@@ -1,5 +1,7 @@
 package org.fergonco.music.mjargon.model;
 
+import org.fergonco.music.midi.Duration;
+
 public class TimeSignature {
 
 	private int n1;
@@ -10,9 +12,9 @@ public class TimeSignature {
 		this.n2 = n2;
 	}
 
-	public int getSubdivisionLength(int length) {
-		// TODO Auto-generated method stub
-		return null;
+	public Duration getSubdivisionDuration(int length) {
+		double subdivisionsPerBeat = length / (double) n1;
+		return new Duration(1 / subdivisionsPerBeat);
 	}
 
 }

@@ -5,8 +5,10 @@ public class TokenImpl implements Token {
 	private String text;
 	private int type;
 	private Token next = null;
+	private int position;
 
-	public TokenImpl(String text, int type) {
+	public TokenImpl(int position, String text, int type) {
+		this.position = position;
 		this.text = text;
 		this.type = type;
 	}
@@ -30,4 +32,8 @@ public class TokenImpl implements Token {
 		return type;
 	}
 
+	@Override
+	public int getPosition() {
+		return position;
+	}
 }

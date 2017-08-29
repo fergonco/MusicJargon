@@ -2,6 +2,7 @@ package org.fergonco.music.mjargon.model;
 
 import java.util.ArrayList;
 
+import org.fergonco.music.midi.Duration;
 import org.fergonco.music.midi.Dynamic;
 
 public class Rhythm {
@@ -9,26 +10,33 @@ public class Rhythm {
 	private ArrayList<RhythmComponent> components = new ArrayList<>();
 
 	public Rhythm(String expression, TimeSignature timeSignature) {
-		int characterLength = timeSignature.getSubdivisionLength(expression.length());
-		int currentDuration = -1;
+		Duration subdivisionDuration = timeSignature.getSubdivisionDuration(expression.length());
+		int currentSubdivisionCount = -1;
 		int lastDynamic = -1;
 		for (int i = 0; i < expression.length(); i++) {
 			char ch = expression.charAt(i);
 			if (ch == 'x' || ch == 'X') {
-				if (currentDuration != -1) {
-					components.add(new RhythmComponent(currentDuration, lastDynamic));
+				if (currentSubdivisionCount != -1) {
+					addRhythmComponent(subdivisionDuration, currentSubdivisionCount, lastDynamic);
 				}
-				currentDuration = characterLength;
+				currentSubdivisionCount = 1;
 				lastDynamic = ch == 'X' ? Dynamic.FF : Dynamic.MF;
 			} else if (ch == '.') {
-				if (currentDuration == -1) { // start rhythm with a silence
-					currentDuration = characterLength;
+				// start rhythm with a silence
+				if (currentSubdivisionCount == -1) {
+					currentSubdivisionCount = 1;
 					lastDynamic = 0;
 				} else {
-					currentDuration += characterLength;
+					currentSubdivisionCount++;
 				}
 			}
 		}
+		addRhythmComponent(subdivisionDuration, currentSubdivisionCount, lastDynamic);
+	}
+
+	private void addRhythmComponent(Duration subdivisionDuration, int currentSubdivisionCount, int lastDynamic) {
+		Duration duration = new Duration(subdivisionDuration.getNumBeats() * currentSubdivisionCount);
+		components.add(new RhythmComponent(duration, lastDynamic));
 	}
 
 	public RhythmComponent[] getComponents() {

@@ -1,6 +1,7 @@
 package org.fergonco.music.mjargon.lexer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Lexer {
 
@@ -27,6 +28,38 @@ public class Lexer {
 	public static final int ON = 21;
 	public static final int DOT = 22;
 	public static final int CHORD_LITERAL = 24;
+
+	private static HashMap<Integer, String> tokenNames = new HashMap<>();
+	static {
+		tokenNames.put(1, "PLAY");
+		tokenNames.put(2, "ID");
+		tokenNames.put(3, "COLON");
+		tokenNames.put(4, "COMMENT");
+		tokenNames.put(5, "NUMBER");
+		tokenNames.put(6, "FORWARD_SLASH");
+		tokenNames.put(7, "EQUALS");
+		tokenNames.put(8, "COMA");
+		tokenNames.put(9, "TIME");
+		tokenNames.put(10, "SIGNATURE");
+		tokenNames.put(11, "RHYTHM");
+		tokenNames.put(12, "CHORD");
+		tokenNames.put(13, "PROGRESSION");
+		tokenNames.put(14, "SEQUENCE");
+		tokenNames.put(15, "REPEAT");
+		tokenNames.put(16, "RHYTHM_EXPRESSION");
+		tokenNames.put(17, "VERTICAL_BAR");
+		tokenNames.put(18, "LINE_BREAK");
+		tokenNames.put(19, "OPEN_SQUARE_BRACKET");
+		tokenNames.put(20, "CLOSE_SQUARE_BRACKET");
+		tokenNames.put(21, "ON");
+		tokenNames.put(22, "DOT");
+		tokenNames.put(24, "CHORD_LITERAL");
+	}
+
+	public static String getTokenName(int code) {
+		return tokenNames.get(code);
+	}
+
 	private String script;
 	private char[] chars;
 	private int position;
@@ -42,24 +75,25 @@ public class Lexer {
 		position = 0;
 		while (position < chars.length) {
 			char character = chars[position];
-			if (consume("play")) {
-				ret.add(new TokenImpl(lastConsumed, PLAY));
-			} else if (consume("time")) {
-				ret.add(new TokenImpl(lastConsumed, TIME));
-			} else if (consume("signature")) {
-				ret.add(new TokenImpl(lastConsumed, SIGNATURE));
-			} else if (consume("rythm")) {
-				ret.add(new TokenImpl(lastConsumed, RHYTHM));
-			} else if (consume("chord")) {
-				ret.add(new TokenImpl(lastConsumed, CHORD));
-			} else if (consume("progression")) {
-				ret.add(new TokenImpl(lastConsumed, PROGRESSION));
-			} else if (consume("on")) {
-				ret.add(new TokenImpl(lastConsumed, ON));
-			} else if (consume("repeat")) {
-				ret.add(new TokenImpl(lastConsumed, SEQUENCE));
-			} else if (consume("repeat")) {
-				ret.add(new TokenImpl(lastConsumed, REPEAT));
+			int tokenPosition = position;
+			if (consumeWord("play")) {
+				ret.add(new TokenImpl(tokenPosition, lastConsumed, PLAY));
+			} else if (consumeWord("time")) {
+				ret.add(new TokenImpl(tokenPosition, lastConsumed, TIME));
+			} else if (consumeWord("signature")) {
+				ret.add(new TokenImpl(tokenPosition, lastConsumed, SIGNATURE));
+			} else if (consumeWord("rythm")) {
+				ret.add(new TokenImpl(tokenPosition, lastConsumed, RHYTHM));
+			} else if (consumeWord("chord")) {
+				ret.add(new TokenImpl(tokenPosition, lastConsumed, CHORD));
+			} else if (consumeWord("progression")) {
+				ret.add(new TokenImpl(tokenPosition, lastConsumed, PROGRESSION));
+			} else if (consumeWord("on")) {
+				ret.add(new TokenImpl(tokenPosition, lastConsumed, ON));
+			} else if (consumeWord("sequence")) {
+				ret.add(new TokenImpl(tokenPosition, lastConsumed, SEQUENCE));
+			} else if (consumeWord("repeat")) {
+				ret.add(new TokenImpl(tokenPosition, lastConsumed, REPEAT));
 			} else if (isRhythmItem(character)) {
 				ret.add(createToken(RHYTHM_EXPRESSION, new TokenFilter() {
 
@@ -73,7 +107,8 @@ public class Lexer {
 
 					@Override
 					public boolean isToken() {
-						return Character.isLetterOrDigit(chars[position]);
+						char ch = chars[position];
+						return Character.isLetterOrDigit(ch) || ch == '_';
 					}
 				}));
 			} else if (Character.isUpperCase(character)) {
@@ -86,9 +121,13 @@ public class Lexer {
 					}
 				}));
 			} else if (character == ':') {
-				ret.add(new TokenImpl(":", COLON));
+				ret.add(new TokenImpl(tokenPosition, ":", COLON));
 			} else if (Character.isWhitespace(character)) {
-				// noop
+				if (String.valueOf(character).matches(".")) {
+					// noop
+				} else {
+					ret.add(new TokenImpl(tokenPosition, null, LINE_BREAK));
+				}
 			} else if (character == '\'') {
 				ret.add(createToken(COMMENT, new TokenFilter() {
 
@@ -106,21 +145,21 @@ public class Lexer {
 					}
 				}));
 			} else if (isLineBreak(character)) {
-				ret.add(new TokenImpl(String.valueOf(character), LINE_BREAK));
+				ret.add(new TokenImpl(tokenPosition, String.valueOf(character), LINE_BREAK));
 			} else if (character == '/') {
-				ret.add(new TokenImpl(String.valueOf(character), FORWARD_SLASH));
+				ret.add(new TokenImpl(tokenPosition, String.valueOf(character), FORWARD_SLASH));
 			} else if (character == ',') {
-				ret.add(new TokenImpl(String.valueOf(character), COMA));
+				ret.add(new TokenImpl(tokenPosition, String.valueOf(character), COMA));
 			} else if (character == '.') {
-				ret.add(new TokenImpl(String.valueOf(character), DOT));
+				ret.add(new TokenImpl(tokenPosition, String.valueOf(character), DOT));
 			} else if (character == '[') {
-				ret.add(new TokenImpl(String.valueOf(character), OPEN_SQUARE_BRACKET));
+				ret.add(new TokenImpl(tokenPosition, String.valueOf(character), OPEN_SQUARE_BRACKET));
 			} else if (character == ']') {
-				ret.add(new TokenImpl(String.valueOf(character), CLOSE_SQUARE_BRACKET));
+				ret.add(new TokenImpl(tokenPosition, String.valueOf(character), CLOSE_SQUARE_BRACKET));
 			} else if (character == '|') {
-				ret.add(new TokenImpl(String.valueOf(character), VERTICAL_BAR));
+				ret.add(new TokenImpl(tokenPosition, String.valueOf(character), VERTICAL_BAR));
 			} else if (character == '=') {
-				ret.add(new TokenImpl(String.valueOf(character), EQUALS));
+				ret.add(new TokenImpl(tokenPosition, String.valueOf(character), EQUALS));
 			} else {
 				throw new LexerException("Invalid character: " + character);
 			}
@@ -137,7 +176,7 @@ public class Lexer {
 		}
 		int end = position;
 		position--; // move to the last position of token
-		return new TokenImpl(script.substring(start, end), tokenType);
+		return new TokenImpl(start, script.substring(start, end), tokenType);
 	}
 
 	private boolean isLineBreak(char character) {
@@ -148,7 +187,7 @@ public class Lexer {
 		return character == 'x' || character == 'X' || character == '.';
 	}
 
-	private boolean consume(String str) {
+	private boolean consumeWord(String str) {
 		if (chars.length < position + str.length()) {
 			return false;
 		}
@@ -156,6 +195,9 @@ public class Lexer {
 			if (chars[position + i] != str.charAt(i)) {
 				return false;
 			}
+		}
+		if (Character.isLetterOrDigit(chars[position + str.length()])) {
+			return false;
 		}
 		position += str.length() - 1;
 		lastConsumed = str;

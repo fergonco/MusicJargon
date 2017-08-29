@@ -64,7 +64,7 @@ public class Model {
 		if (rhythm == null) {
 			throw new SemanticException("No such rhythm: " + rhythmId);
 		}
-		
+
 		currentBarline[instrumentIndex] = new Bar(noteSequence, noteIndex, rhythm);
 	}
 
@@ -93,7 +93,12 @@ public class Model {
 			}
 		}
 
+		score.addTracks(tracks);
 		score.write();
+	}
+
+	public void repeat(String label, int times) {
+		// TODO
 	}
 
 }

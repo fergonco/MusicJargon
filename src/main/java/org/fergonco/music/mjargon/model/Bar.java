@@ -1,7 +1,9 @@
 package org.fergonco.music.mjargon.model;
 
-import java.util.Iterator;
+import java.util.ArrayList;
 
+import org.fergonco.music.midi.Chord;
+import org.fergonco.music.midi.Duration;
 import org.fergonco.music.midi.Note;
 import org.fergonco.music.midi.NoteImpl;
 
@@ -24,16 +26,24 @@ public class Bar {
 		} else {
 			pitches = new PitchArray[] { noteSequence.getNote(noteIndex) };
 		}
-		
+
+		ArrayList<Note> ret = new ArrayList<>();
 		RhythmComponent[] components = rhythm.getComponents();
 		int pitchesIndex = 0;
 		for (int i = 0; i < components.length; i++) {
-			Note note = null;
 			PitchArray pitch = pitches[pitchesIndex];
-			if (pitch.pitchCount()==1) {
-				note = new NoteImpl(pitch.getPitch(0), components[i].getDuration(),components[i].getDynamic());
+			int dynamic = components[i].getDynamic();
+			Duration duration = components[i].getDuration();
+			Note note = null;
+			if (pitch.pitchCount() == 1) {
+				note = new NoteImpl(pitch.getPitch(0), duration, dynamic);
+			} else {
+				note = new Chord(duration, dynamic, pitch.getPitches());
 			}
+			ret.add(note);
 		}
+
+		return ret.toArray(new Note[ret.size()]);
 	}
 
 }

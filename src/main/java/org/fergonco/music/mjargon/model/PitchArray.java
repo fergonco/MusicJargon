@@ -27,4 +27,8 @@ public class PitchArray {
 		return pitch.length;
 	}
 
+	public int[] getPitches() {
+		return pitch;
+	}
+
 }

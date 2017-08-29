@@ -1,0 +1,27 @@
+' Variable ts es la time signature 4/4
+ts = time signature 4/4
+
+' Definimos ritmos r y whole en el 4/4 de ts. Podemos saber cuánto dura cada caracter porque tenemos la time signature. En r es una semicorchea, en whole es una redonda.
+whole = rythm x on ts
+
+' Definimos la progresión de acordes "chords" Ctrl+Shift+u 266f ENTER (266d for flat)
+chords = chord progression C4EG, E4GB, F4AC5, E4G♯B
+
+acoustic_bass
+chords[1] on whole
+chords[1] on whole
+chords[1] on whole
+chords[1] on whole
+chords[1] on whole
+chords[1] on whole
+chords[1] on whole
+chords[1] on whole
+chords[1] on whole
+chords[1] on whole
+chords[1] on whole
+chords[1] on whole
+chords[1] on whole
+chords[1] on whole
+chords[1] on whole
+chords[1] on whole
+

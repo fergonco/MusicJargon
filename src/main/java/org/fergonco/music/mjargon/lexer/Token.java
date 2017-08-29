@@ -7,4 +7,6 @@ public interface Token {
 	Token next();
 	
 	int getType();
+
+	int getPosition();
 }

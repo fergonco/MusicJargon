@@ -11,7 +11,7 @@ public class LexerTest {
 
 	@Test
 	public void testScript() throws Exception {
-		InputStream is = this.getClass().getResourceAsStream("script.mjargon");
+		InputStream is = this.getClass().getResourceAsStream("/script.mjargon");
 		String script = IOUtils.toString(is, "utf-8");
 		is.close();
 
