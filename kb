@@ -15,25 +15,42 @@ package(model, 'org.fergonco.music.mjargon.model').
 
 /* Model */
 variableDefinitions.
+barlines.
+labels.
+instruments.
 composedBy(model, variableDefinitions).
+composedBy(model, instruments).
+composedBy(model, barlines).
+composedBy(model, labels).
 
-timeSignatures.
-rhythms.
-chordProgression.
-noteSequence.
-isTypeOf(timeSignatures, variableDefinitions).
-isTypeOf(rhythms, variableDefinitions).
-isTypeOf(chordProgression, variableDefinition).
-isTypeOf(noteSequence, variableDefinition).
+	/* variableDefinitions */
+	timeSignatures.
+	rhythms.
+	chordProgressions.
+	noteSequences.
+	isTypeOf(timeSignatures, variableDefinitions).
+	isTypeOf(rhythms, variableDefinitions).
+	isTypeOf(chordProgressions, variableDefinition).
+	isTypeOf(noteSequences, variableDefinition).
+	
+		/* rhythms */
+		durations.
+		composedBy(rhythms, durations).
+		composedBy(rhythms, timeSignatures).
+		
+		/* note sequences */
+		polyphonicNoteSequences.
+		monophonicNoteSequences.
+		isTypeOf(polyphonicNoteSequences, noteSequences).
+		isTypeOf(monophonicNoteSequences, noteSequences).
 
-/* rhythms */
-durations.
-composedBy(rhythms, durations).
-composedBy(rhythms, timeSignatures).
+		/* monophonicNoteSequences */
+		chord.
+		composedBy(chord, polyphonicNoteSequences).
+		composedBy(chord, index).
+		composedBy(monophonicNoteSequences, indices).
+		composedBy(monophonicNoteSequences, chord).
 
-/* note sequences */
-polyphonicNoteSequences.
-monophonicNoteSequences.
-isTypeOf(polyphonicNoteSequences, noteSequence).
-isTypeOf(monophonicNoteSequences, noteSequence).
-
+	/* barlines */
+	composedBy(barlines, noteSequences).
+	composedBy(barlines, index).

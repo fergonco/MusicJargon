@@ -10,4 +10,9 @@ public class TimeSignature {
 		this.n2 = n2;
 	}
 
+	public int getSubdivisionLength(int length) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

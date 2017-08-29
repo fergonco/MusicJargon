@@ -1,24 +1,6 @@
 package org.fergonco.music.mjargon.parser;
 
-import static org.fergonco.music.mjargon.lexer.Lexer.CHORD;
-import static org.fergonco.music.mjargon.lexer.Lexer.CLOSE_SQUARE_BRACKET;
-import static org.fergonco.music.mjargon.lexer.Lexer.COLON;
-import static org.fergonco.music.mjargon.lexer.Lexer.COMMENT;
-import static org.fergonco.music.mjargon.lexer.Lexer.DOT;
-import static org.fergonco.music.mjargon.lexer.Lexer.EQUALS;
-import static org.fergonco.music.mjargon.lexer.Lexer.FORWARD_SLASH;
-import static org.fergonco.music.mjargon.lexer.Lexer.ID;
-import static org.fergonco.music.mjargon.lexer.Lexer.LINE_BREAK;
-import static org.fergonco.music.mjargon.lexer.Lexer.NUMBER;
-import static org.fergonco.music.mjargon.lexer.Lexer.ON;
-import static org.fergonco.music.mjargon.lexer.Lexer.OPEN_SQUARE_BRACKET;
-import static org.fergonco.music.mjargon.lexer.Lexer.PROGRESSION;
-import static org.fergonco.music.mjargon.lexer.Lexer.RHYTHM;
-import static org.fergonco.music.mjargon.lexer.Lexer.RHYTHM_EXPRESSION;
-import static org.fergonco.music.mjargon.lexer.Lexer.SEQUENCE;
-import static org.fergonco.music.mjargon.lexer.Lexer.SIGNATURE;
-import static org.fergonco.music.mjargon.lexer.Lexer.TIME;
-import static org.fergonco.music.mjargon.lexer.Lexer.VERTICAL_BAR;
+import static org.fergonco.music.mjargon.lexer.Lexer.*;
 
 import java.util.ArrayList;
 
@@ -35,10 +17,12 @@ public class Parser {
 	public Model parse(Token token) throws SyntaxException, SemanticException {
 		model = new Model();
 		this.currentToken = token;
-		if (accept(ID)) {
-			id();
-		} else {
-			comment();
+		while (currentToken != null) {
+			if (accept(ID)) {
+				id();
+			} else {
+				comment();
+			}
 		}
 
 		return model;
@@ -55,7 +39,7 @@ public class Parser {
 		} else if (accept(COLON)) {
 			label(id);
 		} else if (accept(OPEN_SQUARE_BRACKET)) {
-			musicalExpressions(id);
+			barline(id);
 		} else {
 			instrumentHeader(id);
 		}
@@ -75,8 +59,8 @@ public class Parser {
 		model.setInstruments(instruments.toArray(new String[instruments.size()]));
 	}
 
-	private void musicalExpressions(Token id) throws SyntaxException {
-		int index = 0;
+	private void barline(Token id) throws SyntaxException, SemanticException {
+		int instrumentIndex = 0;
 		while (!accept(LINE_BREAK)) {
 			String noteSequenceId = id.getText();
 			int noteSequenceIndex = -1;
@@ -86,17 +70,13 @@ public class Parser {
 				expect(CLOSE_SQUARE_BRACKET);
 			} catch (SyntaxException e) {
 			}
-			int polyphonicNoteIndex = -1;
-			try {
-				expect(DOT);
-				polyphonicNoteIndex = Integer.parseInt(expect(ID).getText());
-			} catch (SyntaxException e) {
-			}
+			expect(ON);
+			String rhythmId = expect(ID).getText();
 
-			model.addMusicalExpression(index, noteSequenceId, noteSequenceIndex, polyphonicNoteIndex);
-			index++;
+			model.addToBarline(instrumentIndex, noteSequenceId, noteSequenceIndex, rhythmId);
+			instrumentIndex++;
 		}
-		model.newMusicalExpression();
+		model.newBarline();
 	}
 
 	private void label(Token id) throws SyntaxException {
@@ -117,9 +97,10 @@ public class Parser {
 		}
 	}
 
-	private void noteSequence(Token id) throws SyntaxException {
+	private void noteSequence(Token id) throws SyntaxException, SemanticException {
 		expect(SEQUENCE);
 		ArrayList<Integer> notes = new ArrayList<>();
+		notes.add(Integer.parseInt(expect(NUMBER).getText()));
 		try {
 			while (true) {
 				notes.add(Integer.parseInt(expect(NUMBER).getText()));
@@ -140,9 +121,11 @@ public class Parser {
 		expect(CHORD);
 		expect(PROGRESSION);
 		ArrayList<String> chords = new ArrayList<>();
+		chords.add(expect(CHORD_LITERAL).getText());
 		try {
 			while (true) {
-				chords.add(expect(ID).getText());
+				expect(COMA);
+				chords.add(expect(CHORD_LITERAL).getText());
 			}
 		} catch (SyntaxException e) {
 			expect(LINE_BREAK);

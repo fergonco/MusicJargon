@@ -26,6 +26,7 @@ public class Lexer {
 	public static final int CLOSE_SQUARE_BRACKET = 20;
 	public static final int ON = 21;
 	public static final int DOT = 22;
+	public static final int CHORD_LITERAL = 24;
 	private String script;
 	private char[] chars;
 	private int position;
@@ -67,21 +68,30 @@ public class Lexer {
 						return isRhythmItem(chars[position]);
 					}
 				}));
-			} else if (Character.isLetter(character)) {
+			} else if (Character.isLetter(character) && Character.isLowerCase(character)) {
 				ret.add(createToken(ID, new TokenFilter() {
-					
+
 					@Override
 					public boolean isToken() {
 						return Character.isLetterOrDigit(chars[position]);
+					}
+				}));
+			} else if (Character.isUpperCase(character)) {
+				ret.add(createToken(CHORD_LITERAL, new TokenFilter() {
+
+					@Override
+					public boolean isToken() {
+						char ch = chars[position];
+						return Character.isUpperCase(ch) || Character.isDigit(ch) || ch == '♯' || ch == '♭';
 					}
 				}));
 			} else if (character == ':') {
 				ret.add(new TokenImpl(":", COLON));
 			} else if (Character.isWhitespace(character)) {
 				// noop
-			} else if (character == '#') {
+			} else if (character == '\'') {
 				ret.add(createToken(COMMENT, new TokenFilter() {
-					
+
 					@Override
 					public boolean isToken() {
 						return !isLineBreak(chars[position]);
@@ -89,7 +99,7 @@ public class Lexer {
 				}));
 			} else if (Character.isDigit(character)) {
 				ret.add(createToken(NUMBER, new TokenFilter() {
-					
+
 					@Override
 					public boolean isToken() {
 						return Character.isDigit(chars[position]);

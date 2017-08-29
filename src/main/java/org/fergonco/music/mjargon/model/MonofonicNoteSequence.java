@@ -2,14 +2,25 @@ package org.fergonco.music.mjargon.model;
 
 public class MonofonicNoteSequence implements NoteSequence {
 
-	public MonofonicNoteSequence(Integer[] notes, String chordProgressionId, int chordProgressionIndex) {
-		// TODO Auto-generated constructor stub
+	// In this case the PitchArrays contain only one pitch
+	private PitchArray[] singleNotes;
+
+	public MonofonicNoteSequence(Integer[] noteIndices, PitchArray chord) {
+		singleNotes = new PitchArray[noteIndices.length];
+		for (int i = 0; i < singleNotes.length; i++) {
+			int pitch = chord.getPitch(noteIndices[i]);
+			singleNotes[i] = new PitchArray(pitch);
+		}
 	}
 
 	@Override
-	public Note getNote(int noteIndex) {
-		// TODO Auto-generated method stub
-		return null;
+	public PitchArray getNote(int noteIndex) {
+		return singleNotes[noteIndex];
+	}
+
+	@Override
+	public PitchArray[] getAllNotes() {
+		return singleNotes;
 	}
 
 }
