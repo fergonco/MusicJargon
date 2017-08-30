@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class Lexer {
 
-	public static final int PLAY = 1;
+	public static final int TEMPO = 1;
 	public static final int ID = 2;
 	public static final int COLON = 3;
 	public static final int COMMENT = 4;
@@ -31,7 +31,7 @@ public class Lexer {
 
 	private static HashMap<Integer, String> tokenNames = new HashMap<>();
 	static {
-		tokenNames.put(1, "PLAY");
+		tokenNames.put(1, "TEMPO");
 		tokenNames.put(2, "ID");
 		tokenNames.put(3, "COLON");
 		tokenNames.put(4, "COMMENT");
@@ -76,8 +76,8 @@ public class Lexer {
 		while (position < chars.length) {
 			char character = chars[position];
 			int tokenPosition = position;
-			if (consumeWord("play")) {
-				ret.add(new TokenImpl(tokenPosition, lastConsumed, PLAY));
+			if (consumeWord("tempo")) {
+				ret.add(new TokenImpl(tokenPosition, lastConsumed, TEMPO));
 			} else if (consumeWord("time")) {
 				ret.add(new TokenImpl(tokenPosition, lastConsumed, TIME));
 			} else if (consumeWord("signature")) {

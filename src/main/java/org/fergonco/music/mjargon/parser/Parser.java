@@ -1,6 +1,7 @@
 package org.fergonco.music.mjargon.parser;
 
 import static org.fergonco.music.mjargon.lexer.Lexer.CHORD;
+import static org.fergonco.music.mjargon.lexer.Lexer.TEMPO;
 import static org.fergonco.music.mjargon.lexer.Lexer.REPEAT;
 import static org.fergonco.music.mjargon.lexer.Lexer.CHORD_LITERAL;
 import static org.fergonco.music.mjargon.lexer.Lexer.CLOSE_SQUARE_BRACKET;
@@ -44,6 +45,8 @@ public class Parser {
 					id();
 				} else if (accept(COMMENT)) {
 					comment();
+				} else if (accept(TEMPO)) {
+					tempo();
 				} else if (accept(REPEAT)) {
 					repeat();
 				} else if (accept(LINE_BREAK)) {
@@ -76,7 +79,13 @@ public class Parser {
 		return model;
 	}
 
-	private void repeat() throws SyntaxException {
+	private void tempo() throws SyntaxException {
+		expect(TEMPO);
+		int tempo = Integer.parseInt(expect(NUMBER).getText());
+		model.setTempo(tempo);
+	}
+
+	private void repeat() throws SyntaxException, SemanticException {
 		expect(REPEAT);
 		String label = expect(ID).getText();
 		int times = Integer.parseInt(expect(NUMBER).getText());

@@ -16,8 +16,8 @@ public class Model {
 	private HashMap<String, Rhythm> rhythms = new HashMap<>();
 	private HashMap<String, NoteSequence> noteSequences = new HashMap<>();
 	private String[] instruments;
-	private ArrayList<Bar[]> bars = new ArrayList<>();
-	private Bar[] currentBarline = null;
+	private ArrayList<SongLine> songlines = new ArrayList<>();
+	private Barline currentBarline = null;
 	private HashMap<String, Integer> labels = new HashMap<>();
 
 	public void addTimeSignature(String id, int n1, int n2) {
@@ -54,7 +54,7 @@ public class Model {
 	public void addToBarline(int instrumentIndex, String noteSequenceId, int noteIndex, String rhythmId)
 			throws SemanticException {
 		if (currentBarline == null) {
-			currentBarline = new Bar[instruments.length];
+			currentBarline = new Barline(instruments.length);
 		}
 		NoteSequence noteSequence = noteSequences.get(noteSequenceId);
 		if (noteSequenceId == null) {
@@ -65,16 +65,16 @@ public class Model {
 			throw new SemanticException("No such rhythm: " + rhythmId);
 		}
 
-		currentBarline[instrumentIndex] = new Bar(noteSequence, noteIndex, rhythm);
+		currentBarline.setInstrumentBar(instrumentIndex, new Bar(noteSequence, noteIndex, rhythm));
 	}
 
 	public void newBarline() {
-		bars.add(currentBarline);
+		songlines.add(currentBarline);
 		currentBarline = null;
 	}
 
 	public void newLabel(String text) {
-		labels.put(text, bars.size());
+		labels.put(text, songlines.size());
 	}
 
 	public void writeMidi(File output) throws IOException {
@@ -84,12 +84,27 @@ public class Model {
 			tracks[i] = new Track();
 			tracks[i].setInstrument(InstrumentNames.getInstrument(instruments[i]));
 		}
-		for (Bar[] bar : bars) {
-			for (int i = 0; i < bar.length; i++) {
-				Note[] notes = bar[i].getNotes();
-				for (Note note : notes) {
-					tracks[i].addNote(note);
+		for (int songlineIndex = 0; songlineIndex < songlines.size(); songlineIndex++) {
+			SongLine songline = songlines.get(songlineIndex);
+			if (songline.isBarline()) {
+				Bar[] bars = songline.getBars();
+				for (int i = 0; i < bars.length; i++) {
+					Note[] notes = bars[i].getNotes();
+					for (Note note : notes) {
+						tracks[i].addNote(note);
+					}
 				}
+			} else if (songline.isTempo()) {
+				for (Track track : tracks) {
+					track.setTempo(songline.getTempo());
+				}
+			} else if (songline.isRepeat()) {
+				int index = songline.getTarget();
+				if (index != -1) {
+					songlineIndex = index - 1;
+				}
+			}else {
+				throw new RuntimeException();
 			}
 		}
 
@@ -97,8 +112,16 @@ public class Model {
 		score.write();
 	}
 
-	public void repeat(String label, int times) {
-		// TODO
+	public void repeat(String label, int times) throws SemanticException {
+		Integer songlineIndex = labels.get(label);
+		if (songlineIndex == null) {
+			throw new SemanticException("No such label: " + label);
+		}
+		songlines.add(new Repeat(songlineIndex, times));
+	}
+
+	public void setTempo(int tempo) {
+		songlines.add(new TempoBar(tempo));
 	}
 
 }

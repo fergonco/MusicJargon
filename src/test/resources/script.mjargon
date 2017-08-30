@@ -19,14 +19,17 @@ seq4 = sequence 1 2 1 3 2 on chords[3]
 ' La guitarra toca el acorde rítmicamente
 
 fingered_bass            | overdrive_guitar
+'dynamics f               | mp
+tempo 120
 inicio:                  |
 chords[1] on whole       | chords[1] on r
 chords[2] on whole       | chords[2] on r
 chords[3] on whole       | chords[3] on r
 chords[4] on whole       | chords[4] on r
 ' Repetir cuatro veces   |
-repeat inicio 4          |
+repeat inicio 1          |
 ' Ahora el bajo toca la secuencia de notas rítmicamente y la guitarra redondas con el acorde
+tempo 60
 seq1 on r                | chords[1] on whole
 seq2 on r                | chords[2] on whole
 seq3 on r                | chords[3] on whole
