@@ -1,5 +1,6 @@
 package org.fergonco.music.mjargon.lexer;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -28,32 +29,34 @@ public class Lexer {
 	public static final int ON = 21;
 	public static final int DOT = 22;
 	public static final int CHORD_LITERAL = 24;
+	public static final int DYNAMICS = 25;
+	public static final int PPPP = 26;
+	public static final int PPP = 27;
+	public static final int PP = 28;
+	public static final int P = 29;
+	public static final int MP = 30;
+	public static final int MF = 31;
+	public static final int F = 32;
+	public static final int FF = 33;
+	public static final int FFF = 34;
+	public static final int FFFF = 35;
 
 	private static HashMap<Integer, String> tokenNames = new HashMap<>();
+
+	private static int[] keywords = new int[] { TEMPO, TIME, SIGNATURE, RHYTHM, CHORD, PROGRESSION, SEQUENCE, REPEAT,
+			ON, DYNAMICS, PPPP, PPP, PP, P, MP, MF, F, FF, FFF, FFFF };
 	static {
-		tokenNames.put(1, "TEMPO");
-		tokenNames.put(2, "ID");
-		tokenNames.put(3, "COLON");
-		tokenNames.put(4, "COMMENT");
-		tokenNames.put(5, "NUMBER");
-		tokenNames.put(6, "FORWARD_SLASH");
-		tokenNames.put(7, "EQUALS");
-		tokenNames.put(8, "COMA");
-		tokenNames.put(9, "TIME");
-		tokenNames.put(10, "SIGNATURE");
-		tokenNames.put(11, "RHYTHM");
-		tokenNames.put(12, "CHORD");
-		tokenNames.put(13, "PROGRESSION");
-		tokenNames.put(14, "SEQUENCE");
-		tokenNames.put(15, "REPEAT");
-		tokenNames.put(16, "RHYTHM_EXPRESSION");
-		tokenNames.put(17, "VERTICAL_BAR");
-		tokenNames.put(18, "LINE_BREAK");
-		tokenNames.put(19, "OPEN_SQUARE_BRACKET");
-		tokenNames.put(20, "CLOSE_SQUARE_BRACKET");
-		tokenNames.put(21, "ON");
-		tokenNames.put(22, "DOT");
-		tokenNames.put(24, "CHORD_LITERAL");
+
+		Field[] fields = Lexer.class.getDeclaredFields();
+		for (Field field : fields) {
+			if (field.getName().toUpperCase().equals(field.getName())) {
+				try {
+					tokenNames.put(field.getInt(null), field.getName());
+				} catch (IllegalArgumentException | IllegalAccessException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		}
 	}
 
 	public static String getTokenName(int code) {
@@ -76,92 +79,85 @@ public class Lexer {
 		while (position < chars.length) {
 			char character = chars[position];
 			int tokenPosition = position;
-			if (consumeWord("tempo")) {
-				ret.add(new TokenImpl(tokenPosition, lastConsumed, TEMPO));
-			} else if (consumeWord("time")) {
-				ret.add(new TokenImpl(tokenPosition, lastConsumed, TIME));
-			} else if (consumeWord("signature")) {
-				ret.add(new TokenImpl(tokenPosition, lastConsumed, SIGNATURE));
-			} else if (consumeWord("rythm")) {
-				ret.add(new TokenImpl(tokenPosition, lastConsumed, RHYTHM));
-			} else if (consumeWord("chord")) {
-				ret.add(new TokenImpl(tokenPosition, lastConsumed, CHORD));
-			} else if (consumeWord("progression")) {
-				ret.add(new TokenImpl(tokenPosition, lastConsumed, PROGRESSION));
-			} else if (consumeWord("on")) {
-				ret.add(new TokenImpl(tokenPosition, lastConsumed, ON));
-			} else if (consumeWord("sequence")) {
-				ret.add(new TokenImpl(tokenPosition, lastConsumed, SEQUENCE));
-			} else if (consumeWord("repeat")) {
-				ret.add(new TokenImpl(tokenPosition, lastConsumed, REPEAT));
-			} else if (isRhythmItem(character)) {
-				ret.add(createToken(RHYTHM_EXPRESSION, new TokenFilter() {
-
-					@Override
-					public boolean isToken() {
-						return isRhythmItem(chars[position]);
-					}
-				}));
-			} else if (Character.isLetter(character) && Character.isLowerCase(character)) {
-				ret.add(createToken(ID, new TokenFilter() {
-
-					@Override
-					public boolean isToken() {
-						char ch = chars[position];
-						return Character.isLetterOrDigit(ch) || ch == '_';
-					}
-				}));
-			} else if (Character.isUpperCase(character)) {
-				ret.add(createToken(CHORD_LITERAL, new TokenFilter() {
-
-					@Override
-					public boolean isToken() {
-						char ch = chars[position];
-						return Character.isUpperCase(ch) || Character.isDigit(ch) || ch == '♯' || ch == '♭';
-					}
-				}));
-			} else if (character == ':') {
-				ret.add(new TokenImpl(tokenPosition, ":", COLON));
-			} else if (Character.isWhitespace(character)) {
-				if (String.valueOf(character).matches(".")) {
-					// noop
-				} else {
-					ret.add(new TokenImpl(tokenPosition, null, LINE_BREAK));
+			boolean keywordMatched = false;
+			for (int keywordCode : keywords) {
+				String keyword = tokenNames.get(keywordCode).toLowerCase();
+				if (consumeWord(keyword)) {
+					ret.add(new TokenImpl(tokenPosition, lastConsumed, keywordCode));
+					keywordMatched = true;
+					break;
 				}
-			} else if (character == '\'') {
-				ret.add(createToken(COMMENT, new TokenFilter() {
+			}
+			if (!keywordMatched) {
+				if (isRhythmItem(character)) {
+					ret.add(createToken(RHYTHM_EXPRESSION, new TokenFilter() {
 
-					@Override
-					public boolean isToken() {
-						return !isLineBreak(chars[position]);
-					}
-				}));
-			} else if (Character.isDigit(character)) {
-				ret.add(createToken(NUMBER, new TokenFilter() {
+						@Override
+						public boolean isToken() {
+							return isRhythmItem(chars[position]);
+						}
+					}));
+				} else if (Character.isLetter(character) && Character.isLowerCase(character)) {
+					ret.add(createToken(ID, new TokenFilter() {
 
-					@Override
-					public boolean isToken() {
-						return Character.isDigit(chars[position]);
+						@Override
+						public boolean isToken() {
+							char ch = chars[position];
+							return Character.isLetterOrDigit(ch) || ch == '_';
+						}
+					}));
+				} else if (Character.isUpperCase(character)) {
+					ret.add(createToken(CHORD_LITERAL, new TokenFilter() {
+
+						@Override
+						public boolean isToken() {
+							char ch = chars[position];
+							return Character.isUpperCase(ch) || Character.isDigit(ch) || ch == '♯' || ch == '♭';
+						}
+					}));
+				} else if (character == ':') {
+					ret.add(new TokenImpl(tokenPosition, ":", COLON));
+				} else if (Character.isWhitespace(character)) {
+					if (String.valueOf(character).matches(".")) {
+						// noop
+					} else {
+						ret.add(new TokenImpl(tokenPosition, null, LINE_BREAK));
 					}
-				}));
-			} else if (isLineBreak(character)) {
-				ret.add(new TokenImpl(tokenPosition, String.valueOf(character), LINE_BREAK));
-			} else if (character == '/') {
-				ret.add(new TokenImpl(tokenPosition, String.valueOf(character), FORWARD_SLASH));
-			} else if (character == ',') {
-				ret.add(new TokenImpl(tokenPosition, String.valueOf(character), COMA));
-			} else if (character == '.') {
-				ret.add(new TokenImpl(tokenPosition, String.valueOf(character), DOT));
-			} else if (character == '[') {
-				ret.add(new TokenImpl(tokenPosition, String.valueOf(character), OPEN_SQUARE_BRACKET));
-			} else if (character == ']') {
-				ret.add(new TokenImpl(tokenPosition, String.valueOf(character), CLOSE_SQUARE_BRACKET));
-			} else if (character == '|') {
-				ret.add(new TokenImpl(tokenPosition, String.valueOf(character), VERTICAL_BAR));
-			} else if (character == '=') {
-				ret.add(new TokenImpl(tokenPosition, String.valueOf(character), EQUALS));
-			} else {
-				throw new LexerException("Invalid character: " + character);
+				} else if (character == '\'') {
+					ret.add(createToken(COMMENT, new TokenFilter() {
+
+						@Override
+						public boolean isToken() {
+							return !isLineBreak(chars[position]);
+						}
+					}));
+				} else if (Character.isDigit(character)) {
+					ret.add(createToken(NUMBER, new TokenFilter() {
+
+						@Override
+						public boolean isToken() {
+							return Character.isDigit(chars[position]);
+						}
+					}));
+				} else if (isLineBreak(character)) {
+					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), LINE_BREAK));
+				} else if (character == '/') {
+					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), FORWARD_SLASH));
+				} else if (character == ',') {
+					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), COMA));
+				} else if (character == '.') {
+					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), DOT));
+				} else if (character == '[') {
+					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), OPEN_SQUARE_BRACKET));
+				} else if (character == ']') {
+					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), CLOSE_SQUARE_BRACKET));
+				} else if (character == '|') {
+					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), VERTICAL_BAR));
+				} else if (character == '=') {
+					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), EQUALS));
+				} else {
+					throw new LexerException("Invalid character: " + character);
+				}
 			}
 			position++;
 		}

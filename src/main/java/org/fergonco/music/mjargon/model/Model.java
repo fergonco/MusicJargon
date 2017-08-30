@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.fergonco.music.midi.Dynamic;
 import org.fergonco.music.midi.InstrumentNames;
 import org.fergonco.music.midi.Note;
 import org.fergonco.music.midi.Score;
@@ -84,12 +85,16 @@ public class Model {
 			tracks[i] = new Track();
 			tracks[i].setInstrument(InstrumentNames.getInstrument(instruments[i]));
 		}
+		Dynamic[] currentDynamics = new Dynamic[tracks.length];
+		for (int i = 0; i < currentDynamics.length; i++) {
+			currentDynamics[i] = Dynamic.F;
+		}
 		for (int songlineIndex = 0; songlineIndex < songlines.size(); songlineIndex++) {
 			SongLine songline = songlines.get(songlineIndex);
 			if (songline.isBarline()) {
 				Bar[] bars = songline.getBars();
 				for (int i = 0; i < bars.length; i++) {
-					Note[] notes = bars[i].getNotes();
+					Note[] notes = bars[i].getNotes(currentDynamics[i]);
 					for (Note note : notes) {
 						tracks[i].addNote(note);
 					}
@@ -103,7 +108,9 @@ public class Model {
 				if (index != -1) {
 					songlineIndex = index - 1;
 				}
-			}else {
+			} else if (songline.isDynamics()) {
+				currentDynamics = songline.getDynamics();
+			} else {
 				throw new RuntimeException();
 			}
 		}
@@ -122,6 +129,10 @@ public class Model {
 
 	public void setTempo(int tempo) {
 		songlines.add(new TempoBar(tempo));
+	}
+
+	public void setDynamics(ArrayList<Dynamic> dynamics) {
+		songlines.add(new DynamicsLine(dynamics));
 	}
 
 }

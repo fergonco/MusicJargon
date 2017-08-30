@@ -1,5 +1,7 @@
 package org.fergonco.music.mjargon.model;
 
+import org.fergonco.music.midi.Dynamic;
+
 public interface SongLine {
 
 	boolean isBarline();
@@ -13,5 +15,9 @@ public interface SongLine {
 	boolean isRepeat();
 
 	int getTarget();
+
+	boolean isDynamics();
+
+	Dynamic[] getDynamics();
 
 }

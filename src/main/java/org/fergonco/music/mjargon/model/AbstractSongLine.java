@@ -1,6 +1,8 @@
 package org.fergonco.music.mjargon.model;
 
-public abstract class AbstractSongLine implements SongLine{
+import org.fergonco.music.midi.Dynamic;
+
+public abstract class AbstractSongLine implements SongLine {
 
 	@Override
 	public boolean isBarline() {
@@ -32,4 +34,13 @@ public abstract class AbstractSongLine implements SongLine{
 		return 0;
 	}
 
+	@Override
+	public boolean isDynamics() {
+		return false;
+	}
+
+	@Override
+	public Dynamic[] getDynamics() {
+		return null;
+	}
 }

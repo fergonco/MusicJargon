@@ -1,13 +1,22 @@
 package org.fergonco.music.mjargon.parser;
 
+import static org.fergonco.music.mjargon.lexer.Lexer.FFFF;
+import static org.fergonco.music.mjargon.lexer.Lexer.FFF;
+import static org.fergonco.music.mjargon.lexer.Lexer.FF;
+import static org.fergonco.music.mjargon.lexer.Lexer.F;
+import static org.fergonco.music.mjargon.lexer.Lexer.MF;
+import static org.fergonco.music.mjargon.lexer.Lexer.MP;
+import static org.fergonco.music.mjargon.lexer.Lexer.P;
+import static org.fergonco.music.mjargon.lexer.Lexer.PP;
+import static org.fergonco.music.mjargon.lexer.Lexer.PPP;
+import static org.fergonco.music.mjargon.lexer.Lexer.PPPP;
 import static org.fergonco.music.mjargon.lexer.Lexer.CHORD;
-import static org.fergonco.music.mjargon.lexer.Lexer.TEMPO;
-import static org.fergonco.music.mjargon.lexer.Lexer.REPEAT;
 import static org.fergonco.music.mjargon.lexer.Lexer.CHORD_LITERAL;
 import static org.fergonco.music.mjargon.lexer.Lexer.CLOSE_SQUARE_BRACKET;
 import static org.fergonco.music.mjargon.lexer.Lexer.COLON;
 import static org.fergonco.music.mjargon.lexer.Lexer.COMA;
 import static org.fergonco.music.mjargon.lexer.Lexer.COMMENT;
+import static org.fergonco.music.mjargon.lexer.Lexer.DYNAMICS;
 import static org.fergonco.music.mjargon.lexer.Lexer.EQUALS;
 import static org.fergonco.music.mjargon.lexer.Lexer.FORWARD_SLASH;
 import static org.fergonco.music.mjargon.lexer.Lexer.ID;
@@ -16,15 +25,18 @@ import static org.fergonco.music.mjargon.lexer.Lexer.NUMBER;
 import static org.fergonco.music.mjargon.lexer.Lexer.ON;
 import static org.fergonco.music.mjargon.lexer.Lexer.OPEN_SQUARE_BRACKET;
 import static org.fergonco.music.mjargon.lexer.Lexer.PROGRESSION;
+import static org.fergonco.music.mjargon.lexer.Lexer.REPEAT;
 import static org.fergonco.music.mjargon.lexer.Lexer.RHYTHM;
 import static org.fergonco.music.mjargon.lexer.Lexer.RHYTHM_EXPRESSION;
 import static org.fergonco.music.mjargon.lexer.Lexer.SEQUENCE;
 import static org.fergonco.music.mjargon.lexer.Lexer.SIGNATURE;
+import static org.fergonco.music.mjargon.lexer.Lexer.TEMPO;
 import static org.fergonco.music.mjargon.lexer.Lexer.TIME;
 import static org.fergonco.music.mjargon.lexer.Lexer.VERTICAL_BAR;
 
 import java.util.ArrayList;
 
+import org.fergonco.music.midi.Dynamic;
 import org.fergonco.music.mjargon.lexer.Lexer;
 import org.fergonco.music.mjargon.lexer.Token;
 import org.fergonco.music.mjargon.model.Model;
@@ -47,6 +59,8 @@ public class Parser {
 					comment();
 				} else if (accept(TEMPO)) {
 					tempo();
+				} else if (accept(DYNAMICS)) {
+					dynamics();
 				} else if (accept(REPEAT)) {
 					repeat();
 				} else if (accept(LINE_BREAK)) {
@@ -77,6 +91,68 @@ public class Parser {
 		}
 
 		return model;
+	}
+
+	private void dynamics() throws SyntaxException {
+		expect(DYNAMICS);
+		ArrayList<Dynamic> dynamics = new ArrayList<>();
+		while (true) {
+			Dynamic dynamic;
+			switch (currentToken.getType()) {
+			case PPPP:
+				expect(PPPP);
+				dynamic = Dynamic.PPPP;
+				break;
+			case PPP:
+				expect(PPP);
+				dynamic = Dynamic.PPP;
+				break;
+			case PP:
+				expect(PP);
+				dynamic = Dynamic.PP;
+				break;
+			case P:
+				expect(P);
+				dynamic = Dynamic.P;
+				break;
+			case MP:
+				expect(MP);
+				dynamic = Dynamic.MP;
+				break;
+			case MF:
+				expect(MF);
+				dynamic = Dynamic.MF;
+				break;
+			case F:
+				expect(F);
+				dynamic = Dynamic.F;
+				break;
+			case FF:
+				expect(FF);
+				dynamic = Dynamic.FF;
+				break;
+			case FFF:
+				expect(FFF);
+				dynamic = Dynamic.FFF;
+				break;
+			case FFFF:
+				expect(FFFF);
+				dynamic = Dynamic.FFFF;
+				break;
+			default:
+				throw new SyntaxException(currentToken.getPosition(),
+						"Dynamic expression expected (pppp, ppp, pp, p, mp, mf, f, ff, fff, ffff)");
+			}
+			dynamics.add(dynamic);
+
+			try {
+				expect(VERTICAL_BAR);
+			} catch (SyntaxException e) {
+				break;
+			}
+		}
+		
+		model.setDynamics(dynamics);
 	}
 
 	private void tempo() throws SyntaxException {

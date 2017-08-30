@@ -12,31 +12,40 @@ public class Rhythm {
 	public Rhythm(String expression, TimeSignature timeSignature) {
 		Duration subdivisionDuration = timeSignature.getSubdivisionDuration(expression.length());
 		int currentSubdivisionCount = -1;
-		int lastDynamic = -1;
+		int lastDynamicIncrease = 0;
+		boolean silence = false;
 		for (int i = 0; i < expression.length(); i++) {
 			char ch = expression.charAt(i);
 			if (ch == 'x' || ch == 'X') {
 				if (currentSubdivisionCount != -1) {
-					addRhythmComponent(subdivisionDuration, currentSubdivisionCount, lastDynamic);
+					addRhythmComponent(subdivisionDuration, currentSubdivisionCount, lastDynamicIncrease, silence);
 				}
 				currentSubdivisionCount = 1;
-				lastDynamic = ch == 'X' ? Dynamic.FF : Dynamic.MF;
+				lastDynamicIncrease = ch == 'X' ? 1 : 0;
+				silence = false;
 			} else if (ch == '.') {
 				// start rhythm with a silence
 				if (currentSubdivisionCount == -1) {
 					currentSubdivisionCount = 1;
-					lastDynamic = 0;
+					silence = true;
 				} else {
 					currentSubdivisionCount++;
 				}
 			}
 		}
-		addRhythmComponent(subdivisionDuration, currentSubdivisionCount, lastDynamic);
+		addRhythmComponent(subdivisionDuration, currentSubdivisionCount, lastDynamicIncrease, silence);
 	}
 
-	private void addRhythmComponent(Duration subdivisionDuration, int currentSubdivisionCount, int lastDynamic) {
+	private void addRhythmComponent(Duration subdivisionDuration, int currentSubdivisionCount, int lastDynamicIncrease,
+			boolean silence) {
 		Duration duration = new Duration(subdivisionDuration.getNumBeats() * currentSubdivisionCount);
-		components.add(new RhythmComponent(duration, lastDynamic));
+		RhythmComponent rhythmComponent;
+		if (silence) {
+			rhythmComponent =new RhythmComponent(duration, silence); 
+		} else {
+			rhythmComponent =new RhythmComponent(duration, lastDynamicIncrease); 
+		}
+		components.add(rhythmComponent);
 	}
 
 	public RhythmComponent[] getComponents() {

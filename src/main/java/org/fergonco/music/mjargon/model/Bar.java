@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.fergonco.music.midi.Chord;
 import org.fergonco.music.midi.Duration;
+import org.fergonco.music.midi.Dynamic;
 import org.fergonco.music.midi.Note;
 import org.fergonco.music.midi.NoteImpl;
 
@@ -19,7 +20,7 @@ public class Bar {
 		this.rhythm = rhythm;
 	}
 
-	public Note[] getNotes() {
+	public Note[] getNotes(Dynamic baseDynamics) {
 		PitchArray[] pitches = null;
 		if (noteIndex == -1) {
 			pitches = noteSequence.getAllNotes();
@@ -33,13 +34,16 @@ public class Bar {
 		for (int i = 0; i < components.length; i++) {
 			PitchArray pitch = pitches[pitchesIndex];
 			pitchesIndex = (pitchesIndex + 1) % pitches.length;
-			int dynamic = components[i].getDynamic();
+			Dynamic dynamic = components[i].isSilence() ? Dynamic.MUTE : baseDynamics;
+			if (components[i].getDynamicIncrease() > 0) {
+				dynamic = dynamic.louder().louder();
+			}
 			Duration duration = components[i].getDuration();
 			Note note = null;
 			if (pitch.pitchCount() == 1) {
-				note = new NoteImpl(pitch.getPitch(0), duration, dynamic);
+				note = new NoteImpl(pitch.getPitch(0), duration, dynamic.getLevel());
 			} else {
-				note = new Chord(duration, dynamic, pitch.getPitches());
+				note = new Chord(duration, dynamic.getLevel(), pitch.getPitches());
 			}
 			ret.add(note);
 		}
