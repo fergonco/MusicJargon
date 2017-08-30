@@ -7,21 +7,7 @@ whole = rythm x on ts
 ' Definimos la progresión de acordes "chords" Ctrl+Shift+u 266f ENTER (266d for flat)
 chords = chord progression C4EG, E4GB, F4AC5, E4G♯B
 
-acoustic_bass
-chords[1] on whole
-chords[1] on whole
-chords[1] on whole
-chords[1] on whole
-chords[1] on whole
-chords[1] on whole
-chords[1] on whole
-chords[1] on whole
-chords[1] on whole
-chords[1] on whole
-chords[1] on whole
-chords[1] on whole
-chords[1] on whole
-chords[1] on whole
-chords[1] on whole
-chords[1] on whole
+seq = sequence 1 on chords[1]
 
+acoustic_bass
+seq on whole

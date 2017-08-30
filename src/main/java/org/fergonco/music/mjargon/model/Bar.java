@@ -32,6 +32,7 @@ public class Bar {
 		int pitchesIndex = 0;
 		for (int i = 0; i < components.length; i++) {
 			PitchArray pitch = pitches[pitchesIndex];
+			pitchesIndex = (pitchesIndex + 1) % pitches.length;
 			int dynamic = components[i].getDynamic();
 			Duration duration = components[i].getDuration();
 			Note note = null;

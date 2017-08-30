@@ -22,6 +22,7 @@ public class PolyphonicNoteSequence implements NoteSequence {
 
 	public PolyphonicNoteSequence(String[] chordStrings) {
 		chords = new PitchArray[chordStrings.length];
+		int lastOctave = 4;
 		for (int i = 0; i < chordStrings.length; i++) {
 			String chordString = chordStrings[i];
 			ArrayList<Integer> pitchList = new ArrayList<>();
@@ -33,8 +34,7 @@ public class PolyphonicNoteSequence implements NoteSequence {
 				while (index < noteString.length()) {
 					char octaveOrAccidental = noteString.charAt(index);
 					if (Character.isDigit(octaveOrAccidental)) {
-						int octave = Integer.parseInt(String.valueOf(octaveOrAccidental));
-						pitch += 12 * octave;
+						lastOctave = Integer.parseInt(String.valueOf(octaveOrAccidental));
 					} else if (octaveOrAccidental == '♭') {
 						pitch--;
 					} else if (octaveOrAccidental == '♯') {
@@ -44,6 +44,7 @@ public class PolyphonicNoteSequence implements NoteSequence {
 					}
 					index++;
 				}
+				pitch += 12 * lastOctave;
 				pitchList.add(pitch);
 			}
 			chords[i] = new PitchArray(pitchList);
