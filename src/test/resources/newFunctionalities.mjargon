@@ -1,0 +1,32 @@
+r       = rhythm |X  x.| on 5/8
+whole   = rhythm |x| on 5/8
+chords  = chord progression C4EG EGB FAC5 E4G♯B
+hihat   = drums |o . . xX. | on 5/8
+ride    = drums |o . . xX. | on 5/8 with rd in .ox, bd in o, sn in x ' Default hh in .ox, bd in o, sn in x
+seq1    = sequence 1 2 3 on chords[0]
+seq2    = sequence 1 2 3 on chords[1]
+seq3    = sequence 1 2 3 on chords[2]
+seq4    = sequence 1 2 3 on chords[3]
+first1  = sequence 1 on chords[0]
+first2  = sequence 1 on chords[1]
+first3  = sequence 1 on chords[2]
+first4  = sequence 1 on chords[3]
+
+fingered_bass   | overdrive_guitar   | drums
+dynamics f      | p                  | p
+tempo 100       |                    |
+a:              |                    |
+first1 on whole | chords[1] on r     | hihat
+first2 on whole | chords[2] on r     | hihat
+first3 on whole | chords[3] on r     | hihat
+first4 on whole | chords[4] on r     | hihat
+seq1 on r       | chords[1] on whole | ride
+seq2 on r       | chords[2] on whole | ride
+seq3 on r       | chords[3] on whole | ride
+seq4 on r       | chords[4] on whole | ride
+repeat a 2      |                    |
+dynamics -      | -                  | ff ' - does not change dynamic
+seq1 on r       | -                  | onhihat
+seq2 on r       | -                  | onhihat
+seq3 on r       | -                  | onhihat
+seq4 on r       | -                  | onhihat
