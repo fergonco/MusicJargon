@@ -13,8 +13,9 @@ public class TimeSignature {
 	}
 
 	public Duration getSubdivisionDuration(int length) {
-		double subdivisionsPerBeat = length / (double) n1;
-		return new Duration(1 / subdivisionsPerBeat);
+		double totalLength = n1 / (double) n2;
+		double lengthPerSubdivision = totalLength / length;
+		return new Duration(lengthPerSubdivision);
 	}
 
 }
