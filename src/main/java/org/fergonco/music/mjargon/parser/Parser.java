@@ -317,7 +317,8 @@ public class Parser {
 			consumeToken();
 			return lastConsumed;
 		} else {
-			throw new SyntaxException(currentToken.getPosition(), Lexer.getTokenName(expectedTokenType) + " expected");
+			int position = currentToken == null? 0:currentToken.getPosition();
+			throw new SyntaxException(position, Lexer.getTokenName(expectedTokenType) + " expected");
 		}
 	}
 
