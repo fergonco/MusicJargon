@@ -19,6 +19,6 @@ public class Repeat extends AbstractSongLine implements SongLine {
 	@Override
 	public int getTarget() {
 		currentRepetition++;
-		return currentRepetition <= times ? songlineIndex : -1;
+		return currentRepetition < times ? songlineIndex : -1;
 	}
 }

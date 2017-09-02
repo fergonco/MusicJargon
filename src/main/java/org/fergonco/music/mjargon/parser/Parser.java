@@ -337,7 +337,7 @@ public class Parser {
 	}
 
 	private String trimRhythmExpressionDelimiters(String text) {
-		return text.substring(1, text.length() - 2);
+		return text.substring(1, text.length() - 1);
 	}
 
 	private void timeSignature(Token id) throws NumberFormatException, SyntaxException {

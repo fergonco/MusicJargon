@@ -24,6 +24,7 @@ public class Rhythm {
 				}
 			}
 		}
+		components.add(current);
 	}
 
 	public RhythmComponent[] getComponents() {
