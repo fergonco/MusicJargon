@@ -4,32 +4,36 @@ import org.fergonco.music.midi.Duration;
 
 public class RhythmComponent {
 	private Duration duration;
-	private int dynamic;
-	private boolean silence;
+	private char beatSymbol;
 
-	public RhythmComponent(Duration duration, int dynamic) {
-		super();
-		this.duration = duration;
-		this.dynamic = dynamic;
-		this.silence = false;
-	}
-
-	public RhythmComponent(Duration duration, boolean silence) {
-		this.duration = duration;
-		this.dynamic = 0;
-		this.silence = silence;
+	public RhythmComponent(double multiplier, char symbol) {
+		this.duration = new Duration(multiplier);
+		this.beatSymbol = symbol;
 	}
 
 	public Duration getDuration() {
 		return duration;
 	}
 
-	public int getDynamicIncrease() {
-		return dynamic;
+	public boolean isAccent() {
+		return Character.isUpperCase(beatSymbol);
 	}
-	
+
 	public boolean isSilence() {
-		return silence;
+		return beatSymbol == '.';
+	}
+
+	public RhythmComponent process(char symbol, double multiplier) {
+		if (symbol != '.') {
+			return new RhythmComponent(multiplier, symbol);
+		} else {
+			duration.add(multiplier);
+			return null;
+		}
+	}
+
+	public char getBeatSymbol() {
+		return beatSymbol;
 	}
 
 }

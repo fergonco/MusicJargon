@@ -1,0 +1,28 @@
+ts = time signature 3/4
+
+straightHihat      = drumpattern [XxXxXx] with x=hihat on ts
+'                          x...x...x...
+mainRhythmD = drumpattern [o.oo..oo..x.] with o=bassdrum x=snare on ts
+polyRhythmD = drumpattern [xooxooxooxoo] on ts
+mainRhyhtm  = rhythm      [x.xx..xx..x.] on ts
+polyRhythm  = rhythm      [x..x..x..x..] on ts
+whole = rhythm [x] on ts
+
+chords = chord progression E3AC♯4, D3GB, FAC4, D3FA, EG♯B
+seq1 = sequence A B B A C♯ E
+seq2 = sequence D C C B B
+seq3 = sequence A B B C A
+seq4 = sequence A B C F
+seq5 = sequence E
+             
+voices       |  drums (hihat) | drums (rhythm)  | piano (left hand)   | piano (right hand)
+dynamics     |     mf         | mf              | ff                  | ff
+tempo 70     |                |                 |                     | 
+a:           |                |                 |                     | 
+             |  straightHihat | mainRhythmD     | chords(1) on whole  | chords(1) on whole
+             |  straightHihat | mainRhythmD     | chords(2) on whole  | chords(2) on whole
+             |  straightHihat | mainRhythmD     | chords(3) on whole  | chords(3) on whole
+             |  straightHihat | mainRhythmD     | chords(4) on whole  | chords(4) on whole
+             |  straightHihat | mainRhythmD     | chords(5) on whole  | chords(5) on whole
+repeat a 10  |                |                 |                     | 
+                        
