@@ -40,11 +40,14 @@ public class Lexer {
 	public static final int FF = 33;
 	public static final int FFF = 34;
 	public static final int FFFF = 35;
+	public static final int DRUMPATTERN = 36;
+	public static final int WITH = 37;
+	public static final int VOICES = 38;
 
 	private static HashMap<Integer, String> tokenNames = new HashMap<>();
 
 	private static int[] keywords = new int[] { TEMPO, TIME, SIGNATURE, RHYTHM, CHORD, PROGRESSION, SEQUENCE, REPEAT,
-			ON, DYNAMICS, PPPP, PPP, PP, P, MP, MF, F, FF, FFF, FFFF };
+			ON, DYNAMICS, PPPP, PPP, PP, P, MP, MF, F, FF, FFF, FFFF, DRUMPATTERN, WITH, VOICES };
 	static {
 
 		Field[] fields = Lexer.class.getDeclaredFields();
@@ -89,14 +92,17 @@ public class Lexer {
 				}
 			}
 			if (!keywordMatched) {
-				if (isRhythmItem(character)) {
-					ret.add(createToken(RHYTHM_EXPRESSION, new TokenFilter() {
-
-						@Override
-						public boolean isToken() {
-							return isRhythmItem(chars[position]);
-						}
-					}));
+				if (character == '[') {
+					int start = position;
+					position++;
+					while (position < chars.length && isRhythmItem(chars[position])) {
+						position++;
+					}
+					if (chars[position] != ']') {
+						throw new LexerException("Rhythm expression must be closed with ]");
+					}
+					int end = position;
+					ret.add(new TokenImpl(start, script.substring(start, end), RHYTHM_EXPRESSION));
 				} else if (Character.isLetter(character) && Character.isLowerCase(character)) {
 					ret.add(createToken(ID, new TokenFilter() {
 
@@ -147,9 +153,9 @@ public class Lexer {
 					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), COMA));
 				} else if (character == '.') {
 					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), DOT));
-				} else if (character == '[') {
+				} else if (character == '(') {
 					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), OPEN_SQUARE_BRACKET));
-				} else if (character == ']') {
+				} else if (character == ')') {
 					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), CLOSE_SQUARE_BRACKET));
 				} else if (character == '|') {
 					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), VERTICAL_BAR));
@@ -180,7 +186,7 @@ public class Lexer {
 	}
 
 	private boolean isRhythmItem(char character) {
-		return character == 'x' || character == 'X' || character == '.';
+		return character == 'o' || character == 'O' || character == 'x' || character == 'X' || character == '.';
 	}
 
 	private boolean consumeWord(String str) {

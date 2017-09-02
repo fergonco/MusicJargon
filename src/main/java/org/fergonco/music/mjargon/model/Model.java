@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.fergonco.music.midi.Dynamic;
 import org.fergonco.music.midi.InstrumentNames;
@@ -14,6 +15,7 @@ import org.fergonco.music.midi.Track;
 public class Model {
 
 	private HashMap<String, TimeSignature> timeSignatures = new HashMap<>();
+	private HashMap<String, Drums> drums = new HashMap<>();
 	private HashMap<String, Rhythm> rhythms = new HashMap<>();
 	private HashMap<String, NoteSequence> noteSequences = new HashMap<>();
 	private String[] instruments;
@@ -25,12 +27,23 @@ public class Model {
 		timeSignatures.put(id, new TimeSignature(n1, n2));
 	}
 
+	public void addDrums(String id, String[] expressions, Map<Character, String>[] mappings, String timeSignatureId)
+			throws SemanticException {
+		TimeSignature timeSignature = getTimeSignatureOrFail(timeSignatureId);
+		drums.put(id, new Drums(expressions, mappings, timeSignature));
+	}
+
 	public void addRhythm(String id, String expression, String timeSignatureId) throws SemanticException {
+		TimeSignature timeSignature = getTimeSignatureOrFail(timeSignatureId);
+		rhythms.put(id, new Rhythm(new String[] { expression }, timeSignature));
+	}
+
+	private TimeSignature getTimeSignatureOrFail(String timeSignatureId) throws SemanticException {
 		TimeSignature timeSignature = timeSignatures.get(timeSignatureId);
 		if (timeSignature == null) {
 			throw new SemanticException("Time signature not found: " + timeSignatureId);
 		}
-		rhythms.put(id, new Rhythm(expression, timeSignature));
+		return timeSignature;
 	}
 
 	public void addPolyphonicNoteSequence(String id, String[] chords) {
@@ -52,7 +65,7 @@ public class Model {
 		this.instruments = instruments;
 	}
 
-	public void addToBarline(int instrumentIndex, String noteSequenceId, int noteIndex, String rhythmId)
+	public void addPitchedToBarline(int instrumentIndex, String noteSequenceId, int noteIndex, String rhythmId)
 			throws SemanticException {
 		if (currentBarline == null) {
 			currentBarline = new Barline(instruments.length);
@@ -66,7 +79,18 @@ public class Model {
 			throw new SemanticException("No such rhythm: " + rhythmId);
 		}
 
-		currentBarline.setInstrumentBar(instrumentIndex, new Bar(noteSequence, noteIndex, rhythm));
+		currentBarline.setInstrumentBar(instrumentIndex, new PitchedBar(noteSequence, noteIndex, rhythm));
+	}
+
+	public void addDrumsToBarline(int instrumentIndex, String drumsId) throws SemanticException {
+		if (currentBarline == null) {
+			currentBarline = new Barline(instruments.length);
+		}
+		Drums drumbar = drums.get(drumsId);
+		if (drumbar == null) {
+			throw new SemanticException("No such note sequence: " + drumsId);
+		}
+		currentBarline.setInstrumentBar(instrumentIndex, drumbar);
 	}
 
 	public void newBarline() {

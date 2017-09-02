@@ -2,7 +2,7 @@
 ts = time signature 4/4
 
 ' Define rhythm "r" and "whole" on the 4/4 time signature. We know how long each character takes because we have the time signature. In r, it is a eighth note, in whole it is a whole note.
-r = rhythm .x..x...x..X..x. on ts
+r = rhythm [.x..x...x..X..x.] on ts
 whole = rhythm x on ts
 
 ' Define the "chords" chord progression. In Ubuntu you can use these combinations to get the sharp and flat characters: Ctrl+Shift+u 266f ESPACE (266d for flat)
@@ -21,10 +21,10 @@ first4 = sequence 1 on chords[3]
 
 ' The score runs in downwards.
 ' Bass plays a whole note  
-' guitar plays the chord rythmically
+' guitar plays the chord rhythmically
 
 ' instrument names
-fingered_bass            | overdrive_guitar
+voices | fingered_bass            | overdrive_guitar
 
 'dynamics
 dynamics f               | pp

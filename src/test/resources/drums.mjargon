@@ -1,0 +1,34 @@
+ts = time signature 6/8
+
+'hihat   = drums [o.t.t.x.tXt.] on ts
+'ride    = drums [o . . x .X. ] on ts with rd in .ox, bd in o, sn in x ' Default hh in .ox, bd in o, sn in x
+
+'hihatStraight = drums |XxxXxx| on ts with hh
+'drumsStraight = drums |o . . x .x. | on ts with bd, sn  
+'straight = drums hihatStraight + drumStraight
+
+ride       = drumpattern [X.x.x.X.x.x.] with x=ride on ts 
+hihat      = drumpattern [X.x.x.X.x.x.] with x=hihat on ts
+theRhythm  = drumpattern [o.....x..x..] with o=bassdrum x=snare on ts
+hihatpedal = drumpattern [x.....x.....] with x=hihatpedal on ts
+
+
+
+voices drums | drums     | drums
+dynamics p   |           |
+tempo 100    |           |
+a:           |           |
+hihat        | theRhythm | hihatpedal
+hihat        | theRhythm | hihatpedal
+hihat        | theRhythm | hihatpedal
+hihat        | theRhythm | hihatpedal
+ride         | theRhythm | hihatpedal
+ride         | theRhythm | hihatpedal
+ride         | theRhythm | hihatpedal
+ride         | theRhythm | hihatpedal
+repeat a 10  | theRhythm | hihatpedal
+dynamics ff  | theRhythm | hihatpedal
+hihat        | theRhythm | hihatpedal
+hihat        | theRhythm | hihatpedal
+hihat        | theRhythm | hihatpedal
+hihat        | theRhythm | hihatpedal
