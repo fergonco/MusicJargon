@@ -28,35 +28,31 @@ public class Drums implements Bar {
 		instrumentCodes.put("tom6", Note.DRUMS_Low_Floor_Tom);
 	}
 
-	private String[] expressions;
-	private Map<Character, String>[] mappings;
+	private String expression;
+	private Map<Character, String> mapping;
 	private TimeSignature timeSignature;
 
-	public Drums(String[] expressions, Map<Character, String>[] mappings, TimeSignature timeSignature) {
-		this.expressions = expressions;
-		this.mappings = mappings;
+	public Drums(String expression, Map<Character, String> mapping, TimeSignature timeSignature) {
+		super();
+		this.expression = expression;
+		this.mapping = mapping;
 		this.timeSignature = timeSignature;
 	}
 
 	@Override
 	public Note[] getNotes(Dynamic baseDynamics) {
 		ArrayList<Note> ret = new ArrayList<>();
-		RhythmComponent[] components = new Rhythm(expressions, timeSignature).getComponents();
+		RhythmComponent[] components = new Rhythm(expression, timeSignature).getComponents();
 		for (RhythmComponent component : components) {
-			int[] volumes = new int[component.getVoiceCount()];
-			int[] pitches = new int[component.getVoiceCount()];
-			for (int voiceIndex = 0; voiceIndex < pitches.length; voiceIndex++) {
-				Dynamic dynamic = baseDynamics;
-				if (component.isAccent(voiceIndex)) {
-					dynamic = dynamic.louder().louder();
-				}
-				volumes[voiceIndex] = dynamic.getLevel();
-
-				char beatSymbol = component.getBeatSymbol(voiceIndex);
-				String instrumentName = mappings[voiceIndex].get(Character.toLowerCase(beatSymbol));
-				pitches[voiceIndex] = instrumentName != null ? instrumentCodes.get(instrumentName) : 0;
+			Dynamic dynamic = baseDynamics;
+			if (component.isAccent()) {
+				dynamic = dynamic.louder().louder();
 			}
-			ret.add(new DrumNoteImpl(component.getDuration(), volumes, pitches));
+
+			char beatSymbol = component.getBeatSymbol();
+			String instrumentName = mapping.get(Character.toLowerCase(beatSymbol));
+			int pitch = instrumentName != null ? instrumentCodes.get(instrumentName) : 0;
+			ret.add(new DrumNoteImpl(component.getDuration(), new int[] { dynamic.getLevel() }, new int[] { pitch }));
 		}
 		return ret.toArray(new Note[ret.size()]);
 	}

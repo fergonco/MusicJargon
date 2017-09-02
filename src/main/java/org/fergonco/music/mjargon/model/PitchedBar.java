@@ -35,7 +35,7 @@ public class PitchedBar implements Bar{
 			PitchArray pitch = pitches[pitchesIndex];
 			pitchesIndex = (pitchesIndex + 1) % pitches.length;
 			Dynamic dynamic = components[i].isSilence() ? Dynamic.MUTE : baseDynamics;
-			if (components[i].isAccent(0)) {
+			if (components[i].isAccent()) {
 				dynamic = dynamic.louder().louder();
 			}
 			Duration duration = components[i].getDuration();

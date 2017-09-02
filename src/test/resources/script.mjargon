@@ -3,28 +3,28 @@ ts = time signature 4/4
 
 ' Define rhythm "r" and "whole" on the 4/4 time signature. We know how long each character takes because we have the time signature. In r, it is a eighth note, in whole it is a whole note.
 r = rhythm [.x..x...x..X..x.] on ts
-whole = rhythm x on ts
+whole = rhythm [x] on ts
 
 ' Define the "chords" chord progression. In Ubuntu you can use these combinations to get the sharp and flat characters: Ctrl+Shift+u 266f ESPACE (266d for flat)
 chords = chord progression C4EG, EGB, FAC5, E4G♯B
 
 ' Define sequences of notes based on the chords from the progression
-seq1 = sequence 1 2 1 3 2 on chords[0]
-seq2 = sequence 1 2 1 3 2 on chords[1]
-seq3 = sequence 1 2 1 3 2 on chords[2]
-seq4 = sequence 1 2 1 3 2 on chords[3]
+seq1 = sequence 1 2 1 3 2 on chords(0)
+seq2 = sequence 1 2 1 3 2 on chords(1)
+seq3 = sequence 1 2 1 3 2 on chords(2)
+seq4 = sequence 1 2 1 3 2 on chords(3)
 ' Just the first note on each chord
-first1 = sequence 1 on chords[0]
-first2 = sequence 1 on chords[1]
-first3 = sequence 1 on chords[2]
-first4 = sequence 1 on chords[3]
+first1 = sequence 1 on chords(0)
+first2 = sequence 1 on chords(1)
+first3 = sequence 1 on chords(2)
+first4 = sequence 1 on chords(3)
 
 ' The score runs in downwards.
 ' Bass plays a whole note  
 ' guitar plays the chord rhythmically
 
 ' instrument names
-voices | fingered_bass            | overdrive_guitar
+voices fingered_bass            | overdrive_guitar
 
 'dynamics
 dynamics f               | pp
@@ -36,10 +36,10 @@ tempo 120
 init:                    |
 
 ' some bars
-first1 on whole       | chords[1] on r
-first2 on whole       | chords[2] on r
-first3 on whole       | chords[3] on r
-first4 on whole       | chords[4] on r
+first1 on whole       | chords(1) on r
+first2 on whole       | chords(2) on r
+first3 on whole       | chords(3) on r
+first4 on whole       | chords(4) on r
 
 ' Repeat from "init"     |
 repeat init   1          |
@@ -48,7 +48,7 @@ repeat init   1          |
 tempo 60
 
 ' Now bass plays a sequence rhythmically and guitar just a whole note with the chord
-seq1 on r                | chords[1] on whole
-seq2 on r                | chords[2] on whole
-seq3 on r                | chords[3] on whole
-seq4 on r                | chords[4] on whole
+seq1 on r                | chords(1) on whole
+seq2 on r                | chords(2) on whole
+seq3 on r                | chords(3) on whole
+seq4 on r                | chords(4) on whole

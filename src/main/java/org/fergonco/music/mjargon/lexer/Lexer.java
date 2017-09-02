@@ -24,8 +24,6 @@ public class Lexer {
 	public static final int RHYTHM_EXPRESSION = 16;
 	public static final int VERTICAL_BAR = 17;
 	public static final int LINE_BREAK = 18;
-	public static final int OPEN_SQUARE_BRACKET = 19;
-	public static final int CLOSE_SQUARE_BRACKET = 20;
 	public static final int ON = 21;
 	public static final int DOT = 22;
 	public static final int CHORD_LITERAL = 24;
@@ -43,6 +41,8 @@ public class Lexer {
 	public static final int DRUMPATTERN = 36;
 	public static final int WITH = 37;
 	public static final int VOICES = 38;
+	public static final int OPEN_PARENTHESIS = 39;
+	public static final int CLOSE_PARENTHESIS = 40;
 
 	private static HashMap<Integer, String> tokenNames = new HashMap<>();
 
@@ -102,7 +102,7 @@ public class Lexer {
 						throw new LexerException("Rhythm expression must be closed with ]");
 					}
 					int end = position;
-					ret.add(new TokenImpl(start, script.substring(start, end), RHYTHM_EXPRESSION));
+					ret.add(new TokenImpl(start, script.substring(start, end + 1), RHYTHM_EXPRESSION));
 				} else if (Character.isLetter(character) && Character.isLowerCase(character)) {
 					ret.add(createToken(ID, new TokenFilter() {
 
@@ -154,9 +154,9 @@ public class Lexer {
 				} else if (character == '.') {
 					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), DOT));
 				} else if (character == '(') {
-					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), OPEN_SQUARE_BRACKET));
+					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), OPEN_PARENTHESIS));
 				} else if (character == ')') {
-					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), CLOSE_SQUARE_BRACKET));
+					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), CLOSE_PARENTHESIS));
 				} else if (character == '|') {
 					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), VERTICAL_BAR));
 				} else if (character == '=') {

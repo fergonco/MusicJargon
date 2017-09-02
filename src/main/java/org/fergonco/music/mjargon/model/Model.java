@@ -27,15 +27,15 @@ public class Model {
 		timeSignatures.put(id, new TimeSignature(n1, n2));
 	}
 
-	public void addDrums(String id, String[] expressions, Map<Character, String>[] mappings, String timeSignatureId)
+	public void addDrums(String id, String expression, Map<Character, String> mapping, String timeSignatureId)
 			throws SemanticException {
 		TimeSignature timeSignature = getTimeSignatureOrFail(timeSignatureId);
-		drums.put(id, new Drums(expressions, mappings, timeSignature));
+		drums.put(id, new Drums(expression, mapping, timeSignature));
 	}
 
 	public void addRhythm(String id, String expression, String timeSignatureId) throws SemanticException {
 		TimeSignature timeSignature = getTimeSignatureOrFail(timeSignatureId);
-		rhythms.put(id, new Rhythm(new String[] { expression }, timeSignature));
+		rhythms.put(id, new Rhythm(expression, timeSignature));
 	}
 
 	private TimeSignature getTimeSignatureOrFail(String timeSignatureId) throws SemanticException {

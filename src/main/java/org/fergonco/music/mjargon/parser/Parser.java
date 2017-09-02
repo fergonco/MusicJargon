@@ -2,7 +2,7 @@ package org.fergonco.music.mjargon.parser;
 
 import static org.fergonco.music.mjargon.lexer.Lexer.CHORD;
 import static org.fergonco.music.mjargon.lexer.Lexer.CHORD_LITERAL;
-import static org.fergonco.music.mjargon.lexer.Lexer.CLOSE_SQUARE_BRACKET;
+import static org.fergonco.music.mjargon.lexer.Lexer.CLOSE_PARENTHESIS;
 import static org.fergonco.music.mjargon.lexer.Lexer.COLON;
 import static org.fergonco.music.mjargon.lexer.Lexer.COMA;
 import static org.fergonco.music.mjargon.lexer.Lexer.COMMENT;
@@ -20,7 +20,7 @@ import static org.fergonco.music.mjargon.lexer.Lexer.MF;
 import static org.fergonco.music.mjargon.lexer.Lexer.MP;
 import static org.fergonco.music.mjargon.lexer.Lexer.NUMBER;
 import static org.fergonco.music.mjargon.lexer.Lexer.ON;
-import static org.fergonco.music.mjargon.lexer.Lexer.OPEN_SQUARE_BRACKET;
+import static org.fergonco.music.mjargon.lexer.Lexer.OPEN_PARENTHESIS;
 import static org.fergonco.music.mjargon.lexer.Lexer.P;
 import static org.fergonco.music.mjargon.lexer.Lexer.PP;
 import static org.fergonco.music.mjargon.lexer.Lexer.PPP;
@@ -165,6 +165,8 @@ public class Parser {
 	private void tempo() throws SyntaxException {
 		expect(TEMPO);
 		int tempo = Integer.parseInt(expect(NUMBER).getText());
+		anyNumberOfVerticalBars();
+		expect(LINE_BREAK);
 		model.setTempo(tempo);
 	}
 
@@ -172,8 +174,9 @@ public class Parser {
 		expect(REPEAT);
 		String label = expect(ID).getText();
 		int times = Integer.parseInt(expect(NUMBER).getText());
-		model.repeat(label, times);
 		anyNumberOfVerticalBars();
+		expect(LINE_BREAK);
+		model.repeat(label, times);
 	}
 
 	private void comment() throws SyntaxException {
@@ -210,9 +213,9 @@ public class Parser {
 			String noteSequenceId = id.getText();
 			int noteSequenceIndex = -1;
 			try {
-				expect(OPEN_SQUARE_BRACKET);
+				expect(OPEN_PARENTHESIS);
 				noteSequenceIndex = Integer.parseInt(expect(NUMBER).getText()) - 1;
-				expect(CLOSE_SQUARE_BRACKET);
+				expect(CLOSE_PARENTHESIS);
 			} catch (SyntaxException e) {
 			}
 			try {
@@ -237,6 +240,7 @@ public class Parser {
 	private void label(Token id) throws SyntaxException {
 		expect(COLON);
 		anyNumberOfVerticalBars();
+		expect(LINE_BREAK);
 		model.newLabel(id.getText());
 	}
 
@@ -266,24 +270,11 @@ public class Parser {
 
 	private void drums(Token id) throws SyntaxException, SemanticException {
 		expect(DRUMPATTERN);
-		ArrayList<String> expressions = new ArrayList<>();
-		ArrayList<Map<Character, String>> mappings = new ArrayList<>();
-		while (accept(RHYTHM_EXPRESSION)) {
-			String expression = trimRhythmExpressionDelimiters(expect(RHYTHM_EXPRESSION).getText());
-			expressions.add(expression);
-			Map<Character, String> mapping = getDrumsMapping();
-			mappings.add(mapping);
-			if (accept(LINE_BREAK)) {
-				expect(LINE_BREAK);
-			}
-		}
+		String expression = trimRhythmExpressionDelimiters(expect(RHYTHM_EXPRESSION).getText());
+		Map<Character, String> mapping = getDrumsMapping();
 		expect(ON);
 		String timeSignatureId = expect(ID).getText();
-
-		@SuppressWarnings("unchecked")
-		Map<Character, String>[] mappingsArray = mappings.toArray(new Map[mappings.size()]);
-		String[] expressionsArray = expressions.toArray(new String[expressions.size()]);
-		model.addDrums(id.getText(), expressionsArray, mappingsArray, timeSignatureId);
+		model.addDrums(id.getText(), expression, mapping, timeSignatureId);
 	}
 
 	private Map<Character, String> getDrumsMapping() throws SyntaxException {
@@ -314,9 +305,9 @@ public class Parser {
 		} catch (SyntaxException e) {
 			expect(ON);
 			Token chordProgressionId = expect(ID);
-			expect(OPEN_SQUARE_BRACKET);
+			expect(OPEN_PARENTHESIS);
 			int chordProgressionIndex = Integer.parseInt(expect(NUMBER).getText());
-			expect(CLOSE_SQUARE_BRACKET);
+			expect(CLOSE_PARENTHESIS);
 			model.addMonofonicNoteSequence(id.getText(), notes.toArray(new Integer[notes.size()]),
 					chordProgressionId.getText(), chordProgressionIndex);
 		}

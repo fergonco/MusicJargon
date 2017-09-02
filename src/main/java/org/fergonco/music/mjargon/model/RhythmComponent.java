@@ -4,50 +4,36 @@ import org.fergonco.music.midi.Duration;
 
 public class RhythmComponent {
 	private Duration duration;
-	private char[] beatSymbols;
+	private char beatSymbol;
 
-	public RhythmComponent(Duration duration, char[] beatSymbols) {
-		this.duration = duration;
-		this.beatSymbols = beatSymbols;
+	public RhythmComponent(double multiplier, char symbol) {
+		this.duration = new Duration(multiplier);
+		this.beatSymbol = symbol;
 	}
 
 	public Duration getDuration() {
 		return duration;
 	}
 
-	public boolean isAccent(int voiceIndex) {
-		return Character.isUpperCase(beatSymbols[voiceIndex]);
+	public boolean isAccent() {
+		return Character.isUpperCase(beatSymbol);
 	}
 
 	public boolean isSilence() {
-		for (char symbol : beatSymbols) {
-			if (symbol != '.') {
-				return false;
-			}
-		}
-		return true;
+		return beatSymbol == '.';
 	}
 
-	public char getBeatSymbol(int voiceIndex) {
-		return beatSymbols[voiceIndex];
-	}
-
-	public RhythmComponent process(char[] symbols, Duration symbolDuration) {
-		boolean anyBeat = false;
-		for (char symbol : symbols) {
-			if (symbol != '.') {
-				anyBeat = true;
-			}
-		}
-		if (anyBeat) {
-			return new RhythmComponent(symbolDuration, symbols);
+	public RhythmComponent process(char symbol, double multiplier) {
+		if (symbol != '.') {
+			return new RhythmComponent(multiplier, symbol);
 		} else {
-			duration.add(symbolDuration);
+			duration.add(multiplier);
 			return null;
 		}
 	}
 
-	public int getVoiceCount() {
-		return beatSymbols.length;
+	public char getBeatSymbol() {
+		return beatSymbol;
 	}
+
 }
