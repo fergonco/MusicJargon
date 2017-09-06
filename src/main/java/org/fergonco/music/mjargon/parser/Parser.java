@@ -58,7 +58,10 @@ public class Parser {
 		this.currentToken = token;
 		try {
 			while (currentToken != null) {
-				if (accept(ID)) {
+				if (accept(VERTICAL_BAR)) {
+					// no op
+					currentToken = currentToken.next();
+				} else if (accept(ID)) {
 					id();
 				} else if (accept(COMMENT)) {
 					comment();
@@ -104,6 +107,11 @@ public class Parser {
 		expect(DYNAMICS);
 		ArrayList<Dynamic> dynamics = new ArrayList<>();
 		while (true) {
+			try {
+				expect(VERTICAL_BAR);
+			} catch (SyntaxException e) {
+				break;
+			}
 			Dynamic dynamic;
 			switch (currentToken.getType()) {
 			case PPPP:
@@ -151,12 +159,6 @@ public class Parser {
 						"Dynamic expression expected (pppp, ppp, pp, p, mp, mf, f, ff, fff, ffff)");
 			}
 			dynamics.add(dynamic);
-
-			try {
-				expect(VERTICAL_BAR);
-			} catch (SyntaxException e) {
-				break;
-			}
 		}
 
 		model.setDynamics(dynamics);
@@ -199,8 +201,8 @@ public class Parser {
 		ArrayList<String> instruments = new ArrayList<>();
 		try {
 			while (true) {
-				instruments.add(expect(ID).getText());
 				expect(VERTICAL_BAR);
+				instruments.add(expect(ID).getText());
 			}
 		} catch (SyntaxException e) {
 		}
