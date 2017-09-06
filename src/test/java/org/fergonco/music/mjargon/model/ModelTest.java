@@ -62,7 +62,7 @@ public class ModelTest {
 
 	@Test
 	public void manualTest() throws Exception {
-		testWriteAndPlayMidi(new File("src/test/resources/ignore/drums.mjargon"));
+		testWriteAndPlayMidi(new File("src/test/resources/script.mjargon"));
 	}
 
 	private void testWriteAndPlayMidi(File testCase)

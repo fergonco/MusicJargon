@@ -19,10 +19,10 @@ voices       |  drums (hihat) | drums (rhythm)  | piano (left hand)   | piano (r
 dynamics     |     mf         | mf              | ff                  | ff
 tempo 70     |                |                 |                     | 
 a:           |                |                 |                     | 
+             |  straightHihat | mainRhythmD     | chords(0) on whole  | chords(0) on whole
              |  straightHihat | mainRhythmD     | chords(1) on whole  | chords(1) on whole
              |  straightHihat | mainRhythmD     | chords(2) on whole  | chords(2) on whole
              |  straightHihat | mainRhythmD     | chords(3) on whole  | chords(3) on whole
              |  straightHihat | mainRhythmD     | chords(4) on whole  | chords(4) on whole
-             |  straightHihat | mainRhythmD     | chords(5) on whole  | chords(5) on whole
 repeat a 10  |                |                 |                     | 
                         

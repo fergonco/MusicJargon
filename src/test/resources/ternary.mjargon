@@ -16,16 +16,16 @@ voices    | fingered_bass   | overdrive_guitar
 dynamics  | f               | p
 tempo 120 |
 a:        |
-          | first1 on whole | chords(1) on r
-          | first2 on whole | chords(2) on r
-          | first3 on whole | chords(3) on r
-          | first4 on whole | chords(4) on r
-          | seq1 on r       | chords(1) on whole
-          | seq2 on r       | chords(2) on whole
-          | seq3 on r       | chords(3) on whole
-          | seq4 on r       | chords(4) on whole
+          | first1 on whole | chords(0) on r
+          | first2 on whole | chords(1) on r
+          | first3 on whole | chords(2) on r
+          | first4 on whole | chords(3) on r
+          | seq1 on r       | chords(0) on whole
+          | seq2 on r       | chords(1) on whole
+          | seq3 on r       | chords(2) on whole
+          | seq4 on r       | chords(3) on whole
           | repeat a 2      |
-          | seq1 on r       | chords(1) on silence
-          | seq2 on r       | chords(2) on silence
-          | seq3 on r       | chords(3) on silence
-          | seq4 on r       | chords(4) on silence
+          | seq1 on r       | chords(0) on silence
+          | seq2 on r       | chords(1) on silence
+          | seq3 on r       | chords(2) on silence
+          | seq4 on r       | chords(3) on silence

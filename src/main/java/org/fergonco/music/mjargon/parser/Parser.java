@@ -215,7 +215,7 @@ public class Parser {
 			int noteSequenceIndex = -1;
 			try {
 				expect(OPEN_PARENTHESIS);
-				noteSequenceIndex = Integer.parseInt(expect(NUMBER).getText()) - 1;
+				noteSequenceIndex = Integer.parseInt(expect(NUMBER).getText());
 				expect(CLOSE_PARENTHESIS);
 			} catch (SyntaxException e) {
 			}
