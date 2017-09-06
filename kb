@@ -2,6 +2,11 @@ project.
 
 aim(project, 'Provide a high level language able to express a musical accompaniment in few lines without the need to write every note').
 
+reference('https://www.midi.org/specifications/item/gm-level-1-sound-set').
+reference('http://www.skytopia.com/project/articles/midi.html').
+reference('http://www.personal.kent.edu/~sbirch/Music_Production/MP-II/MIDI/midi_file_format.htm').
+reference('http://www.music-software-development.com/midi-tutorial.html').
+
 language.
 lexer.
 parser.
