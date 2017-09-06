@@ -18,7 +18,7 @@ public class ModelTest {
 
 	@Test
 	public void testWriteMidi() throws Exception {
-		InputStream is = this.getClass().getResourceAsStream("/drums.mjargon");
+		InputStream is = this.getClass().getResourceAsStream("/3_4.mjargon");
 		String script = IOUtils.toString(is, "utf-8");
 		is.close();
 
