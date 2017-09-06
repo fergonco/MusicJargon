@@ -15,9 +15,9 @@ public class Rhythm {
 		for (int i = 0; i < length; i++) {
 			char symbol = expression.charAt(i);
 			if (current == null) {
-				current = new RhythmComponent(subdivisionDuration.getNumBeats(), symbol);
+				current = new RhythmComponent(subdivisionDuration.getMultipliler(), symbol);
 			} else {
-				RhythmComponent next = current.process(symbol, subdivisionDuration.getNumBeats());
+				RhythmComponent next = current.process(symbol, subdivisionDuration.getMultipliler());
 				if (next != null) {
 					components.add(current);
 					current = next;
