@@ -5,19 +5,18 @@ r = rhythm [x..xxx.x.x.xx.x.] on ts
 hihat      = drumpattern [X...x...X...x...X...x...X...x...] with x=hihat on ts
 theRhythm  = drumpattern [o.....o.x.o...o...o...oox.o.o.o.] with o=bassdrum x=snare on ts
 
-chords = chord progression C2EG, EGB, FAC3, E2G♯B
+chords = chord progression C2EG EGB FAC3 E2G♯B
 seq1 = sequence 1 1 2 1 1 1 1 2 3 on chords(0)
 seq2 = sequence 1 1 2 1 1 1 1 2 3 on chords(1)
 seq3 = sequence 1 1 2 1 1 1 1 2 3 on chords(2)
 seq4 = sequence 1 1 2 1 1 1 1 2 3 on chords(3)
 
-voices drums | drums     | fretless_bass
-dynamics mp  | p         | ff
-tempo 75     |           | 
-a:           |           | 
-hihat        | theRhythm | seq1 on r
-hihat        | theRhythm | seq2 on r
-hihat        | theRhythm | seq3 on r
-hihat        | theRhythm | seq4 on r
-repeat a 10  |           | 
+voices  | drums | drums     | fretless_bass
+dynamics| mp    | p         | ff
+tempo 75|       |           | 
+a:      |       |           | 
+        |hihat  | theRhythm | seq1 on r
+        |hihat  | theRhythm | seq2 on r
+        |hihat  | theRhythm | seq3 on r
+        |hihat  | theRhythm | seq4 on r
                         

@@ -4,7 +4,6 @@ import static org.fergonco.music.mjargon.lexer.Lexer.CHORD;
 import static org.fergonco.music.mjargon.lexer.Lexer.CHORD_LITERAL;
 import static org.fergonco.music.mjargon.lexer.Lexer.CLOSE_PARENTHESIS;
 import static org.fergonco.music.mjargon.lexer.Lexer.COLON;
-import static org.fergonco.music.mjargon.lexer.Lexer.COMA;
 import static org.fergonco.music.mjargon.lexer.Lexer.COMMENT;
 import static org.fergonco.music.mjargon.lexer.Lexer.DRUMPATTERN;
 import static org.fergonco.music.mjargon.lexer.Lexer.DYNAMICS;
@@ -322,7 +321,6 @@ public class Parser {
 		chords.add(expect(CHORD_LITERAL).getText());
 		try {
 			while (true) {
-				expect(COMA);
 				chords.add(expect(CHORD_LITERAL).getText());
 			}
 		} catch (SyntaxException e) {

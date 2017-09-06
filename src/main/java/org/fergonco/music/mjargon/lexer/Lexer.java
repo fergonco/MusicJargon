@@ -13,7 +13,6 @@ public class Lexer {
 	public static final int NUMBER = 5;
 	public static final int FORWARD_SLASH = 6;
 	public static final int EQUALS = 7;
-	public static final int COMA = 8;
 	public static final int TIME = 9;
 	public static final int SIGNATURE = 10;
 	public static final int RHYTHM = 11;
@@ -149,8 +148,6 @@ public class Lexer {
 					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), LINE_BREAK));
 				} else if (character == '/') {
 					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), FORWARD_SLASH));
-				} else if (character == ',') {
-					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), COMA));
 				} else if (character == '.') {
 					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), DOT));
 				} else if (character == '(') {

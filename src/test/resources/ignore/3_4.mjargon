@@ -8,7 +8,7 @@ mainRhyhtm  = rhythm      [x.xx..xx..x.] on ts
 polyRhythm  = rhythm      [x..x..x..x..] on ts
 whole = rhythm [x] on ts
 
-chords = chord progression E3AC♯4, D3GB, FAC4, D3FA, EG♯B
+chords = chord progression E3AC♯4 D3GB FAC4 D3FA EG♯B
 seq1 = sequence A B B A C♯ E
 seq2 = sequence D C C B B
 seq3 = sequence A B B C A

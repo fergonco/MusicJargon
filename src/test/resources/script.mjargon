@@ -6,7 +6,7 @@ r = rhythm [.x..x...x..X..x.] on ts
 whole = rhythm [x] on ts
 
 ' Define the "chords" chord progression. In Ubuntu you can use these combinations to get the sharp and flat characters: Ctrl+Shift+u 266f ESPACE (266d for flat)
-chords = chord progression C4EG, EGB, FAC5, E4G♯B
+chords = chord progression C4EG EGB FAC5 E4G♯B
 
 ' Define sequences of notes based on the chords from the progression
 seq1 = sequence 1 2 1 3 2 on chords(0)
@@ -24,10 +24,9 @@ first4 = sequence 1 on chords(3)
 ' guitar plays the chord rhythmically
 
 ' instrument names
-voices fingered_bass            | overdrive_guitar
-
-'dynamics
-dynamics f               | pp
+voices | fingered_bass            | overdrive_guitar
+' dynamics
+dynamics| f               | pp
 
 ' set tempo
 tempo 120

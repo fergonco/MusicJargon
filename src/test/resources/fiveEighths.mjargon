@@ -1,31 +1,31 @@
-ts = time signature 5/8
-r = rhythm XxxXx on ts
-whole = rhythm x on ts
-silence = rhythm . on ts
-chords = chord progression C4EG, EGB, FAC5, E4G♯B
-seq1 = sequence 1 2 1 3 2 3 on chords[0]
-seq2 = sequence 1 2 1 3 2 3 on chords[1]
-seq3 = sequence 1 2 1 3 2 3 on chords[2]
-seq4 = sequence 1 2 1 3 2 3 on chords[3]
-first1 = sequence 1 on chords[0]
-first2 = sequence 1 on chords[1]
-first3 = sequence 1 on chords[2]
-first4 = sequence 1 on chords[3]
+ts      = time signature 5/8
+r       = rhythm [XxxXx] on ts
+whole   = rhythm [x] on ts
+silence = rhythm [.] on ts
+chords  = chord progression C4EG EGB FAC5 E4G♯B
+seq1    = sequence 1 2 1 3 2 3 on chords(0)
+seq2    = sequence 1 2 1 3 2 3 on chords(1)
+seq3    = sequence 1 2 1 3 2 3 on chords(2)
+seq4    = sequence 1 2 1 3 2 3 on chords(3)
+first1  = sequence 1 on chords(0)
+first2  = sequence 1 on chords(1)
+first3  = sequence 1 on chords(2)
+first4  = sequence 1 on chords(3)
 
-fingered_bass            | overdrive_guitar
-dynamics f               | p
-tempo 100
-a:   |
-first1 on whole       | chords[1] on r
-first2 on whole       | chords[2] on r
-first3 on whole       | chords[3] on r
-first4 on whole       | chords[4] on r
-seq1 on r                | chords[1] on whole
-seq2 on r                | chords[2] on whole
-seq3 on r                | chords[3] on whole
-seq4 on r                | chords[4] on whole
-repeat a 2 |
-seq1 on r                | chords[1] on silence
-seq2 on r                | chords[2] on silence
-seq3 on r                | chords[3] on silence
-seq4 on r                | chords[4] on silence
+voices    | fingered_bass   | overdrive_guitar
+dynamics  | f               | p
+tempo 100 |                 |
+a:        |
+          | first1 on whole | chords(1) on r
+          | first2 on whole | chords(2) on r
+          | first3 on whole | chords(3) on r
+          | first4 on whole | chords(4) on r
+          | seq1 on r       | chords(1) on whole
+          | seq2 on r       | chords(2) on whole
+          | seq3 on r       | chords(3) on whole
+          | seq4 on r       | chords(4) on whole
+          | repeat a 2      |
+          | seq1 on r       | chords(1) on silence
+          | seq2 on r       | chords(2) on silence
+          | seq3 on r       | chords(3) on silence
+          | seq4 on r       | chords(4) on silence

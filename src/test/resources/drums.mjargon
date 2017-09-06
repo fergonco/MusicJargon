@@ -18,7 +18,6 @@ a:         |       |           |
            | ride  | theRhythm | hihatpedal
            | ride  | theRhythm | hihatpedal
            | ride  | theRhythm | hihatpedal
-repeat a 2 |       |           |
 dynamics   | ff    | ff        | ff
            | hihat | theRhythm | hihatpedal
            | hihat | theRhythm | hihatpedal
