@@ -10,4 +10,4 @@ chords = chord progression C4EG
 seq = sequence 1 on chords(0)
 
 voices | acoustic_bass
-seq on whole
+       | seq on whole

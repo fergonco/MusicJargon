@@ -48,6 +48,11 @@ public class ModelTest {
 		}
 	}
 
+	@Test
+	public void manualTest() throws Exception {
+		testWriteAndPlayMidi(new File("src/test/resources/noDynamicChange.mjargon"));
+	}
+
 	private File[] getTestCases() {
 		File folder = new File("src/test/resources/");
 		File[] testCases = folder.listFiles(new FileFilter() {
@@ -58,11 +63,6 @@ public class ModelTest {
 			}
 		});
 		return testCases;
-	}
-
-	@Test
-	public void manualTest() throws Exception {
-		testWriteAndPlayMidi(new File("src/test/resources/script.mjargon"));
 	}
 
 	private void testWriteAndPlayMidi(File testCase)

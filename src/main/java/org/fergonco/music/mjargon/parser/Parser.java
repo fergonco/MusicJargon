@@ -16,6 +16,7 @@ import static org.fergonco.music.mjargon.lexer.Lexer.FORWARD_SLASH;
 import static org.fergonco.music.mjargon.lexer.Lexer.ID;
 import static org.fergonco.music.mjargon.lexer.Lexer.LINE_BREAK;
 import static org.fergonco.music.mjargon.lexer.Lexer.MF;
+import static org.fergonco.music.mjargon.lexer.Lexer.MINUS;
 import static org.fergonco.music.mjargon.lexer.Lexer.MP;
 import static org.fergonco.music.mjargon.lexer.Lexer.NUMBER;
 import static org.fergonco.music.mjargon.lexer.Lexer.ON;
@@ -58,8 +59,7 @@ public class Parser {
 		try {
 			while (currentToken != null) {
 				if (accept(VERTICAL_BAR)) {
-					// no op
-					currentToken = currentToken.next();
+					barline();
 				} else if (accept(ID)) {
 					id();
 				} else if (accept(COMMENT)) {
@@ -153,6 +153,10 @@ public class Parser {
 				expect(FFFF);
 				dynamic = Dynamic.FFFF;
 				break;
+			case MINUS:
+				expect(MINUS);
+				dynamic = null;
+				break;
 			default:
 				throw new SyntaxException(currentToken.getPosition(),
 						"Dynamic expression expected (pppp, ppp, pp, p, mp, mf, f, ff, fff, ffff)");
@@ -191,7 +195,7 @@ public class Parser {
 		} else if (accept(COLON)) {
 			label(id);
 		} else {
-			barline(id);
+			throw new SyntaxException(lastConsumed.getPosition(), "= or : expected");
 		}
 	}
 
@@ -208,29 +212,34 @@ public class Parser {
 		model.setInstruments(instruments.toArray(new String[instruments.size()]));
 	}
 
-	private void barline(Token id) throws SyntaxException, SemanticException {
+	private void barline() throws SyntaxException, SemanticException {
+		expect(VERTICAL_BAR);
 		int instrumentIndex = 0;
 		while (true) {
-			String noteSequenceId = id.getText();
-			int noteSequenceIndex = -1;
-			try {
-				expect(OPEN_PARENTHESIS);
-				noteSequenceIndex = Integer.parseInt(expect(NUMBER).getText());
-				expect(CLOSE_PARENTHESIS);
-			} catch (SyntaxException e) {
+			if (accept(ID)) {
+				Token id = expect(ID);
+				String noteSequenceId = id.getText();
+				int noteSequenceIndex = -1;
+				try {
+					expect(OPEN_PARENTHESIS);
+					noteSequenceIndex = Integer.parseInt(expect(NUMBER).getText());
+					expect(CLOSE_PARENTHESIS);
+				} catch (SyntaxException e) {
+				}
+				try {
+					expect(ON);
+					String rhythmId = expect(ID).getText();
+					model.addPitchedToBarline(instrumentIndex, noteSequenceId, noteSequenceIndex, rhythmId);
+				} catch (SyntaxException e) {
+					model.addDrumsToBarline(instrumentIndex, noteSequenceId);
+				}
+			} else if (accept(MINUS)){
+				expect(MINUS);
+				model.addSilenceToBarline(instrumentIndex);
 			}
-			try {
-				expect(ON);
-				String rhythmId = expect(ID).getText();
-				model.addPitchedToBarline(instrumentIndex, noteSequenceId, noteSequenceIndex, rhythmId);
-			} catch (SyntaxException e) {
-				model.addDrumsToBarline(instrumentIndex, noteSequenceId);
-			}
-
 			instrumentIndex++;
 			try {
 				expect(VERTICAL_BAR);
-				id = expect(ID);
 			} catch (SyntaxException e) {
 				break;
 			}

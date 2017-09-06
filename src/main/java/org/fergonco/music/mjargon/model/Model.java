@@ -67,9 +67,6 @@ public class Model {
 
 	public void addPitchedToBarline(int instrumentIndex, String noteSequenceId, int noteIndex, String rhythmId)
 			throws SemanticException {
-		if (currentBarline == null) {
-			currentBarline = new Barline(instruments.length);
-		}
 		NoteSequence noteSequence = noteSequences.get(noteSequenceId);
 		if (noteSequenceId == null) {
 			throw new SemanticException("No such note sequence: " + noteSequenceId);
@@ -79,18 +76,26 @@ public class Model {
 			throw new SemanticException("No such rhythm: " + rhythmId);
 		}
 
-		currentBarline.setInstrumentBar(instrumentIndex, new PitchedBar(noteSequence, noteIndex, rhythm));
+		setInstrumentBar(instrumentIndex, new PitchedBar(noteSequence, noteIndex, rhythm));
 	}
 
 	public void addDrumsToBarline(int instrumentIndex, String drumsId) throws SemanticException {
-		if (currentBarline == null) {
-			currentBarline = new Barline(instruments.length);
-		}
 		Drums drumbar = drums.get(drumsId);
 		if (drumbar == null) {
 			throw new SemanticException("No such note sequence: " + drumsId);
 		}
-		currentBarline.setInstrumentBar(instrumentIndex, drumbar);
+		setInstrumentBar(instrumentIndex, drumbar);
+	}
+
+	public void addSilenceToBarline(int instrumentIndex) {
+		setInstrumentBar(instrumentIndex, new SilenceBar());
+	}
+
+	private void setInstrumentBar(int instrumentIndex, Bar bar) {
+		if (currentBarline == null) {
+			currentBarline = new Barline(instruments.length);
+		}
+		currentBarline.setInstrumentBar(instrumentIndex, bar);
 	}
 
 	public void newBarline() {
@@ -133,7 +138,12 @@ public class Model {
 					songlineIndex = index - 1;
 				}
 			} else if (songline.isDynamics()) {
-				currentDynamics = songline.getDynamics();
+				Dynamic[] nextDynamics = songline.getDynamics();
+				for (int i = 0; i < nextDynamics.length; i++) {
+					if (nextDynamics[i] != null) {
+						currentDynamics[i] = nextDynamics[i];
+					}
+				}
 			} else {
 				throw new RuntimeException();
 			}
@@ -158,5 +168,4 @@ public class Model {
 	public void setDynamics(ArrayList<Dynamic> dynamics) {
 		songlines.add(new DynamicsLine(dynamics));
 	}
-
 }

@@ -35,10 +35,10 @@ tempo 120
 init:                    |
 
 ' some bars
-first1 on whole       | chords(0) on r
-first2 on whole       | chords(1) on r
-first3 on whole       | chords(2) on r
-first4 on whole       | chords(3) on r
+| first1 on whole       | chords(0) on r
+| first2 on whole       | chords(1) on r
+| first3 on whole       | chords(2) on r
+| first4 on whole       | chords(3) on r
 
 ' Repeat from "init"     |
 repeat init   1          |
@@ -47,7 +47,7 @@ repeat init   1          |
 tempo 60
 
 ' Now bass plays a sequence rhythmically and guitar just a whole note with the chord
-seq1 on r                | chords(0) on whole
-seq2 on r                | chords(1) on whole
-seq3 on r                | chords(2) on whole
-seq4 on r                | chords(3) on whole
+| seq1 on r                | chords(0) on whole
+| seq2 on r                | chords(1) on whole
+| seq3 on r                | chords(2) on whole
+| seq4 on r                | chords(3) on whole

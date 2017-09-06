@@ -42,6 +42,7 @@ public class Lexer {
 	public static final int VOICES = 38;
 	public static final int OPEN_PARENTHESIS = 39;
 	public static final int CLOSE_PARENTHESIS = 40;
+	public static final int MINUS = 41;
 
 	private static HashMap<Integer, String> tokenNames = new HashMap<>();
 
@@ -156,6 +157,8 @@ public class Lexer {
 					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), CLOSE_PARENTHESIS));
 				} else if (character == '|') {
 					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), VERTICAL_BAR));
+				} else if (character == '-') {
+					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), MINUS));
 				} else if (character == '=') {
 					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), EQUALS));
 				} else {
