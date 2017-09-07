@@ -13,6 +13,16 @@ public class MonofonicNoteSequence implements NoteSequence {
 		}
 	}
 
+	public MonofonicNoteSequence(String[] notes) throws SemanticException {
+		singleNotes = ChordLiteral.parseSequence(notes);
+		for (PitchArray pitchArray : singleNotes) {
+			if (pitchArray.pitchCount() > 1) {
+				throw new SemanticException("Only single notes allowed in note sequences");
+			}
+		}
+
+	}
+
 	@Override
 	public PitchArray getNote(int noteIndex) {
 		return singleNotes[noteIndex];

@@ -1,28 +1,35 @@
 ts = time signature 3/4
 
 straightHihat      = drumpattern [XxXxXx] with x=hihat on ts
+rhythmHihat        = drumpattern [x.xx..xx..x.] with x=ride on ts
 '                          x...x...x...
 mainRhythmD = drumpattern [o.oo..oo..x.] with o=bassdrum x=snare on ts
-polyRhythmD = drumpattern [xooxooxooxoo] on ts
-mainRhyhtm  = rhythm      [x.xx..xx..x.] on ts
+polyRhythmD = drumpattern [xooxooxooxoo] with o=bassdrum x=snare on ts
+mainRhythm  = rhythm      [x.xx..xx..x.] on ts
 polyRhythm  = rhythm      [x..x..x..x..] on ts
 whole = rhythm [x] on ts
 
-chords = chord progression E3AC♯4 D3GB FAC4 D3FA EG♯B
-seq1 = sequence A B B A C♯ E
-seq2 = sequence D C C B B
-seq3 = sequence A B B C A
-seq4 = sequence A B C F
-seq5 = sequence E
+chords = chord progression E3AC4♯ D3GB FAC4 D3FA EG♯B
+seq1 = sequence A4 B B A C5♯ E
+seq2 = sequence D5 C C B4 B B
+seq3 = sequence A4 B B C5 A4 A
+seq4 = sequence A4 B C5 F
+seq5 = sequence E5
              
-voices       |  drums (hihat) | drums (rhythm)  | piano (left hand)   | piano (right hand)
+'voices       |  drums (hihat) | drums (rhythm)  | piano (left hand)   | piano (right hand)
+voices       |  drums         | drums           | piano               | piano              
 dynamics     |     mf         | mf              | ff                  | ff
 tempo 70     |                |                 |                     | 
 a:           |                |                 |                     | 
-             |  straightHihat | mainRhythmD     | chords(0) on whole  | chords(0) on whole
-             |  straightHihat | mainRhythmD     | chords(1) on whole  | chords(1) on whole
-             |  straightHihat | mainRhythmD     | chords(2) on whole  | chords(2) on whole
-             |  straightHihat | mainRhythmD     | chords(3) on whole  | chords(3) on whole
-             |  straightHihat | mainRhythmD     | chords(4) on whole  | chords(4) on whole
+             |  straightHihat | mainRhythmD     | chords(0) on whole  | seq1 on mainRhythm
+             |  straightHihat | mainRhythmD     | chords(1) on whole  | seq2 on mainRhythm
+             |  straightHihat | mainRhythmD     | chords(2) on whole  | seq3 on mainRhythm
+             |  straightHihat | polyRhythmD     | chords(3) on whole  | seq4 on polyRhythm
+             |  straightHihat | mainRhythmD     | chords(4) on whole  | seq5 on whole
+             |  rhythmHihat   | mainRhythmD     | chords(0) on whole  | seq1 on mainRhythm
+             |  rhythmHihat   | mainRhythmD     | chords(1) on whole  | seq2 on mainRhythm
+             |  rhythmHihat   | mainRhythmD     | chords(2) on whole  | seq3 on mainRhythm
+             |  rhythmHihat   | polyRhythmD     | chords(3) on whole  | seq4 on polyRhythm
+             |  rhythmHihat   | mainRhythmD     | chords(4) on whole  | seq5 on whole
 repeat a 10  |                |                 |                     | 
                         

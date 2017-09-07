@@ -233,7 +233,7 @@ public class Parser {
 				} catch (SyntaxException e) {
 					model.addDrumsToBarline(instrumentIndex, noteSequenceId);
 				}
-			} else if (accept(MINUS)){
+			} else if (accept(MINUS)) {
 				expect(MINUS);
 				model.addSilenceToBarline(instrumentIndex);
 			}
@@ -306,6 +306,29 @@ public class Parser {
 
 	private void noteSequence(Token id) throws SyntaxException, SemanticException {
 		expect(SEQUENCE);
+		if (accept(NUMBER)) {
+			chordBasedNoteSequence(id);
+		} else if (accept(CHORD_LITERAL)) {
+			freeNoteSequence(id);
+		} else {
+			throw new SyntaxException(lastConsumed.getPosition(), "number or note expression expected");
+		}
+	}
+
+	private void freeNoteSequence(Token id) throws SemanticException, SyntaxException {
+		ArrayList<String> notes = new ArrayList<>();
+		String note = expect(CHORD_LITERAL).getText();
+		notes.add(note);
+		try {
+			while (true) {
+				notes.add(expect(CHORD_LITERAL).getText());
+			}
+		} catch (SyntaxException e) {
+			model.addMonofonicNoteSequence(id.getText(), notes.toArray(new String[notes.size()]));
+		}
+	}
+
+	private void chordBasedNoteSequence(Token id) throws SyntaxException, SemanticException {
 		ArrayList<Integer> notes = new ArrayList<>();
 		notes.add(Integer.parseInt(expect(NUMBER).getText()) - 1);
 		try {

@@ -50,7 +50,7 @@ public class ModelTest {
 
 	@Test
 	public void manualTest() throws Exception {
-		testWriteAndPlayMidi(new File("src/test/resources/noDynamicChange.mjargon"));
+		testWriteAndPlayMidi(new File("src/test/resources/ignore/3_4.mjargon"));
 	}
 
 	private File[] getTestCases() {

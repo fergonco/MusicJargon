@@ -61,6 +61,10 @@ public class Model {
 		}
 	}
 
+	public void addMonofonicNoteSequence(String id, String[] notes) throws SemanticException {
+		noteSequences.put(id, new MonofonicNoteSequence(notes));
+	}
+
 	public void setInstruments(String[] instruments) {
 		this.instruments = instruments;
 	}
