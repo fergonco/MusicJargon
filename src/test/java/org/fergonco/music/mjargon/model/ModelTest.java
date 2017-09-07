@@ -29,7 +29,20 @@ public class ModelTest {
 		File[] testCases = getTestCases();
 		for (File testCase : testCases) {
 			try {
-				testWriteAndPlayMidi(testCase);
+				testWrite(testCase);
+				playMidi();
+			} catch (Exception e) {
+				throw new RuntimeException(testCase.getName(), e);
+			}
+		}
+	}
+
+	@Test
+	public void testWriteMidi() throws Exception {
+		File[] testCases = getTestCases();
+		for (File testCase : testCases) {
+			try {
+				testWrite(testCase);
 			} catch (Exception e) {
 				throw new RuntimeException(testCase.getName(), e);
 			}
@@ -50,7 +63,8 @@ public class ModelTest {
 
 	@Test
 	public void manualTest() throws Exception {
-		testWriteAndPlayMidi(new File("src/test/resources/ignore/3_4.mjargon"));
+		testWrite(new File("src/test/resources/fiveEighths.mjargon"));
+		playMidi();
 	}
 
 	private File[] getTestCases() {
@@ -65,13 +79,16 @@ public class ModelTest {
 		return testCases;
 	}
 
-	private void testWriteAndPlayMidi(File testCase)
-			throws FileNotFoundException, IOException, LexerException, SyntaxException, SemanticException,
-			MidiUnavailableException, InvalidMidiDataException, InterruptedException {
+	private void testWrite(File testCase)
+			throws FileNotFoundException, IOException, LexerException, SyntaxException, SemanticException {
 		Model model = getModel(testCase);
 		File file = new File("/tmp/a.mid");
 		model.writeMidi(file);
-		Sequencer sequencer = MidiPlayer.play(file);
+	}
+
+	private void playMidi()
+			throws MidiUnavailableException, IOException, InvalidMidiDataException, InterruptedException {
+		Sequencer sequencer = MidiPlayer.play(new File("/tmp/a.mid"));
 		while (sequencer.isRunning()) {
 			synchronized (this) {
 				wait(500);

@@ -24,7 +24,7 @@ a:        |
           | seq2 on r       | chords(1) on whole
           | seq3 on r       | chords(2) on whole
           | seq4 on r       | chords(3) on whole
-          | repeat a 2      |
+repeat a 2|                 | 
           | seq1 on r       | chords(0) on silence
           | seq2 on r       | chords(1) on silence
           | seq3 on r       | chords(2) on silence

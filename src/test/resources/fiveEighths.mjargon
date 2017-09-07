@@ -1,7 +1,6 @@
 ts      = time signature 5/8
 r       = rhythm [XxxXx] on ts
 whole   = rhythm [x] on ts
-silence = rhythm [.] on ts
 chords  = chord progression C4EG EGB FAC5 E4G♯B
 seq1    = sequence 1 2 1 3 2 3 on chords(0)
 seq2    = sequence 1 2 1 3 2 3 on chords(1)
@@ -24,8 +23,8 @@ a:        |
           | seq2 on r       | chords(1) on whole
           | seq3 on r       | chords(2) on whole
           | seq4 on r       | chords(3) on whole
-          | repeat a 2      |
-          | seq1 on r       | chords(0) on silence
-          | seq2 on r       | chords(1) on silence
-          | seq3 on r       | chords(2) on silence
-          | seq4 on r       | chords(3) on silence
+repeat a 2|                 |
+          | seq1 on r       | -
+          | seq2 on r       | -
+          | seq3 on r       | -
+          | seq4 on r       | -
