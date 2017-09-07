@@ -94,27 +94,31 @@ public class Lexer {
 			}
 			if (!keywordMatched) {
 				if (character == '[') {
-					int start = position;
-					position++;
-					while (position < chars.length && isRhythmItem(chars[position])) {
-						position++;
-					}
-					if (chars[position] != ']') {
-						throw new LexerException("Rhythm expression must be closed with ]");
-					}
-					int end = position;
-					ret.add(new TokenImpl(start, script.substring(start, end + 1), RHYTHM_EXPRESSION));
+					ret.add(createDelimitedToken(RHYTHM_EXPRESSION, new DelimitedTokenFilter() {
+
+						@Override
+						public boolean isToken() {
+							return isRhythmItem(chars[position]);
+						}
+
+						@Override
+						public char getClosingChar() {
+							return ']';
+						}
+					}));
 				} else if (character == '\"') {
-					int start = position;
-					position++;
-					while (position < chars.length && chars[position]!='\"') {
-						position++;
-					}
-					if (chars[position] != '\"') {
-						throw new LexerException("String literal must be closed with \"");
-					}
-					int end = position;
-					ret.add(new TokenImpl(start, script.substring(start, end + 1), STRING_LITERAL));
+					ret.add(createDelimitedToken(STRING_LITERAL, new DelimitedTokenFilter() {
+
+						@Override
+						public boolean isToken() {
+							return chars[position] != getClosingChar();
+						}
+
+						@Override
+						public char getClosingChar() {
+							return '\"';
+						}
+					}));
 				} else if (Character.isLetter(character) && Character.isLowerCase(character)) {
 					ret.add(createToken(ID, new TokenFilter() {
 
@@ -193,6 +197,19 @@ public class Lexer {
 		return new TokenImpl(start, script.substring(start, end), tokenType);
 	}
 
+	private Token createDelimitedToken(int tokenType, DelimitedTokenFilter tokenFilter) throws LexerException {
+		int start = position;
+		position++;
+		while (position < chars.length && tokenFilter.isToken()) {
+			position++;
+		}
+		if (chars[position] != tokenFilter.getClosingChar()) {
+			throw new LexerException(tokenFilter.getClosingChar() + " expected");
+		}
+		int end = position;
+		return new TokenImpl(start, script.substring(start, end + 1), tokenType);
+	}
+
 	private boolean isLineBreak(char character) {
 		return !String.valueOf(character).matches(".");
 	}
@@ -227,6 +244,12 @@ public class Lexer {
 	private interface TokenFilter {
 
 		boolean isToken();
+
+	}
+
+	private interface DelimitedTokenFilter extends TokenFilter {
+
+		char getClosingChar();
 
 	}
 }
