@@ -1,6 +1,7 @@
 package org.fergonco.music.mjargon.parser;
 
 import static org.fergonco.music.mjargon.lexer.Lexer.CHORD;
+import static org.fergonco.music.mjargon.lexer.Lexer.STRING_LITERAL;
 import static org.fergonco.music.mjargon.lexer.Lexer.CHORD_LITERAL;
 import static org.fergonco.music.mjargon.lexer.Lexer.CLOSE_PARENTHESIS;
 import static org.fergonco.music.mjargon.lexer.Lexer.COLON;
@@ -204,6 +205,9 @@ public class Parser {
 		ArrayList<String> instruments = new ArrayList<>();
 		try {
 			while (true) {
+				if (accept(STRING_LITERAL)) {
+					expect(STRING_LITERAL);
+				}
 				expect(VERTICAL_BAR);
 				instruments.add(expect(ID).getText());
 			}

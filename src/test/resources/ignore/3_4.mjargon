@@ -16,8 +16,7 @@ seq3 = sequence A4 B B C5 A4 A
 seq4 = sequence A4 B C5 F
 seq5 = sequence E5
              
-'voices       |  drums (hihat) | drums (rhythm)  | piano (left hand)   | piano (right hand)
-voices       |  drums         | drums           | piano               | piano              
+voices       |  drums "hihat" | drums "rhythm"  | piano "left hand"   | piano "right hand"
 dynamics     |     mf         | mf              | ff                  | ff
 tempo 70     |                |                 |                     | 
 a:           |                |                 |                     | 

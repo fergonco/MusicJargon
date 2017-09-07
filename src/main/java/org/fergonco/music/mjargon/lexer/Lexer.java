@@ -43,6 +43,7 @@ public class Lexer {
 	public static final int OPEN_PARENTHESIS = 39;
 	public static final int CLOSE_PARENTHESIS = 40;
 	public static final int MINUS = 41;
+	public static final int STRING_LITERAL = 42;
 
 	private static HashMap<Integer, String> tokenNames = new HashMap<>();
 
@@ -103,6 +104,17 @@ public class Lexer {
 					}
 					int end = position;
 					ret.add(new TokenImpl(start, script.substring(start, end + 1), RHYTHM_EXPRESSION));
+				} else if (character == '\"') {
+					int start = position;
+					position++;
+					while (position < chars.length && chars[position]!='\"') {
+						position++;
+					}
+					if (chars[position] != '\"') {
+						throw new LexerException("String literal must be closed with \"");
+					}
+					int end = position;
+					ret.add(new TokenImpl(start, script.substring(start, end + 1), STRING_LITERAL));
 				} else if (Character.isLetter(character) && Character.isLowerCase(character)) {
 					ret.add(createToken(ID, new TokenFilter() {
 
