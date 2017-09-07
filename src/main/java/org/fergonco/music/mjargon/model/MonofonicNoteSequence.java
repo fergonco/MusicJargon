@@ -9,14 +9,14 @@ public class MonofonicNoteSequence implements NoteSequence {
 		singleNotes = new PitchArray[noteIndices.length];
 		for (int i = 0; i < singleNotes.length; i++) {
 			int pitch = chord.getPitch(noteIndices[i]);
-			singleNotes[i] = new PitchArray(pitch);
+			singleNotes[i] = new PitchArrayImpl(pitch);
 		}
 	}
 
 	public MonofonicNoteSequence(String[] notes) throws SemanticException {
 		singleNotes = ChordLiteral.parseSequence(notes);
 		for (PitchArray pitchArray : singleNotes) {
-			if (pitchArray.pitchCount() > 1) {
+			if (!pitchArray.isTie() && pitchArray.pitchCount() > 1) {
 				throw new SemanticException("Only single notes allowed in note sequences");
 			}
 		}

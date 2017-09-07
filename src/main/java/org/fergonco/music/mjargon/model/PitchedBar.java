@@ -8,7 +8,7 @@ import org.fergonco.music.midi.Dynamic;
 import org.fergonco.music.midi.Note;
 import org.fergonco.music.midi.NoteImpl;
 
-public class PitchedBar implements Bar{
+public class PitchedBar implements Bar {
 
 	private NoteSequence noteSequence;
 	private int noteIndex;
@@ -40,12 +40,17 @@ public class PitchedBar implements Bar{
 			}
 			Duration duration = components[i].getDuration();
 			Note note = null;
-			if (pitch.pitchCount() == 1) {
-				note = new NoteImpl(pitch.getPitch(0), duration, dynamic.getLevel());
+			if (pitch.isTie()) {
+				Note lastNote = ret.get(ret.size()-1);
+				lastNote.addDuration(duration);
 			} else {
-				note = new Chord(duration, dynamic.getLevel(), pitch.getPitches());
+				if (pitch.pitchCount() == 1) {
+					note = new NoteImpl(pitch.getPitch(0), duration, dynamic.getLevel());
+				} else {
+					note = new Chord(duration, dynamic.getLevel(), pitch.getPitches());
+				}
+				ret.add(note);
 			}
-			ret.add(note);
 		}
 
 		return ret.toArray(new Note[ret.size()]);

@@ -1,6 +1,7 @@
 package org.fergonco.music.mjargon.model;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -20,10 +21,12 @@ import org.fergonco.music.mjargon.lexer.LexerException;
 import org.fergonco.music.mjargon.lexer.Token;
 import org.fergonco.music.mjargon.parser.Parser;
 import org.fergonco.music.mjargon.parser.SyntaxException;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class ModelTest {
 
+	@Ignore
 	@Test
 	public void testWriteAndPlayMidi() throws Exception {
 		File[] testCases = getTestCases();
@@ -63,8 +66,6 @@ public class ModelTest {
 
 	@Test
 	public void manualTest() throws Exception {
-		testWrite(new File("src/test/resources/fiveEighths.mjargon"));
-		playMidi();
 	}
 
 	private File[] getTestCases() {
@@ -79,33 +80,47 @@ public class ModelTest {
 		return testCases;
 	}
 
-	private void testWrite(File testCase)
+	static void testWrite(File testCase)
 			throws FileNotFoundException, IOException, LexerException, SyntaxException, SemanticException {
 		Model model = getModel(testCase);
 		File file = new File("/tmp/a.mid");
 		model.writeMidi(file);
 	}
 
-	private void playMidi()
+	static void playMidi()
 			throws MidiUnavailableException, IOException, InvalidMidiDataException, InterruptedException {
 		Sequencer sequencer = MidiPlayer.play(new File("/tmp/a.mid"));
 		while (sequencer.isRunning()) {
-			synchronized (this) {
-				wait(500);
+			synchronized (ModelTest.class) {
+				ModelTest.class.wait(500);
 			}
 		}
 	}
 
-	private Model getModel(File testCase)
+	private static Model getModel(File testCase)
 			throws FileNotFoundException, IOException, LexerException, SyntaxException, SemanticException {
 		InputStream is = new FileInputStream(testCase);
 		String script = IOUtils.toString(is, "utf-8");
 		is.close();
 
+		return getModel(script);
+	}
+
+	private static Model getModel(String script) throws LexerException, SyntaxException, SemanticException {
 		Lexer lexer = new Lexer(script);
 		Token token = lexer.process();
 		Parser parser = new Parser();
 		Model model = parser.parse(token);
 		return model;
+	}
+
+	@Test
+	public void chordTiesNotAllowed() throws LexerException, SyntaxException, SemanticException {
+		try {
+			getModel("c = chord progression CEG _ DFA");
+			fail();
+		} catch (Exception e) {
+			getModel("c = chord progression CEG CEG DFA");
+		}
 	}
 }

@@ -11,8 +11,8 @@ whole = rhythm [x] on ts
 
 chords = chord progression E3AC4♯ D3GB FAC4 D3FA EG♯B
 seq1 = sequence A4 B B A C5♯ E
-seq2 = sequence D5 C C B4 B B
-seq3 = sequence A4 B B C5 A4 A
+seq2 = sequence D5 C C B4 B _
+seq3 = sequence A4 B B C5 A4 _
 seq4 = sequence A4 B C5 F
 seq5 = sequence E5
              

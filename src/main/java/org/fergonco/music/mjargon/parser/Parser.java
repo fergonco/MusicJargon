@@ -1,6 +1,7 @@
 package org.fergonco.music.mjargon.parser;
 
 import static org.fergonco.music.mjargon.lexer.Lexer.CHORD;
+import static org.fergonco.music.mjargon.lexer.Lexer.UNDERSCORE;
 import static org.fergonco.music.mjargon.lexer.Lexer.STRING_LITERAL;
 import static org.fergonco.music.mjargon.lexer.Lexer.CHORD_LITERAL;
 import static org.fergonco.music.mjargon.lexer.Lexer.CLOSE_PARENTHESIS;
@@ -39,6 +40,7 @@ import static org.fergonco.music.mjargon.lexer.Lexer.VOICES;
 import static org.fergonco.music.mjargon.lexer.Lexer.WITH;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -325,7 +327,7 @@ public class Parser {
 		notes.add(note);
 		try {
 			while (true) {
-				notes.add(expect(CHORD_LITERAL).getText());
+				notes.add(expect(CHORD_LITERAL, UNDERSCORE).getText());
 			}
 		} catch (SyntaxException e) {
 			model.addMonofonicNoteSequence(id.getText(), notes.toArray(new String[notes.size()]));
@@ -393,14 +395,27 @@ public class Parser {
 		}
 	}
 
-	private Token expect(int expectedTokenType) throws SyntaxException {
-		if (currentToken != null && currentToken.getType() == expectedTokenType) {
+	private Token expect(int... expectedTokenTypes) throws SyntaxException {
+		if (currentToken != null && expectedType(currentToken.getType(), expectedTokenTypes)) {
 			consumeToken();
 			return lastConsumed;
 		} else {
 			int position = currentToken == null ? 0 : currentToken.getPosition();
-			throw new SyntaxException(position, Lexer.getTokenName(expectedTokenType) + " expected");
+			throw new SyntaxException(position, "Expected: " + getTokenNameList(expectedTokenTypes));
 		}
+	}
+
+	private String getTokenNameList(int[] expectedTokenTypes) {
+		StringBuilder ret = new StringBuilder();
+		for (int tokenType : expectedTokenTypes) {
+			ret.append(Lexer.getTokenName(tokenType)).append(", ");
+		}
+		ret.setLength(ret.length() - 2);
+		return ret.toString();
+	}
+
+	private boolean expectedType(int type, int[] expectedTokenTypes) {
+		return Arrays.binarySearch(expectedTokenTypes, 0, expectedTokenTypes.length, type) >= 0;
 	}
 
 	private void consumeToken() {
