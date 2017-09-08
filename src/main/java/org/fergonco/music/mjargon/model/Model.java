@@ -14,7 +14,6 @@ import org.fergonco.music.midi.Track;
 public class Model {
 
 	private HashMap<String, TimeSignature> timeSignatures = new HashMap<>();
-	private HashMap<String, DrumSequence> drumSequences = new HashMap<>();
 	private HashMap<String, Rhythm> rhythms = new HashMap<>();
 	private HashMap<String, NoteSequence> noteSequences = new HashMap<>();
 	private String[] instruments;
@@ -27,7 +26,7 @@ public class Model {
 	}
 
 	public void addDrums(String id, String[] drumNotes) throws SemanticException {
-		drumSequences.put(id, new DrumSequence(drumNotes));
+		noteSequences.put(id, new DrumSequence(drumNotes));
 	}
 
 	public void addRhythm(String id, String expression, String timeSignatureId) throws SemanticException {
@@ -71,10 +70,7 @@ public class Model {
 		Rhythm rhythm = getRhythmOrFail(rhythmId);
 		if (noteSequences.containsKey(noteOrDrumsSequenceId)) {
 			NoteSequence noteSequence = noteSequences.get(noteOrDrumsSequenceId);
-			setInstrumentBar(instrumentIndex, new PitchedBar(noteSequence, noteIndex, rhythm));
-		} else if (drumSequences.containsKey(noteOrDrumsSequenceId)) {
-			DrumSequence drumSequence = drumSequences.get(noteOrDrumsSequenceId);
-			setInstrumentBar(instrumentIndex, new Drums(drumSequence, rhythm));
+			setInstrumentBar(instrumentIndex, new InstrumentBar(noteSequence, noteIndex, rhythm));
 		} else {
 			throw new SemanticException("No such sequence: " + noteOrDrumsSequenceId);
 		}

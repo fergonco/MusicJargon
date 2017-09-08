@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class PitchArrayImpl implements PitchArray {
 
 	private int[] pitch;
+	private boolean drums;
 
 	public PitchArrayImpl(int... pitch) {
 		super();
@@ -17,6 +18,10 @@ public class PitchArrayImpl implements PitchArray {
 			intPitches[i] = pitchList.get(i);
 		}
 		this.pitch = intPitches;
+	}
+
+	public void setDrums(boolean drums) {
+		this.drums = drums;
 	}
 
 	public int getPitch(int index) {
@@ -34,5 +39,10 @@ public class PitchArrayImpl implements PitchArray {
 	@Override
 	public boolean isTie() {
 		return false;
+	}
+
+	@Override
+	public boolean isDrums() {
+		return drums;
 	}
 }

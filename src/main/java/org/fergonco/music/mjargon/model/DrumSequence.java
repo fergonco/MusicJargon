@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.fergonco.music.midi.Note;
 
-public class DrumSequence {
+public class DrumSequence implements NoteSequence {
 
 	private static Map<String, Integer> instrumentCodes = new HashMap<>();
 
@@ -47,12 +47,20 @@ public class DrumSequence {
 			if (!instrumentCodes.containsKey(drumNote)) {
 				throw new SemanticException("Unrecognized drum instrument: " + drumNote);
 			}
-			pitches.add(new PitchArrayImpl(instrumentCodes.get(drumNote)));
+			PitchArrayImpl pitch = new PitchArrayImpl(instrumentCodes.get(drumNote));
+			pitch.setDrums(true);
+			pitches.add(pitch);
 		}
 		this.pitches = pitches.toArray(new PitchArray[pitches.size()]);
 	}
 
-	public PitchArray[] getNotes() {
+	@Override
+	public PitchArray getNote(int noteIndex) {
+		return pitches[noteIndex];
+	}
+
+	@Override
+	public PitchArray[] getAllNotes() {
 		return pitches;
 	}
 

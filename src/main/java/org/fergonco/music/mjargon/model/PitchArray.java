@@ -9,4 +9,6 @@ public interface PitchArray {
 	int[] getPitches();
 	
 	boolean isTie();
+
+	boolean isDrums();
 }

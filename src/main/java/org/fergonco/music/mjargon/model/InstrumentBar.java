@@ -3,18 +3,19 @@ package org.fergonco.music.mjargon.model;
 import java.util.ArrayList;
 
 import org.fergonco.music.midi.Chord;
+import org.fergonco.music.midi.DrumNoteImpl;
 import org.fergonco.music.midi.Duration;
 import org.fergonco.music.midi.Dynamic;
 import org.fergonco.music.midi.Note;
 import org.fergonco.music.midi.NoteImpl;
 
-public class PitchedBar implements Bar {
+public class InstrumentBar implements Bar {
 
 	private NoteSequence noteSequence;
 	private int noteIndex;
 	private Rhythm rhythm;
 
-	public PitchedBar(NoteSequence noteSequence, int noteIndex, Rhythm rhythm) {
+	public InstrumentBar(NoteSequence noteSequence, int noteIndex, Rhythm rhythm) {
 		this.noteSequence = noteSequence;
 		this.noteIndex = noteIndex;
 		this.rhythm = rhythm;
@@ -41,10 +42,13 @@ public class PitchedBar implements Bar {
 			Duration duration = components[i].getDuration();
 			Note note = null;
 			if (pitch.isTie()) {
-				Note lastNote = ret.get(ret.size()-1);
+				Note lastNote = ret.get(ret.size() - 1);
 				lastNote.addDuration(duration);
 			} else {
-				if (pitch.pitchCount() == 1) {
+				if (pitch.isDrums()) {
+					note = new DrumNoteImpl(duration, new int[] { dynamic.getLevel() },
+							new int[] { pitch.getPitch(0) });
+				} else if (pitch.pitchCount() == 1) {
 					note = new NoteImpl(pitch.getPitch(0), duration, dynamic.getLevel());
 				} else {
 					note = new Chord(duration, dynamic.getLevel(), pitch.getPitches());

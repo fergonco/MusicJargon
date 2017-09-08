@@ -22,4 +22,9 @@ public class TiedPichArray implements PitchArray {
 		return true;
 	}
 
+	@Override
+	public boolean isDrums() {
+		return false;
+	}
+
 }
