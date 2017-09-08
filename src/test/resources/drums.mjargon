@@ -1,25 +1,28 @@
 ts = time signature 6/8
 
-ride       = drumpattern [X.x.x.X.x.x.] with x=ride on ts 
-hihat      = drumpattern [X.x.x.X.x.x.] with x=hihat on ts
-theRhythm  = drumpattern [o.....x..x..] with o=bassdrum x=snare on ts
-hihatpedal = drumpattern [x.....x.....] with x=hihatpedal on ts
+subbeat    = rhythm [X.x.x.X.x.x.] on ts 
+mainRhythm = rhythm [x.....x..x..] on ts
+beat       = rhythm [x.....x.....] on ts
 
+hihat     = drum sequence hh
+ride      = drum sequence rd
+bassSnare = drum sequence bd sn sn
+pedal     = drum sequence hhp
 
-voices     | drums | drums     | drums
-dynamics   | p     | p         | p
-tempo 120  |       |           |
-a:         |       |           |
-           | hihat | theRhythm | hihatpedal
-           | hihat | theRhythm | hihatpedal
-           | hihat | theRhythm | hihatpedal
-           | hihat | theRhythm | hihatpedal
-           | ride  | theRhythm | hihatpedal
-           | ride  | theRhythm | hihatpedal
-           | ride  | theRhythm | hihatpedal
-           | ride  | theRhythm | hihatpedal
-dynamics   | ff    | ff        | ff
-           | hihat | theRhythm | hihatpedal
-           | hihat | theRhythm | hihatpedal
-           | hihat | theRhythm | hihatpedal
-           | hihat | theRhythm | hihatpedal
+voices     | drums            | drums                   | drums
+dynamics   | p                | p                       | p
+tempo 120  |                  |                         |
+a:         |                  |                         |
+           | hihat on subbeat | bassSnare on mainRhythm | pedal on beat
+           | hihat on subbeat | bassSnare on mainRhythm | pedal on beat
+           | hihat on subbeat | bassSnare on mainRhythm | pedal on beat
+           | hihat on subbeat | bassSnare on mainRhythm | pedal on beat
+           | ride  on beat    | bassSnare on mainRhythm | pedal on subbeat
+           | ride  on beat    | bassSnare on mainRhythm | pedal on subbeat
+           | ride  on beat    | bassSnare on mainRhythm | pedal on subbeat
+           | ride  on beat    | bassSnare on mainRhythm | pedal on subbeat
+dynamics   | ff               | ff                      | ff
+           | hihat on subbeat | bassSnare on mainRhythm | pedal on beat
+           | hihat on subbeat | bassSnare on mainRhythm | pedal on beat
+           | hihat on subbeat | bassSnare on mainRhythm | pedal on beat
+           | hihat on subbeat | bassSnare on mainRhythm | pedal on beat

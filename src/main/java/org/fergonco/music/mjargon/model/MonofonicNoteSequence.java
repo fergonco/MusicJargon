@@ -5,11 +5,15 @@ public class MonofonicNoteSequence implements NoteSequence {
 	// In this case the PitchArrays contain only one pitch
 	private PitchArray[] singleNotes;
 
-	public MonofonicNoteSequence(Integer[] noteIndices, PitchArray chord) {
+	public MonofonicNoteSequence(String[] noteIndices, PitchArray chord) {
 		singleNotes = new PitchArray[noteIndices.length];
 		for (int i = 0; i < singleNotes.length; i++) {
-			int pitch = chord.getPitch(noteIndices[i]);
-			singleNotes[i] = new PitchArrayImpl(pitch);
+			try {
+				int pitch = chord.getPitch(Integer.parseInt(noteIndices[i]) - 1);
+				singleNotes[i] = new PitchArrayImpl(pitch);
+			} catch (NumberFormatException e) {
+				singleNotes[i] = new TiedPichArray();
+			}
 		}
 	}
 

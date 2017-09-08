@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import org.fergonco.music.midi.Dynamic;
 import org.fergonco.music.midi.InstrumentNames;
@@ -15,7 +14,7 @@ import org.fergonco.music.midi.Track;
 public class Model {
 
 	private HashMap<String, TimeSignature> timeSignatures = new HashMap<>();
-	private HashMap<String, Drums> drums = new HashMap<>();
+	private HashMap<String, DrumSequence> drumSequences = new HashMap<>();
 	private HashMap<String, Rhythm> rhythms = new HashMap<>();
 	private HashMap<String, NoteSequence> noteSequences = new HashMap<>();
 	private String[] instruments;
@@ -27,10 +26,8 @@ public class Model {
 		timeSignatures.put(id, new TimeSignature(n1, n2));
 	}
 
-	public void addDrums(String id, String expression, Map<Character, String> mapping, String timeSignatureId)
-			throws SemanticException {
-		TimeSignature timeSignature = getTimeSignatureOrFail(timeSignatureId);
-		drums.put(id, new Drums(expression, mapping, timeSignature));
+	public void addDrums(String id, String[] drumNotes) throws SemanticException {
+		drumSequences.put(id, new DrumSequence(drumNotes));
 	}
 
 	public void addRhythm(String id, String expression, String timeSignatureId) throws SemanticException {
@@ -50,11 +47,11 @@ public class Model {
 		noteSequences.put(id, new PolyphonicNoteSequence(chords));
 	}
 
-	public void addMonofonicNoteSequence(String id, Integer[] notes, String chordProgressionId,
+	public void addMonofonicNoteSequence(String id, String[] noteIndices, String chordProgressionId,
 			int chordProgressionIndex) throws SemanticException {
 		NoteSequence chordProgression = noteSequences.get(chordProgressionId);
 		if (chordProgression instanceof PolyphonicNoteSequence) {
-			noteSequences.put(id, new MonofonicNoteSequence(notes,
+			noteSequences.put(id, new MonofonicNoteSequence(noteIndices,
 					((PolyphonicNoteSequence) chordProgression).getChord(chordProgressionIndex)));
 		} else {
 			throw new SemanticException(chordProgressionId + " is not a chord progression");
@@ -69,26 +66,26 @@ public class Model {
 		this.instruments = instruments;
 	}
 
-	public void addPitchedToBarline(int instrumentIndex, String noteSequenceId, int noteIndex, String rhythmId)
+	public void addPitchedToBarline(int instrumentIndex, String noteOrDrumsSequenceId, int noteIndex, String rhythmId)
 			throws SemanticException {
-		NoteSequence noteSequence = noteSequences.get(noteSequenceId);
-		if (noteSequenceId == null) {
-			throw new SemanticException("No such note sequence: " + noteSequenceId);
+		Rhythm rhythm = getRhythmOrFail(rhythmId);
+		if (noteSequences.containsKey(noteOrDrumsSequenceId)) {
+			NoteSequence noteSequence = noteSequences.get(noteOrDrumsSequenceId);
+			setInstrumentBar(instrumentIndex, new PitchedBar(noteSequence, noteIndex, rhythm));
+		} else if (drumSequences.containsKey(noteOrDrumsSequenceId)) {
+			DrumSequence drumSequence = drumSequences.get(noteOrDrumsSequenceId);
+			setInstrumentBar(instrumentIndex, new Drums(drumSequence, rhythm));
+		} else {
+			throw new SemanticException("No such sequence: " + noteOrDrumsSequenceId);
 		}
+	}
+
+	private Rhythm getRhythmOrFail(String rhythmId) throws SemanticException {
 		Rhythm rhythm = rhythms.get(rhythmId);
 		if (rhythm == null) {
 			throw new SemanticException("No such rhythm: " + rhythmId);
 		}
-
-		setInstrumentBar(instrumentIndex, new PitchedBar(noteSequence, noteIndex, rhythm));
-	}
-
-	public void addDrumsToBarline(int instrumentIndex, String drumsId) throws SemanticException {
-		Drums drumbar = drums.get(drumsId);
-		if (drumbar == null) {
-			throw new SemanticException("No such note sequence: " + drumsId);
-		}
-		setInstrumentBar(instrumentIndex, drumbar);
+		return rhythm;
 	}
 
 	public void addSilenceToBarline(int instrumentIndex) {
@@ -172,4 +169,5 @@ public class Model {
 	public void setDynamics(ArrayList<Dynamic> dynamics) {
 		songlines.add(new DynamicsLine(dynamics));
 	}
+
 }

@@ -1,22 +1,24 @@
 ts = time signature 4/4
 
-r = rhythm [x..xxx.x.x.xx.x.] on ts 
+beat    = rhythm [X.......X.......X.......X.......] on ts 
+subbeat = rhythm [X...x...X...x...X...x...X...x...] on ts 
+main    = rhythm [x.....x.X.x...x...x...xxX.x.x.x.] on ts
 
-hihat      = drumpattern [X...x...X...x...X...x...X...x...] with x=hihat on ts
-theRhythm  = drumpattern [o.....o.x.o...o...o...oox.o.o.o.] with o=bassdrum x=snare on ts
+hihat      = drum sequence  hh
+theRhythm  = drum sequence  bd bd sn bd bd bd bd bd sn bd bd bd
 
 chords = chord progression C2EG EGB FAC3 E2G♯B
-seq1 = sequence 1 1 2 1 1 1 1 2 3 on chords(0)
-seq2 = sequence 1 1 2 1 1 1 1 2 3 on chords(1)
-seq3 = sequence 1 1 2 1 1 1 1 2 3 on chords(2)
-seq4 = sequence 1 1 2 1 1 1 1 2 3 on chords(3)
+seq1 = sequence 1 1 2 1 1 1 1 _ 2 _ 3 _ on chords(0)
+seq2 = sequence 1 1 2 1 1 1 1 _ 2 _ 3 _ on chords(1)
+seq3 = sequence 1 1 2 1 1 1 1 _ 2 _ 3 _ on chords(2)
+seq4 = sequence 1 1 2 1 1 1 1 _ 2 _ 3 _ on chords(3)
 
-voices  | drums | drums     | fretless_bass
-dynamics| mp    | p         | ff
-tempo 75|       |           | 
-a:      |       |           | 
-        |hihat  | theRhythm | seq1 on r
-        |hihat  | theRhythm | seq2 on r
-        |hihat  | theRhythm | seq3 on r
-        |hihat  | theRhythm | seq4 on r
+voices  | drums            | drums             | fretless_bass
+dynamics| mp               | p                 | ff
+tempo 75|                  |                   | 
+a:      |                  |                   | 
+        | hihat on subbeat | theRhythm on main | seq1 on main
+        | hihat on subbeat | theRhythm on main | seq2 on main
+        | hihat on subbeat | theRhythm on main | seq3 on main
+        | hihat on subbeat | theRhythm on main | seq4 on main
                         

@@ -37,8 +37,8 @@ public class Lexer {
 	public static final int FF = 33;
 	public static final int FFF = 34;
 	public static final int FFFF = 35;
-	public static final int DRUMPATTERN = 36;
-	public static final int WITH = 37;
+	public static final int DRUM = 36;
+//	public static final int WITH = 37;
 	public static final int VOICES = 38;
 	public static final int OPEN_PARENTHESIS = 39;
 	public static final int CLOSE_PARENTHESIS = 40;
@@ -49,7 +49,7 @@ public class Lexer {
 	private static HashMap<Integer, String> tokenNames = new HashMap<>();
 
 	private static int[] keywords = new int[] { TEMPO, TIME, SIGNATURE, RHYTHM, CHORD, PROGRESSION, SEQUENCE, REPEAT,
-			ON, DYNAMICS, PPPP, PPP, PP, P, MP, MF, F, FF, FFF, FFFF, DRUMPATTERN, WITH, VOICES };
+			ON, DYNAMICS, PPPP, PPP, PP, P, MP, MF, F, FF, FFF, FFFF, DRUM, VOICES };
 	static {
 
 		Field[] fields = Lexer.class.getDeclaredFields();

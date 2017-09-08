@@ -32,7 +32,7 @@ desc(timeSignature    , 'define any time signature').
 desc(rhythm           , 'define a rhythm on a time signature. define which components of the rythm have a higher dynamic').
 desc(chordProgression , 'define a chord progression').
 desc(noteSequence     , 'define a note sequence, either based on a chord progression or specifying the notes explicitely. Define that a note takes two or more places in the sequence (tie)').
-desc(drumSequence     ,  'define a drums instrument sequence (bass drum, snare, hihat, etc.). It has to be flexible enough to be able to use any midi drum instrument').
+desc(drumSequence     , 'define a drums instrument sequence (bass drum, snare, hihat, etc.). It has to be flexible enough to be able to use any midi drum instrument').
 
 implementedBy(dynamics   , 'dynamics').
 implementedBy(tempo      , 'tempo').

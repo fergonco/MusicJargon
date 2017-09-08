@@ -2,30 +2,22 @@ ts = time signature 3/4
 
 '                           x...x...x...
 eighths           = rhythm [X.x.X.x.X.x.] on ts
-mainRhyhtm        = rhythm [x.xx..xx..x.] on ts
+mainRhythm        = rhythm [x.xx..xx..x.] on ts
 polyRhythm        = rhythm [x..x..x..x..] on ts
-filledPolyRhythm  = rhythm [XxxXxxXxxXxx] on ts
+filledPolyRhythm  = rhythm [xxXxxXxxXxxX] on ts
 whole             = rhythm [x] on ts
 
-straightHihat = drum sequence hihat             on eighths
-bassrhythm    = drum sequence bd bd bd bd bd sn on mainRhythm
-sn2bd         = drum sequence sn bd bd          on filledPolyRhythm
-
-chords = chord progression E3AC♯4 D3GB FAC4 D3FA EG♯B
-seq1 = sequence A B B A C♯ E
-seq2 = sequence D C C B B
-seq3 = sequence A B B C A
-seq4 = sequence A B C F
-seq5 = sequence E
+hh         = drum sequence hihat
+bassdrumSn = drum sequence bd bd bd bd bd sn
+sn2bd      = drum sequence bd bd sn
              
-voices       |  drums (hihat) | drums (rhythm)  | piano (left hand)   | piano (right hand)
-dynamics     |     mf         | mf              | ff                  | ff
-tempo 70     |                |                 |                     | 
-a:           |                |                 |                     | 
-             |  straightHihat | bassrhythm      | chords(0) on whole  | chords(0) on whole
-             |  straightHihat | bassrhythm      | chords(1) on whole  | chords(1) on whole
-             |  straightHihat | bassrhythm      | chords(2) on whole  | chords(2) on whole
-             |  straightHihat | bassrhythm      | chords(3) on whole  | chords(3) on whole
-             |  straightHihat | bassrhythm      | chords(4) on whole  | chords(4) on whole
-repeat a 10  |                |                 |                     | 
+voices       | drums "hihat" | drums "rhythm"          
+dynamics     |    mf         | mf                      
+tempo 70     |               |                         
+a:           |               |                         
+             | hh on eighths | sn2bd on mainRhythm
+             | hh on eighths | sn2bd on mainRhythm
+             | hh on eighths | sn2bd on filledPolyRhythm
+             | hh on eighths | sn2bd on polyRhythm
+repeat a 10  |               |                         
                         
