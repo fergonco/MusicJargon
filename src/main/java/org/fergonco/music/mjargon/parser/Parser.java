@@ -1,8 +1,7 @@
 package org.fergonco.music.mjargon.parser;
 
 import static org.fergonco.music.mjargon.lexer.Lexer.CHORD;
-import static org.fergonco.music.mjargon.lexer.Lexer.UNDERSCORE;
-import static org.fergonco.music.mjargon.lexer.Lexer.STRING_LITERAL;
+import static org.fergonco.music.mjargon.lexer.Lexer.WITH;
 import static org.fergonco.music.mjargon.lexer.Lexer.CHORD_LITERAL;
 import static org.fergonco.music.mjargon.lexer.Lexer.CLOSE_PARENTHESIS;
 import static org.fergonco.music.mjargon.lexer.Lexer.COLON;
@@ -33,8 +32,10 @@ import static org.fergonco.music.mjargon.lexer.Lexer.RHYTHM;
 import static org.fergonco.music.mjargon.lexer.Lexer.RHYTHM_EXPRESSION;
 import static org.fergonco.music.mjargon.lexer.Lexer.SEQUENCE;
 import static org.fergonco.music.mjargon.lexer.Lexer.SIGNATURE;
+import static org.fergonco.music.mjargon.lexer.Lexer.STRING_LITERAL;
 import static org.fergonco.music.mjargon.lexer.Lexer.TEMPO;
 import static org.fergonco.music.mjargon.lexer.Lexer.TIME;
+import static org.fergonco.music.mjargon.lexer.Lexer.UNDERSCORE;
 import static org.fergonco.music.mjargon.lexer.Lexer.VERTICAL_BAR;
 import static org.fergonco.music.mjargon.lexer.Lexer.VOICES;
 
@@ -349,9 +350,19 @@ public class Parser {
 	private void rhythm(Token id) throws SyntaxException, SemanticException {
 		expect(RHYTHM);
 		Token expr = expect(RHYTHM_EXPRESSION);
-		expect(ON);
-		Token timeSignature = expect(ID);
-		model.addRhythm(id.getText(), trimRhythmExpressionDelimiters(expr.getText()), timeSignature.getText());
+		if (accept(ON)) {
+			expect(ON);
+			Token timeSignature = expect(ID);
+			model.addRhythmWithTimeSignature(id.getText(), trimRhythmExpressionDelimiters(expr.getText()),
+					timeSignature.getText());
+		} else if (accept(WITH)) {
+			expect(WITH);
+			int[] noteLength = getTimeSignature();
+			model.addRhythmWithNoteLength(id.getText(), trimRhythmExpressionDelimiters(expr.getText()),
+					noteLength[1]);
+		} else {
+			throw new SyntaxException(lastConsumed.getPosition(), "WITH or OR expected");
+		}
 	}
 
 	private String trimRhythmExpressionDelimiters(String text) {
@@ -361,10 +372,15 @@ public class Parser {
 	private void timeSignature(Token id) throws NumberFormatException, SyntaxException {
 		expect(TIME);
 		expect(SIGNATURE);
+		int[] timeSignature = getTimeSignature();
+		model.addTimeSignature(id.getText(), timeSignature[0], timeSignature[1]);
+	}
+
+	private int[] getTimeSignature() throws NumberFormatException, SyntaxException {
 		int n1 = Integer.parseInt(expect(NUMBER).getText());
 		expect(FORWARD_SLASH);
 		int n2 = Integer.parseInt(expect(NUMBER).getText());
-		model.addTimeSignature(id.getText(), n1, n2);
+		return new int[] { n1, n2 };
 	}
 
 	private boolean accept(int tokenType) {

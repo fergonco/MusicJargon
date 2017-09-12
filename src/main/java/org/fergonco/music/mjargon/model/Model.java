@@ -29,7 +29,12 @@ public class Model {
 		noteSequences.put(id, new DrumSequence(drumNotes));
 	}
 
-	public void addRhythm(String id, String expression, String timeSignatureId) throws SemanticException {
+	public void addRhythmWithNoteLength(String id, String expression, int noteLength) {
+		rhythms.put(id, new Rhythm(expression, new TimeSignature(expression.length(), noteLength)));
+	}
+
+	public void addRhythmWithTimeSignature(String id, String expression, String timeSignatureId)
+			throws SemanticException {
 		TimeSignature timeSignature = getTimeSignatureOrFail(timeSignatureId);
 		rhythms.put(id, new Rhythm(expression, timeSignature));
 	}

@@ -4,7 +4,7 @@ import java.io.File;
 
 public class ManualTest {
 	public static void main(String[] args) throws Exception {
-		ModelTest.testWrite(new File("src/test/resources/3_4.mjargon"));
+		ModelTest.testWrite(new File("src/test/resources/implicitTimeSignature.mjargon"));
 		ModelTest.playMidi();
 	}
 }
