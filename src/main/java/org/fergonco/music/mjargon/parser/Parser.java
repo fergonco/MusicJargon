@@ -233,9 +233,6 @@ public class Parser {
 				expect(ON);
 				String rhythmId = expect(ID).getText();
 				model.addPitchedToBarline(instrumentIndex, noteOrDrumSequenceId, noteSequenceIndex, rhythmId);
-			} else if (accept(MINUS)) {
-				expect(MINUS);
-				model.addSilenceToBarline(instrumentIndex);
 			} else if (accept(CHORD_LITERAL)) {
 				ArrayList<String> notes = new ArrayList<>();
 				while (accept(CHORD_LITERAL)) {
@@ -244,6 +241,8 @@ public class Parser {
 				expect(ON);
 				String rhythmId = expect(ID).getText();
 				model.addPitchedToBarline(instrumentIndex, notes.toArray(new String[notes.size()]), rhythmId);
+			} else {
+				model.addSilenceToBarline(instrumentIndex);
 			}
 			instrumentIndex++;
 			try {
