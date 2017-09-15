@@ -86,6 +86,12 @@ public class Model {
 		}
 	}
 
+	public void addPitchedToBarline(int instrumentIndex, String[] notes, String rhythmId) throws SemanticException {
+		Rhythm rhythm = getRhythmOrFail(rhythmId);
+		NoteSequence noteSequence = new PolyphonicNoteSequence(notes);
+		setInstrumentBar(instrumentIndex, new InstrumentBar(noteSequence, -1, rhythm));
+	}
+
 	private Rhythm getRhythmOrFail(String rhythmId) throws SemanticException {
 		Rhythm rhythm = rhythms.get(rhythmId);
 		if (rhythm == null) {
