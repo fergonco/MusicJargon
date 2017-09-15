@@ -303,7 +303,7 @@ public class Parser {
 		}
 	}
 
-	private void freeNoteSequence(Token id) throws SemanticException, SyntaxException {
+	private void freeNoteSequence(Token id) throws SyntaxException {
 		ArrayList<String> notes = new ArrayList<>();
 		String note = expect(CHORD_LITERAL).getText();
 		notes.add(note);
@@ -312,7 +312,7 @@ public class Parser {
 				notes.add(expect(CHORD_LITERAL, UNDERSCORE).getText());
 			}
 		} catch (SyntaxException e) {
-			model.addMonofonicNoteSequence(id.getText(), notes.toArray(new String[notes.size()]));
+			model.addPitchedNoteSequence(id.getText(), notes.toArray(new String[notes.size()]));
 		}
 	}
 
@@ -329,7 +329,7 @@ public class Parser {
 			expect(OPEN_PARENTHESIS);
 			int chordProgressionIndex = Integer.parseInt(expect(NUMBER).getText());
 			expect(CLOSE_PARENTHESIS);
-			model.addMonofonicNoteSequence(id.getText(), notes.toArray(new String[notes.size()]),
+			model.addPitchedNoteSequence(id.getText(), notes.toArray(new String[notes.size()]),
 					chordProgressionId.getText(), chordProgressionIndex);
 		}
 	}
@@ -345,7 +345,7 @@ public class Parser {
 			}
 		} catch (SyntaxException e) {
 		}
-		model.addPolyphonicNoteSequence(id.getText(), chords.toArray(new String[chords.size()]));
+		model.addPitchedNoteSequence(id.getText(), chords.toArray(new String[chords.size()]));
 	}
 
 	private void rhythm(Token id) throws SyntaxException, SemanticException {

@@ -52,23 +52,19 @@ public class Model {
 		return timeSignature;
 	}
 
-	public void addPolyphonicNoteSequence(String id, String[] chords) {
-		noteSequences.put(id, new PolyphonicNoteSequence(chords));
+	public void addPitchedNoteSequence(String id, String[] notes) {
+		noteSequences.put(id, new PitchedNoteSequence(notes));
 	}
 
-	public void addMonofonicNoteSequence(String id, String[] noteIndices, String chordProgressionId,
+	public void addPitchedNoteSequence(String id, String[] noteIndices, String chordProgressionId,
 			int chordProgressionIndex) throws SemanticException {
 		NoteSequence chordProgression = noteSequences.get(chordProgressionId);
-		if (chordProgression instanceof PolyphonicNoteSequence) {
-			noteSequences.put(id, new MonofonicNoteSequence(noteIndices,
-					((PolyphonicNoteSequence) chordProgression).getChord(chordProgressionIndex)));
+		if (chordProgression instanceof PitchedNoteSequence) {
+			noteSequences.put(id, new PitchedNoteSequence(noteIndices,
+					((PitchedNoteSequence) chordProgression).getChord(chordProgressionIndex)));
 		} else {
 			throw new SemanticException(chordProgressionId + " is not a chord progression");
 		}
-	}
-
-	public void addMonofonicNoteSequence(String id, String[] notes) throws SemanticException {
-		noteSequences.put(id, new MonofonicNoteSequence(notes));
 	}
 
 	public void setInstruments(String[] instruments) {
@@ -88,7 +84,7 @@ public class Model {
 
 	public void addPitchedToBarline(int instrumentIndex, String[] notes, String rhythmId) throws SemanticException {
 		Rhythm rhythm = getRhythmOrFail(rhythmId);
-		NoteSequence noteSequence = new PolyphonicNoteSequence(notes);
+		NoteSequence noteSequence = new PitchedNoteSequence(notes);
 		setInstrumentBar(instrumentIndex, new InstrumentBar(noteSequence, -1, rhythm));
 	}
 
