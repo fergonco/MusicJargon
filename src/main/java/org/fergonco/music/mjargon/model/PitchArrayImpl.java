@@ -4,36 +4,28 @@ import java.util.ArrayList;
 
 public class PitchArrayImpl implements PitchArray {
 
-	private int[] pitch;
+	private ArrayList<Integer> pitch = new ArrayList<>();
 	private boolean drums;
-
-	public PitchArrayImpl(int... pitch) {
-		super();
-		this.pitch = pitch;
-	}
-
-	public PitchArrayImpl(ArrayList<Integer> pitchList) {
-		int[] intPitches = new int[pitchList.size()];
-		for (int i = 0; i < pitchList.size(); i++) {
-			intPitches[i] = pitchList.get(i);
-		}
-		this.pitch = intPitches;
-	}
+	private boolean silence;
 
 	public void setDrums(boolean drums) {
 		this.drums = drums;
 	}
 
 	public int getPitch(int index) {
-		return pitch[index];
+		return pitch.get(index);
 	}
 
 	public int pitchCount() {
-		return pitch.length;
+		return pitch.size();
 	}
 
 	public int[] getPitches() {
-		return pitch;
+		int[] intPitches = new int[pitch.size()];
+		for (int i = 0; i < pitch.size(); i++) {
+			intPitches[i] = pitch.get(i);
+		}
+		return intPitches;
 	}
 
 	@Override
@@ -44,5 +36,17 @@ public class PitchArrayImpl implements PitchArray {
 	@Override
 	public boolean isDrums() {
 		return drums;
+	}
+
+	public boolean isSilence() {
+		return silence;
+	}
+
+	public void add(int newPitch) {
+		this.pitch.add(newPitch);
+	}
+
+	public void setSilence() {
+		this.silence = true;
 	}
 }

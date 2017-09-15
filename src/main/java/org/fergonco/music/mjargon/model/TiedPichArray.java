@@ -27,4 +27,9 @@ public class TiedPichArray implements PitchArray {
 		return false;
 	}
 
+	@Override
+	public boolean isSilence() {
+		return false;
+	}
+
 }

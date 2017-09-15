@@ -43,7 +43,7 @@ public class Lexer {
 	public static final int OPEN_PARENTHESIS = 39;
 	public static final int CLOSE_PARENTHESIS = 40;
 	public static final int STRING_LITERAL = 42;
-	public static final int UNDERSCORE= 43;
+	public static final int UNDERSCORE = 43;
 
 	private static HashMap<Integer, String> tokenNames = new HashMap<>();
 
@@ -128,13 +128,13 @@ public class Lexer {
 							return Character.isLetterOrDigit(ch) || ch == '_';
 						}
 					}));
-				} else if (Character.isUpperCase(character)) {
+				} else if ("ABCDEFG-".indexOf(character) != -1) {
 					ret.add(createToken(CHORD_LITERAL, new TokenFilter() {
 
 						@Override
 						public boolean isToken() {
 							char ch = chars[position];
-							return Character.isUpperCase(ch) || Character.isDigit(ch) || ch == '♯' || ch == '♭';
+							return "ABCDEFG-".indexOf(ch) != -1 || Character.isDigit(ch) || ch == '♯' || ch == '♭';
 						}
 					}));
 				} else if (character == ':') {

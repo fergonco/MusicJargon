@@ -11,4 +11,6 @@ public interface PitchArray {
 	boolean isTie();
 
 	boolean isDrums();
+
+	boolean isSilence();
 }

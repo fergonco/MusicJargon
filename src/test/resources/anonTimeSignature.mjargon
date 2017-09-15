@@ -1,9 +1,9 @@
 r1 = rhythm [x.x.x.x.] on 4/4 
 
-chords = chord progression C2EG EGB FAC3 E2G♯B
+chords = chord progression C4EG EGB FAC5 E4G♯B
 
-voices   | acoustic_bass
-tempo 60 |
+voices   | piano
+tempo 160|
          | 
          | chords(0) on r1
          | chords(1) on r1

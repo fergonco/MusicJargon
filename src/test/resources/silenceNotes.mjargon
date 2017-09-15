@@ -1,0 +1,9 @@
+ts           = time signature 4/4
+beat         = rhythm [xxxx] on ts
+whole        = rhythm [x] on ts
+
+voices        | piano "right hand"       | piano "left hand"  
+tempo 100     |                          |                    
+              |                          | - - - C4 on beat        
+              | D4GB on whole            | B A G A  on beat   
+              | EAC5 on whole            | A        on whole  

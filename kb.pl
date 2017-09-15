@@ -16,6 +16,7 @@ functionality(voices).
 functionality(niceLayout).
 functionality(instrumentBar).
 functionality(noteLiteralInBar).
+functionality(silenceNotes).
 functionality(silence).
 functionality(timeSignature).
 functionality(rhythm).
@@ -29,6 +30,7 @@ desc(repeat                , 'jump to a label a number of times').
 desc(voices                , 'choose the instrument to play among all midi instruments, including drums as special instrument. add a label to the instrument name').
 desc(niceLayout            , 'layout the different lines nicely, having the "commands" like repeat, tempo, etc. in the first column').
 desc(instrumentBar         , 'define what an instrument has to do in a specific bar (the sequence of notes to play): a combination of a note sequence with a rhythm. If the sequence has more notes than the rhythm, the remaining are ignored. If it has less, it is looped').
+desc(silenceNotes          , 'add silence notes in a sequence').
 desc(noteLiteralInBar      , 'be able to use note literals on the instrument bars to define the note sequence, for single notes and chords').
 desc(silence               , 'define that an instrument does not play during a bar').
 desc(timeSignature         , 'define any time signature').

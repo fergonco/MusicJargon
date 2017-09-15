@@ -48,6 +48,8 @@ public class InstrumentBar implements Bar {
 				if (pitch.isDrums()) {
 					note = new DrumNoteImpl(duration, new int[] { dynamic.getLevel() },
 							new int[] { pitch.getPitch(0) });
+				} else if (pitch.isSilence()) {
+					note = new NoteImpl(0, duration, Dynamic.MUTE.getLevel());
 				} else if (pitch.pitchCount() == 1) {
 					note = new NoteImpl(pitch.getPitch(0), duration, dynamic.getLevel());
 				} else {

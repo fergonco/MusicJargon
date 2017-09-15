@@ -10,7 +10,9 @@ public class MonofonicNoteSequence implements NoteSequence {
 		for (int i = 0; i < singleNotes.length; i++) {
 			try {
 				int pitch = chord.getPitch(Integer.parseInt(noteIndices[i]) - 1);
-				singleNotes[i] = new PitchArrayImpl(pitch);
+				PitchArrayImpl pitchArray = new PitchArrayImpl();
+				pitchArray.add(pitch);
+				singleNotes[i] = pitchArray;
 			} catch (NumberFormatException e) {
 				singleNotes[i] = new TiedPichArray();
 			}

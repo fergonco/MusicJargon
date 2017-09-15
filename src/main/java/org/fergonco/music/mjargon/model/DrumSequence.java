@@ -47,7 +47,8 @@ public class DrumSequence implements NoteSequence {
 			if (!instrumentCodes.containsKey(drumNote)) {
 				throw new SemanticException("Unrecognized drum instrument: " + drumNote);
 			}
-			PitchArrayImpl pitch = new PitchArrayImpl(instrumentCodes.get(drumNote));
+			PitchArrayImpl pitch = new PitchArrayImpl();
+			pitch.add(instrumentCodes.get(drumNote));
 			pitch.setDrums(true);
 			pitches.add(pitch);
 		}
