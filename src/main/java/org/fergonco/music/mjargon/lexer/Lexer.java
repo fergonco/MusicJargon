@@ -44,6 +44,34 @@ public class Lexer {
 	public static final int CLOSE_PARENTHESIS = 40;
 	public static final int STRING_LITERAL = 42;
 	public static final int UNDERSCORE = 43;
+	public static final int HIHAT = 44;
+	public static final int HH = 45;
+	public static final int HIHATOPEN = 46;
+	public static final int HHO = 47;
+	public static final int HIHATPEDAL = 48;
+	public static final int HHP = 49;
+	public static final int BASSDRUM = 50;
+	public static final int BD = 51;
+	public static final int SNARE = 52;
+	public static final int SN = 53;
+	public static final int RIDE = 54;
+	public static final int RD = 55;
+	public static final int CRASH = 56;
+	public static final int CR = 57;
+	public static final int TOM1 = 58;
+	public static final int T1 = 59;
+	public static final int TOM2 = 60;
+	public static final int T2 = 61;
+	public static final int TOM3 = 62;
+	public static final int T3 = 63;
+	public static final int TOM4 = 64;
+	public static final int T4 = 65;
+	public static final int TOM5 = 66;
+	public static final int T5 = 67;
+	public static final int TOM6 = 68;
+	public static final int T6 = 69;
+	public static final int[] DRUM_INSTRUMENTS = new int[] { HIHAT, HH, HIHATOPEN, HHO, HIHATPEDAL, HHP, BASSDRUM, BD,
+			SNARE, SN, RIDE, RD, CRASH, CR, TOM1, T1, TOM2, T2, TOM3, T3, TOM4, T4, TOM5, T5, TOM6, T6 };
 
 	private static HashMap<Integer, String> tokenNames = new HashMap<>();
 
@@ -51,9 +79,15 @@ public class Lexer {
 			ON, DYNAMICS, PPPP, PPP, PP, P, MP, MF, F, FF, FFF, FFFF, DRUM, WITH, VOICES };
 	static {
 
+		int[] allKeywords = new int[DRUM_INSTRUMENTS.length + keywords.length];
+		System.arraycopy(DRUM_INSTRUMENTS, 0, allKeywords, 0, DRUM_INSTRUMENTS.length);
+		System.arraycopy(keywords, 0, allKeywords, DRUM_INSTRUMENTS.length, keywords.length);
+		keywords = allKeywords;
+
 		Field[] fields = Lexer.class.getDeclaredFields();
 		for (Field field : fields) {
-			if (field.getName().toUpperCase().equals(field.getName())) {
+			if ((!field.getName().equals("DRUM_INSTRUMENTS"))
+					&& field.getName().toUpperCase().equals(field.getName())) {
 				try {
 					tokenNames.put(field.getInt(null), field.getName());
 				} catch (IllegalArgumentException | IllegalAccessException e) {

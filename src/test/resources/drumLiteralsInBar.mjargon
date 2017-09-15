@@ -1,0 +1,21 @@
+ts = time signature 4/4
+
+beat    = rhythm [X.......X.......X.......X.......] on ts 
+subbeat = rhythm [X...x...X...x...X...x...X...x...] on ts 
+main    = rhythm [x.....x.X.x...x...x...xxX.x.x.x.] on ts
+
+chords = chord progression C2EG EGB FAC3 E2G♯B
+seq1 = sequence 1 1 2 1 1 1 1 _ 2 _ 3 _ on chords(0)
+seq2 = sequence 1 1 2 1 1 1 1 _ 2 _ 3 _ on chords(1)
+seq3 = sequence 1 1 2 1 1 1 1 _ 2 _ 3 _ on chords(2)
+seq4 = sequence 1 1 2 1 1 1 1 _ 2 _ 3 _ on chords(3)
+
+voices  | drums                      | drums                                       | fretless_bass
+dynamics| mp                         | p                                           | ff
+tempo 75|                            |                                             | 
+a:      |                            |                                             | 
+        | hihat hihatopen on subbeat | bd bd sn bd bd bd bd bd sn bd bd bd on main | seq1 on main
+        | ride            on subbeat | bd bd sn bd bd bd bd bd sn bd bd bd on main | seq2 on main
+        | hihat hihatopen on subbeat | bd bd sn bd bd bd bd bd sn bd bd bd on main | seq3 on main
+        | ride            on subbeat | bd bd sn bd bd bd bd bd sn bd bd bd on main | seq4 on main
+                        

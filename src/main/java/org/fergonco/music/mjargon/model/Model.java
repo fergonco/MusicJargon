@@ -25,7 +25,7 @@ public class Model {
 		timeSignatures.put(id, new TimeSignature(n1, n2));
 	}
 
-	public void addDrums(String id, String[] drumNotes) throws SemanticException {
+	public void addDrums(String id, Integer[] drumNotes) throws SemanticException {
 		noteSequences.put(id, new DrumSequence(drumNotes));
 	}
 
@@ -71,21 +71,30 @@ public class Model {
 		this.instruments = instruments;
 	}
 
-	public void addPitchedToBarline(int instrumentIndex, String noteOrDrumsSequenceId, int noteIndex, String rhythmId)
+	public void addSequenceReferenceToBarline(int instrumentIndex, String noteOrDrumsSequenceId, int noteIndex, String rhythmId)
 			throws SemanticException {
-		Rhythm rhythm = getRhythmOrFail(rhythmId);
 		if (noteSequences.containsKey(noteOrDrumsSequenceId)) {
 			NoteSequence noteSequence = noteSequences.get(noteOrDrumsSequenceId);
-			setInstrumentBar(instrumentIndex, new InstrumentBar(noteSequence, noteIndex, rhythm));
+			addNoteSequenceToBarline(instrumentIndex, rhythmId, noteSequence, noteIndex);
 		} else {
 			throw new SemanticException("No such sequence: " + noteOrDrumsSequenceId);
 		}
 	}
 
 	public void addPitchedToBarline(int instrumentIndex, String[] notes, String rhythmId) throws SemanticException {
-		Rhythm rhythm = getRhythmOrFail(rhythmId);
 		NoteSequence noteSequence = new PitchedNoteSequence(notes);
-		setInstrumentBar(instrumentIndex, new InstrumentBar(noteSequence, -1, rhythm));
+		addNoteSequenceToBarline(instrumentIndex, rhythmId, noteSequence, -1);
+	}
+
+	public void addDrumsToBarline(int instrumentIndex, Integer[] notes, String rhythmId) throws SemanticException {
+		NoteSequence noteSequence = new DrumSequence(notes);
+		addNoteSequenceToBarline(instrumentIndex, rhythmId, noteSequence, -1);
+	}
+
+	private void addNoteSequenceToBarline(int instrumentIndex, String rhythmId, NoteSequence noteSequence, int noteIndex)
+			throws SemanticException {
+		Rhythm rhythm = getRhythmOrFail(rhythmId);
+		setInstrumentBar(instrumentIndex, new InstrumentBar(noteSequence, noteIndex, rhythm));
 	}
 
 	private Rhythm getRhythmOrFail(String rhythmId) throws SemanticException {

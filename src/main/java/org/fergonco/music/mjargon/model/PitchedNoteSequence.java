@@ -16,6 +16,7 @@ public class PitchedNoteSequence implements NoteSequence {
 				singleNotes[i] = new TiedPichArray();
 			}
 		}
+		chords = singleNotes;
 	}
 
 	public PitchedNoteSequence(String[] chordStrings) {

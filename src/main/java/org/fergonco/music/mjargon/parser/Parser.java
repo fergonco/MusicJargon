@@ -1,6 +1,6 @@
 package org.fergonco.music.mjargon.parser;
 
-import static org.fergonco.music.mjargon.lexer.Lexer.CHORD;
+import static org.fergonco.music.mjargon.lexer.Lexer.*;
 import static org.fergonco.music.mjargon.lexer.Lexer.WITH;
 import static org.fergonco.music.mjargon.lexer.Lexer.CHORD_LITERAL;
 import static org.fergonco.music.mjargon.lexer.Lexer.CLOSE_PARENTHESIS;
@@ -226,7 +226,7 @@ public class Parser {
 				}
 				expect(ON);
 				String rhythmId = expect(ID).getText();
-				model.addPitchedToBarline(instrumentIndex, noteOrDrumSequenceId, noteSequenceIndex, rhythmId);
+				model.addSequenceReferenceToBarline(instrumentIndex, noteOrDrumSequenceId, noteSequenceIndex, rhythmId);
 			} else if (accept(CHORD_LITERAL)) {
 				ArrayList<String> notes = new ArrayList<>();
 				while (accept(CHORD_LITERAL)) {
@@ -235,6 +235,14 @@ public class Parser {
 				expect(ON);
 				String rhythmId = expect(ID).getText();
 				model.addPitchedToBarline(instrumentIndex, notes.toArray(new String[notes.size()]), rhythmId);
+			} else if (accept(DRUM_INSTRUMENTS)) {
+				ArrayList<Integer> drumNotes = new ArrayList<>();
+				while (accept(DRUM_INSTRUMENTS)) {
+					drumNotes.add(expect(DRUM_INSTRUMENTS).getType());
+				}
+				expect(ON);
+				String rhythmId = expect(ID).getText();
+				model.addDrumsToBarline(instrumentIndex, drumNotes.toArray(new Integer[drumNotes.size()]), rhythmId);
 			} else {
 				model.addSilenceToBarline(instrumentIndex);
 			}
@@ -282,14 +290,14 @@ public class Parser {
 	private void drumSequence(Token id) throws SyntaxException, SemanticException {
 		expect(DRUM);
 		expect(SEQUENCE);
-		ArrayList<String> drumNotes = new ArrayList<>();
+		ArrayList<Integer> drumNotes = new ArrayList<>();
 		try {
 			while (true) {
-				drumNotes.add(expect(ID).getText());
+				drumNotes.add(expect(DRUM_INSTRUMENTS).getType());
 			}
 		} catch (SyntaxException e) {
 		}
-		model.addDrums(id.getText(), drumNotes.toArray(new String[0]));
+		model.addDrums(id.getText(), drumNotes.toArray(new Integer[0]));
 	}
 
 	private void noteSequence(Token id) throws SyntaxException, SemanticException {
@@ -391,8 +399,8 @@ public class Parser {
 		return new int[] { n1, n2 };
 	}
 
-	private boolean accept(int tokenType) {
-		if (currentToken != null && currentToken.getType() == tokenType) {
+	private boolean accept(int... tokenTypes) {
+		if (currentToken != null && expectedType(currentToken.getType(), tokenTypes)) {
 			return true;
 		} else {
 			return false;
