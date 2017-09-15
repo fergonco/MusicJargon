@@ -5,6 +5,6 @@ seq = sequence 1 on chords(0)
 
 voices | acoustic_bass | piano
        | seq on whole  | seq on whole
-       | -             | seq on whole
-       | seq on whole  | -
+       |               | seq on whole
+       | seq on whole  | 
        

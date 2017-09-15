@@ -17,7 +17,6 @@ import static org.fergonco.music.mjargon.lexer.Lexer.FORWARD_SLASH;
 import static org.fergonco.music.mjargon.lexer.Lexer.ID;
 import static org.fergonco.music.mjargon.lexer.Lexer.LINE_BREAK;
 import static org.fergonco.music.mjargon.lexer.Lexer.MF;
-import static org.fergonco.music.mjargon.lexer.Lexer.MINUS;
 import static org.fergonco.music.mjargon.lexer.Lexer.MP;
 import static org.fergonco.music.mjargon.lexer.Lexer.NUMBER;
 import static org.fergonco.music.mjargon.lexer.Lexer.ON;
@@ -154,13 +153,8 @@ public class Parser {
 				expect(FFFF);
 				dynamic = Dynamic.FFFF;
 				break;
-			case MINUS:
-				expect(MINUS);
-				dynamic = null;
-				break;
 			default:
-				throw new SyntaxException(currentToken.getPosition(),
-						"Dynamic expression expected (pppp, ppp, pp, p, mp, mf, f, ff, fff, ffff)");
+				dynamic = null;
 			}
 			dynamics.add(dynamic);
 		}

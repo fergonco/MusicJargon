@@ -7,7 +7,7 @@ seq1 = sequence 1 2 1 3 3 2 on chords(1)
 
 voices   | acoustic_bass
 tempo 60 |
-         | -
+         | 
          | seq1 on r1
          | seq1 on r2
          | seq1 on r3

@@ -7,10 +7,10 @@ voices   | acoustic_bass | piano
 tempo 250|               | 
 dynamics | ffff          | ffff
          | seq on whole  | seq on whole
-dynamics | -             | pppp
+dynamics |               | pppp
          | seq on whole  | seq on whole
 dynamics | ffff          | ffff
          | seq on whole  | seq on whole
-dynamics | pppp          | -
+dynamics | pppp          | 
          | seq on whole  | seq on whole
          
