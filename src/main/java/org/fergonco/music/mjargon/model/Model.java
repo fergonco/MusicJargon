@@ -33,7 +33,12 @@ public class Model {
 		rhythms.put(id, new Rhythm(expression, new TimeSignature(expression.length(), noteLength)));
 	}
 
-	public void addRhythmWithTimeSignature(String id, String expression, String timeSignatureId)
+	public void addRhythmWithTimeSignatureLiteral(String id, String expression, int[] timeSignature)
+			throws SemanticException {
+		rhythms.put(id, new Rhythm(expression, new TimeSignature(timeSignature[0], timeSignature[1])));
+	}
+
+	public void addRhythmWithTimeSignatureId(String id, String expression, String timeSignatureId)
 			throws SemanticException {
 		TimeSignature timeSignature = getTimeSignatureOrFail(timeSignatureId);
 		rhythms.put(id, new Rhythm(expression, timeSignature));

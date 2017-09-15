@@ -352,14 +352,21 @@ public class Parser {
 		Token expr = expect(RHYTHM_EXPRESSION);
 		if (accept(ON)) {
 			expect(ON);
-			Token timeSignature = expect(ID);
-			model.addRhythmWithTimeSignature(id.getText(), trimRhythmExpressionDelimiters(expr.getText()),
-					timeSignature.getText());
+			if (accept(ID)) {
+				Token timeSignature = expect(ID);
+				model.addRhythmWithTimeSignatureId(id.getText(), trimRhythmExpressionDelimiters(expr.getText()),
+						timeSignature.getText());
+			} else if (accept(NUMBER)) {
+				int[] timeSignature = getTimeSignature();
+				model.addRhythmWithTimeSignatureLiteral(id.getText(), trimRhythmExpressionDelimiters(expr.getText()),
+						timeSignature);
+			} else {
+				throw new SyntaxException(lastConsumed.getPosition(), "Time signature variable or literal expected");
+			}
 		} else if (accept(WITH)) {
 			expect(WITH);
 			int[] noteLength = getTimeSignature();
-			model.addRhythmWithNoteLength(id.getText(), trimRhythmExpressionDelimiters(expr.getText()),
-					noteLength[1]);
+			model.addRhythmWithNoteLength(id.getText(), trimRhythmExpressionDelimiters(expr.getText()), noteLength[1]);
 		} else {
 			throw new SyntaxException(lastConsumed.getPosition(), "WITH or OR expected");
 		}

@@ -34,14 +34,6 @@ desc(chordProgression , 'define a chord progression').
 desc(noteSequence     , 'define a note sequence, either based on a chord progression or specifying the notes explicitely. Define that a note takes two or more places in the sequence (tie)').
 desc(drumSequence     , 'define a drums instrument sequence (bass drum, snare, hihat, etc.). It has to be flexible enough to be able to use any midi drum instrument').
 
-implementedBy(dynamics   , 'dynamics').
-implementedBy(tempo      , 'tempo').
-implementedBy(repeat     , 'repeat').
-implementedBy(repeat     , 'label').
-implementedBy(comment    , '\'').
-implementedBy(voices     , 'voices').
-implementedBy(niceLayout , '|').
-
 relate(dynamics      , silence            , '- is used for no dynamic change and silenced bar').
 relate(instrumentBar , chordProgression).
 relate(instrumentBar , noteSequence).
