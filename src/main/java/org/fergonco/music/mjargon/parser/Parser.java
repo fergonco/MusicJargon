@@ -305,7 +305,7 @@ public class Parser {
 	private NoteSequenceExpression noteSequenceExpression() throws SyntaxException {
 		if (accept(ID)) {
 			return sequenceReferenceExpression();
-		} else if (accept(CHORD_LITERAL)) {
+		} else if (accept(UNDERSCORE, CHORD_LITERAL)) {
 			return pitchedLiteralExpression();
 		} else if (accept(NUMBER)) {
 			return chordBasedPitchedLiteralExpression();
@@ -508,7 +508,12 @@ public class Parser {
 	}
 
 	private boolean expectedType(int type, int[] expectedTokenTypes) {
-		return Arrays.binarySearch(expectedTokenTypes, 0, expectedTokenTypes.length, type) >= 0;
+		for (int expectedTokenType : expectedTokenTypes) {
+			if (expectedTokenType == type) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private void consumeToken() {

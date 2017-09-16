@@ -165,7 +165,7 @@ public class Model {
 			if (songline.isBarline()) {
 				Bar[] bars = songline.getBars();
 				for (int i = 0; i < bars.length; i++) {
-					Note[] notes = bars[i].getNotes(currentDynamics[i]);
+					Note[] notes = bars[i].getNotes(currentDynamics[i], tracks[i].getLastNote());
 					for (Note note : notes) {
 						tracks[i].addNote(note);
 					}

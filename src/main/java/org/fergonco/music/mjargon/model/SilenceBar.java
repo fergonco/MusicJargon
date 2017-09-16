@@ -8,7 +8,7 @@ import org.fergonco.music.midi.NoteImpl;
 public class SilenceBar implements Bar {
 
 	@Override
-	public Note[] getNotes(Dynamic baseDynamics) {
+	public Note[] getNotes(Dynamic baseDynamics, Note lastNote) {
 		return new Note[] { new NoteImpl(0, new Duration(1), Dynamic.MUTE.getLevel()) };
 	}
 

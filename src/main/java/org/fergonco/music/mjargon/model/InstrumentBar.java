@@ -21,7 +21,7 @@ public class InstrumentBar implements Bar {
 		this.rhythm = rhythm;
 	}
 
-	public Note[] getNotes(Dynamic baseDynamics) {
+	public Note[] getNotes(Dynamic baseDynamics, Note lastNote) {
 		PitchArray[] pitches = null;
 		if (noteIndex == -1) {
 			pitches = noteSequence.getAllNotes();
@@ -42,7 +42,6 @@ public class InstrumentBar implements Bar {
 			Duration duration = components[i].getDuration();
 			Note note = null;
 			if (pitch.isTie()) {
-				Note lastNote = ret.get(ret.size() - 1);
 				lastNote.addDuration(duration);
 			} else {
 				if (pitch.isDrums()) {
@@ -56,6 +55,7 @@ public class InstrumentBar implements Bar {
 					note = new Chord(duration, dynamic.getLevel(), pitch.getPitches());
 				}
 				ret.add(note);
+				lastNote = note;
 			}
 		}
 
