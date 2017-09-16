@@ -1,6 +1,7 @@
 package org.fergonco.music.mjargon.lexer;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -73,32 +74,36 @@ public class Lexer {
 	public static final int[] DRUM_INSTRUMENTS = new int[] { HIHAT, HH, HIHATOPEN, HHO, HIHATPEDAL, HHP, BASSDRUM, BD,
 			SNARE, SN, RIDE, RD, CRASH, CR, TOM1, T1, TOM2, T2, TOM3, T3, TOM4, T4, TOM5, T5, TOM6, T6 };
 
-	private static HashMap<Integer, String> tokenNames = new HashMap<>();
+	private static HashMap<Integer, String> TOKEN_NAMES = new HashMap<>();
 
-	private static int[] keywords = new int[] { TEMPO, TIME, SIGNATURE, RHYTHM, CHORD, PROGRESSION, SEQUENCE, REPEAT,
+	private static int[] KEYWORDS = new int[] { TEMPO, TIME, SIGNATURE, RHYTHM, CHORD, PROGRESSION, SEQUENCE, REPEAT,
 			ON, DYNAMICS, PPPP, PPP, PP, P, MP, MF, F, FF, FFF, FFFF, DRUM, WITH, VOICES };
 	static {
 
-		int[] allKeywords = new int[DRUM_INSTRUMENTS.length + keywords.length];
+		int[] allKeywords = new int[DRUM_INSTRUMENTS.length + KEYWORDS.length];
 		System.arraycopy(DRUM_INSTRUMENTS, 0, allKeywords, 0, DRUM_INSTRUMENTS.length);
-		System.arraycopy(keywords, 0, allKeywords, DRUM_INSTRUMENTS.length, keywords.length);
-		keywords = allKeywords;
+		System.arraycopy(KEYWORDS, 0, allKeywords, DRUM_INSTRUMENTS.length, KEYWORDS.length);
+		KEYWORDS = allKeywords;
 
 		Field[] fields = Lexer.class.getDeclaredFields();
 		for (Field field : fields) {
-			if ((!field.getName().equals("DRUM_INSTRUMENTS"))
-					&& field.getName().toUpperCase().equals(field.getName())) {
-				try {
-					tokenNames.put(field.getInt(null), field.getName());
-				} catch (IllegalArgumentException | IllegalAccessException e) {
-					throw new RuntimeException(e);
-				}
+			if (!Modifier.isStatic(field.getModifiers())) {
+				continue;
+			}
+			if (field.getName().equals("DRUM_INSTRUMENTS") || field.getName().equals("KEYWORDS")
+					|| field.getName().equals("TOKEN_NAMES")) {
+				continue;
+			}
+			try {
+				TOKEN_NAMES.put(field.getInt(null), field.getName());
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				throw new RuntimeException(field.getName(), e);
 			}
 		}
 	}
 
 	public static String getTokenName(int code) {
-		return tokenNames.get(code);
+		return TOKEN_NAMES.get(code);
 	}
 
 	private String script;
@@ -118,8 +123,8 @@ public class Lexer {
 			char character = chars[position];
 			int tokenPosition = position;
 			boolean keywordMatched = false;
-			for (int keywordCode : keywords) {
-				String keyword = tokenNames.get(keywordCode).toLowerCase();
+			for (int keywordCode : KEYWORDS) {
+				String keyword = TOKEN_NAMES.get(keywordCode).toLowerCase();
 				if (consumeWord(keyword)) {
 					ret.add(new TokenImpl(tokenPosition, lastConsumed, keywordCode));
 					keywordMatched = true;
