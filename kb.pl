@@ -10,12 +10,14 @@ reference('http://www.music-software-development.com/midi-tutorial.html').
 functionality(errorPositions).
 functionality(dynamics).
 functionality(tempo).
+functionality(tempoNote).
 functionality(repeat).
 functionality(comment).
 functionality(voices).
 functionality(niceLayout).
 functionality(instrumentBar).
 functionality(noteLiteralInBar).
+functionality(drumLiteralInBar).
 functionality(silenceNotes).
 functionality(silence).
 functionality(timeSignature).
@@ -26,12 +28,14 @@ functionality(noteSequence).
 functionality(drumSequence).
 desc(dynamics              , 'change in one line the dynamics of all or one instrument. Mute is a dynamic.').
 desc(tempo                 , 'change the tempo for all instruments').
+desc(tempoNote             , 'specify the length of the beat when setting the tempo').
 desc(repeat                , 'jump to a label a number of times').
 desc(voices                , 'choose the instrument to play among all midi instruments, including drums as special instrument. add a label to the instrument name').
 desc(niceLayout            , 'layout the different lines nicely, having the "commands" like repeat, tempo, etc. in the first column').
 desc(instrumentBar         , 'define what an instrument has to do in a specific bar (the sequence of notes to play): a combination of a note sequence with a rhythm. If the sequence has more notes than the rhythm, the remaining are ignored. If it has less, it is looped').
 desc(silenceNotes          , 'add silence notes in a sequence').
-desc(noteLiteralInBar      , 'be able to use note literals on the instrument bars to define the note sequence, for single notes and chords').
+desc(noteLiteralInBar      , 'use note literals on the instrument bars to define the note sequence, for single notes and chords').
+desc(drumLiteralInBar      , 'use drum literals on the instrument bars').
 desc(silence               , 'define that an instrument does not play during a bar').
 desc(timeSignature         , 'define any time signature').
 desc(rhythm                , 'define a rhythm on a time signature. define which components of the rythm have a higher dynamic').
