@@ -67,7 +67,6 @@ import static org.fergonco.music.mjargon.lexer.Lexer.VOICES;
 import static org.fergonco.music.mjargon.lexer.Lexer.WITH;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -305,7 +304,19 @@ public class Parser {
 	private NoteSequenceExpression noteSequenceExpression() throws SyntaxException {
 		if (accept(ID)) {
 			return sequenceReferenceExpression();
-		} else if (accept(UNDERSCORE, CHORD_LITERAL)) {
+		} else if (accept(UNDERSCORE)) {
+			Token lookAhead = currentToken;
+			while (accept(UNDERSCORE)) {
+				expect(UNDERSCORE);
+			}
+			if (accept(NUMBER)) {
+				currentToken = lookAhead;
+				return chordBasedPitchedLiteralExpression();
+			} else {
+				currentToken = lookAhead;
+				return pitchedLiteralExpression();
+			}
+		} else if (accept(CHORD_LITERAL)) {
 			return pitchedLiteralExpression();
 		} else if (accept(NUMBER)) {
 			return chordBasedPitchedLiteralExpression();
