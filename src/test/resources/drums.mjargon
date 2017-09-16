@@ -4,8 +4,6 @@ subbeat    = rhythm [X.x.x.X.x.x.] on ts
 mainRhythm = rhythm [x.....x..x..] on ts
 beat       = rhythm [x.....x.....] on ts
 
-hihat     = drum sequence hh
-ride      = drum sequence rd
 bassSnare = drum sequence bd sn sn
 pedal     = drum sequence hhp
 

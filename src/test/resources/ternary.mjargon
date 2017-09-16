@@ -3,14 +3,14 @@ r       = rhythm [XxxXxx] on ts
 whole   = rhythm [x] on ts
 silence = rhythm [.] on ts
 chords  = chord progression C4EG EGB FAC5 E4G♯B
-seq1    = sequence 1 2 1 3 2 3 on chords(0)
-seq2    = sequence 1 2 1 3 2 3 on chords(1)
-seq3    = sequence 1 2 1 3 2 3 on chords(2)
-seq4    = sequence 1 2 1 3 2 3 on chords(3)
-first1  = sequence 1 on chords(0)
-first2  = sequence 1 on chords(1)
-first3  = sequence 1 on chords(2)
-first4  = sequence 1 on chords(3)
+seq1    = sequence 1 2 1 3 2 3 of chords(0)
+seq2    = sequence 1 2 1 3 2 3 of chords(1)
+seq3    = sequence 1 2 1 3 2 3 of chords(2)
+seq4    = sequence 1 2 1 3 2 3 of chords(3)
+first1  = sequence 1 of chords(0)
+first2  = sequence 1 of chords(1)
+first3  = sequence 1 of chords(2)
+first4  = sequence 1 of chords(3)
 
 voices    | fingered_bass   | overdrive_guitar
 dynamics  | f               | p

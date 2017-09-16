@@ -6,7 +6,7 @@ public class DrumSequence implements NoteSequence {
 
 	private PitchArray[] pitches;
 
-	public DrumSequence(DrumNote[] drumNotes) throws SemanticException {
+	public DrumSequence(DrumNote[] drumNotes) {
 		ArrayList<PitchArray> pitches = new ArrayList<>();
 		for (DrumNote drumNote : drumNotes) {
 			PitchArrayImpl pitch = new PitchArrayImpl();

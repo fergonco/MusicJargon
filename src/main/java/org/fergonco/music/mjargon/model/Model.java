@@ -10,6 +10,8 @@ import org.fergonco.music.midi.InstrumentNames;
 import org.fergonco.music.midi.Note;
 import org.fergonco.music.midi.Score;
 import org.fergonco.music.midi.Track;
+import org.fergonco.music.mjargon.parser.NoteSequenceExpression;
+import org.fergonco.music.mjargon.parser.NoteSequenceExpressionVisitor;
 
 public class Model {
 
@@ -58,41 +60,61 @@ public class Model {
 
 	public void addPitchedNoteSequence(String id, String[] noteIndices, String chordProgressionId,
 			int chordProgressionIndex) throws SemanticException {
+		PitchArray chord = getChord(chordProgressionId, chordProgressionIndex);
+		noteSequences.put(id, new PitchedNoteSequence(noteIndices, chord));
+	}
+
+	private PitchArray getChord(String chordProgressionId, int chordProgressionIndex) throws SemanticException {
 		NoteSequence chordProgression = noteSequences.get(chordProgressionId);
+		PitchArray chord;
 		if (chordProgression instanceof PitchedNoteSequence) {
-			noteSequences.put(id, new PitchedNoteSequence(noteIndices,
-					((PitchedNoteSequence) chordProgression).getChord(chordProgressionIndex)));
+			chord = ((PitchedNoteSequence) chordProgression).getChord(chordProgressionIndex);
 		} else {
 			throw new SemanticException(chordProgressionId + " is not a chord progression");
 		}
+		return chord;
 	}
 
 	public void setInstruments(String[] instruments) {
 		this.instruments = instruments;
 	}
 
-	public void addSequenceReferenceToBarline(int instrumentIndex, String noteOrDrumsSequenceId, int noteIndex, String rhythmId)
-			throws SemanticException {
-		if (noteSequences.containsKey(noteOrDrumsSequenceId)) {
-			NoteSequence noteSequence = noteSequences.get(noteOrDrumsSequenceId);
-			addNoteSequenceToBarline(instrumentIndex, rhythmId, noteSequence, noteIndex);
-		} else {
-			throw new SemanticException("No such sequence: " + noteOrDrumsSequenceId);
-		}
+	public void addSequenceToBarline(final int instrumentIndex, NoteSequenceExpression expression,
+			final String rhythmId) throws SemanticException {
+		expression.visit(new NoteSequenceExpressionVisitor() {
+
+			@Override
+			public void sequenceReference(String noteOrDrumsSequenceId, int noteIndex) throws SemanticException {
+				if (noteSequences.containsKey(noteOrDrumsSequenceId)) {
+					NoteSequence noteSequence = noteSequences.get(noteOrDrumsSequenceId);
+					addNoteSequenceToBarline(instrumentIndex, rhythmId, noteSequence, noteIndex);
+				} else {
+					throw new SemanticException("No such sequence: " + noteOrDrumsSequenceId);
+				}
+			}
+
+			@Override
+			public void pitched(String[] notes) throws SemanticException {
+				NoteSequence noteSequence = new PitchedNoteSequence(notes);
+				addNoteSequenceToBarline(instrumentIndex, rhythmId, noteSequence, -1);
+			}
+
+			@Override
+			public void chordBasedPitched(String[] notes, String chordProgressionId, int chordProgressionIndex) throws SemanticException {
+				NoteSequence noteSequence = new PitchedNoteSequence(notes, getChord(chordProgressionId, chordProgressionIndex));
+				addNoteSequenceToBarline(instrumentIndex, rhythmId, noteSequence, -1);
+			}
+
+			@Override
+			public void drums(DrumNote[] notes) throws SemanticException {
+				NoteSequence noteSequence = new DrumSequence(notes);
+				addNoteSequenceToBarline(instrumentIndex, rhythmId, noteSequence, -1);
+			}
+		});
 	}
 
-	public void addPitchedToBarline(int instrumentIndex, String[] notes, String rhythmId) throws SemanticException {
-		NoteSequence noteSequence = new PitchedNoteSequence(notes);
-		addNoteSequenceToBarline(instrumentIndex, rhythmId, noteSequence, -1);
-	}
-
-	public void addDrumsToBarline(int instrumentIndex, DrumNote[] notes, String rhythmId) throws SemanticException {
-		NoteSequence noteSequence = new DrumSequence(notes);
-		addNoteSequenceToBarline(instrumentIndex, rhythmId, noteSequence, -1);
-	}
-
-	private void addNoteSequenceToBarline(int instrumentIndex, String rhythmId, NoteSequence noteSequence, int noteIndex)
-			throws SemanticException {
+	private void addNoteSequenceToBarline(int instrumentIndex, String rhythmId, NoteSequence noteSequence,
+			int noteIndex) throws SemanticException {
 		Rhythm rhythm = getRhythmOrFail(rhythmId);
 		setInstrumentBar(instrumentIndex, new InstrumentBar(noteSequence, noteIndex, rhythm));
 	}

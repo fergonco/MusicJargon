@@ -7,7 +7,6 @@ polyRhythm        = rhythm [x..x..x..x..] on ts
 filledPolyRhythm  = rhythm [xxXxxXxxXxxX] on ts
 whole             = rhythm [x] on ts
 
-hh         = drum sequence hihat
 bassdrumSn = drum sequence bd bd bd bd bd sn
 sn2bd      = drum sequence bd bd sn
              

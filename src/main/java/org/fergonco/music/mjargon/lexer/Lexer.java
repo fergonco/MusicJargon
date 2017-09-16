@@ -71,13 +71,14 @@ public class Lexer {
 	public static final int T5 = 67;
 	public static final int TOM6 = 68;
 	public static final int T6 = 69;
+	public static final int OF = 70;
 	public static final int[] DRUM_INSTRUMENTS = new int[] { HIHAT, HH, HIHATOPEN, HHO, HIHATPEDAL, HHP, BASSDRUM, BD,
 			SNARE, SN, RIDE, RD, CRASH, CR, TOM1, T1, TOM2, T2, TOM3, T3, TOM4, T4, TOM5, T5, TOM6, T6 };
 
 	private static HashMap<Integer, String> TOKEN_NAMES = new HashMap<>();
 
 	private static int[] KEYWORDS = new int[] { TEMPO, TIME, SIGNATURE, RHYTHM, CHORD, PROGRESSION, SEQUENCE, REPEAT,
-			ON, DYNAMICS, PPPP, PPP, PP, P, MP, MF, F, FF, FFF, FFFF, DRUM, WITH, VOICES };
+			ON, DYNAMICS, PPPP, PPP, PP, P, MP, MF, F, FF, FFF, FFFF, DRUM, WITH, VOICES, OF };
 	static {
 
 		int[] allKeywords = new int[DRUM_INSTRUMENTS.length + KEYWORDS.length];

@@ -7,8 +7,8 @@ poly       = rhythm [x..x..x..x..] on ts
 sixteenths = rhythm [xxxxxxxxxxxx] on ts
 whole      = rhythm [x...........] on ts
 
-hihat          = drum sequence hh
-ride           = drum sequence rd
+accHihat       = drum sequence hh
+accRide        = drum sequence rd
 bassdrumrhythm = drum sequence bd   bd bd   bd bd    sn
 tutupa         = drum sequence bd bd sn
 
@@ -23,15 +23,15 @@ voices       |  drums "hihat"    | drums "rhythm"         | piano "left hand"   
 dynamics     |     mf            | mf                     | ff                  | ff
 tempo 70     |                   |                        |                     | 
 a:           |                   |                        |                     | 
-             |  hihat on subbeat | bassdrumrhythm on main | chords(0) on whole  | seq1 on main 
-             |  hihat on subbeat | bassdrumrhythm on main | chords(1) on whole  | seq2 on main 
-             |  hihat on subbeat | bassdrumrhythm on main | chords(2) on whole  | seq3 on main 
-             |  ride on poly     | tutupa on sixteenths   | chords(3) on whole  | seq4 on poly 
-             |  hihat on subbeat | bassdrumrhythm on main | chords(4) on whole  | seq5 on whole
-             |  ride on main     | bassdrumrhythm on main | chords(0) on whole  | seq1 on main 
-             |  ride on main     | bassdrumrhythm on main | chords(1) on whole  | seq2 on main 
-             |  ride on main     | bassdrumrhythm on main | chords(2) on whole  | seq3 on main 
-             |  ride on main     | tutupa on sixteenths   | chords(3) on whole  | seq4 on poly 
-             |  ride on main     | bassdrumrhythm on main | chords(4) on whole  | seq5 on whole
+             |  accHihat on subbeat | bassdrumrhythm on main | chords(0) on whole  | seq1 on main 
+             |  accHihat on subbeat | bassdrumrhythm on main | chords(1) on whole  | seq2 on main 
+             |  accHihat on subbeat | bassdrumrhythm on main | chords(2) on whole  | seq3 on main 
+             |  accRide on poly     | tutupa on sixteenths   | chords(3) on whole  | seq4 on poly 
+             |  accHihat on subbeat | bassdrumrhythm on main | chords(4) on whole  | seq5 on whole
+             |  accRide on main     | bassdrumrhythm on main | chords(0) on whole  | seq1 on main 
+             |  accRide on main     | bassdrumrhythm on main | chords(1) on whole  | seq2 on main 
+             |  accRide on main     | bassdrumrhythm on main | chords(2) on whole  | seq3 on main 
+             |  accRide on main     | tutupa on sixteenths   | chords(3) on whole  | seq4 on poly 
+             |  accRide on main     | bassdrumrhythm on main | chords(4) on whole  | seq5 on whole
 repeat a 10  |                   |                        |                     | 
                         

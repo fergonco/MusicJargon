@@ -30,6 +30,7 @@ import static org.fergonco.music.mjargon.lexer.Lexer.MF;
 import static org.fergonco.music.mjargon.lexer.Lexer.MP;
 import static org.fergonco.music.mjargon.lexer.Lexer.NUMBER;
 import static org.fergonco.music.mjargon.lexer.Lexer.ON;
+import static org.fergonco.music.mjargon.lexer.Lexer.OF;
 import static org.fergonco.music.mjargon.lexer.Lexer.OPEN_PARENTHESIS;
 import static org.fergonco.music.mjargon.lexer.Lexer.P;
 import static org.fergonco.music.mjargon.lexer.Lexer.PP;
@@ -276,43 +277,15 @@ public class Parser {
 		expect(VERTICAL_BAR);
 		int instrumentIndex = 0;
 		while (true) {
-			if (accept(ID)) {
-				Token id = expect(ID);
-				String noteOrDrumSequenceId = id.getText();
-				int noteSequenceIndex = -1;
-				try {
-					expect(OPEN_PARENTHESIS);
-					noteSequenceIndex = Integer.parseInt(expect(NUMBER).getText());
-					expect(CLOSE_PARENTHESIS);
-				} catch (SyntaxException e) {
-				}
+			NoteSequenceExpression expression = noteSequenceExpression();
+			if (expression != null) {
 				expect(ON);
 				String rhythmId = expect(ID).getText();
-				model.addSequenceReferenceToBarline(instrumentIndex, noteOrDrumSequenceId, noteSequenceIndex, rhythmId);
-			} else if (accept(CHORD_LITERAL)) {
-				ArrayList<String> notes = new ArrayList<>();
-				while (accept(CHORD_LITERAL)) {
-					notes.add(expect(CHORD_LITERAL).getText());
-				}
-				expect(ON);
-				String rhythmId = expect(ID).getText();
-				model.addPitchedToBarline(instrumentIndex, notes.toArray(new String[notes.size()]), rhythmId);
-			} else if (accept(DRUM_INSTRUMENTS)) {
-				ArrayList<DrumNote> drumNotes = new ArrayList<>();
-				while (accept(DRUM_INSTRUMENTS)) {
-					int drumTokenType = expect(DRUM_INSTRUMENTS).getType();
-					if (!drumInstrumentCodes.containsKey(drumTokenType)) {
-						throw new SemanticException("Unrecognized drum instrument: " + drumTokenType);
-					}
-
-					drumNotes.add(drumInstrumentCodes.get(drumTokenType));
-				}
-				expect(ON);
-				String rhythmId = expect(ID).getText();
-				model.addDrumsToBarline(instrumentIndex, drumNotes.toArray(new DrumNote[drumNotes.size()]), rhythmId);
+				model.addSequenceToBarline(instrumentIndex, expression, rhythmId);
 			} else {
 				model.addSilenceToBarline(instrumentIndex);
 			}
+
 			instrumentIndex++;
 			try {
 				expect(VERTICAL_BAR);
@@ -321,6 +294,67 @@ public class Parser {
 			}
 		}
 		model.newBarline();
+	}
+
+	private NoteSequenceExpression noteSequenceExpression() throws SyntaxException {
+		if (accept(ID)) {
+			return sequenceReferenceExpression();
+		} else if (accept(CHORD_LITERAL)) {
+			return pitchedLiteralExpression();
+		} else if (accept(NUMBER)) {
+			return chordBasedPitchedLiteralExpression();
+		} else if (accept(DRUM_INSTRUMENTS)) {
+			return drumLiteralExpression();
+		} else {
+			return null;
+		}
+	}
+
+	private DrumLiteralExpression drumLiteralExpression() throws SyntaxException {
+		ArrayList<DrumNote> drumNotes = new ArrayList<>();
+		while (accept(DRUM_INSTRUMENTS)) {
+			int drumTokenType = expect(DRUM_INSTRUMENTS).getType();
+			if (!drumInstrumentCodes.containsKey(drumTokenType)) {
+				throw new RuntimeException("Unrecognized drum instrument: " + drumTokenType);
+			}
+
+			drumNotes.add(drumInstrumentCodes.get(drumTokenType));
+		}
+		return new DrumLiteralExpression(drumNotes.toArray(new DrumNote[drumNotes.size()]));
+	}
+
+	private PitchedLiteralExpression pitchedLiteralExpression() throws SyntaxException {
+		ArrayList<String> notes = new ArrayList<>();
+		while (accept(CHORD_LITERAL, UNDERSCORE)) {
+			notes.add(expect(CHORD_LITERAL, UNDERSCORE).getText());
+		}
+		return new PitchedLiteralExpression(notes.toArray(new String[notes.size()]));
+	}
+
+	private ChordBasedPitchedLiteralExpression chordBasedPitchedLiteralExpression() throws SyntaxException {
+		ArrayList<String> notes = new ArrayList<>();
+		while (accept(NUMBER, UNDERSCORE)) {
+			notes.add(expect(NUMBER, UNDERSCORE).getText());
+		}
+		expect(OF);
+		Token chordProgressionId = expect(ID);
+		expect(OPEN_PARENTHESIS);
+		int chordProgressionIndex = Integer.parseInt(expect(NUMBER).getText());
+		expect(CLOSE_PARENTHESIS);
+		return new ChordBasedPitchedLiteralExpression(notes.toArray(new String[notes.size()]), chordProgressionId.getText(), chordProgressionIndex);
+	}
+
+	private NoteSequenceExpression sequenceReferenceExpression() throws SyntaxException {
+		Token id = expect(ID);
+		String noteOrDrumSequenceId = id.getText();
+		int noteSequenceIndex = -1;
+		try {
+			expect(OPEN_PARENTHESIS);
+			noteSequenceIndex = Integer.parseInt(expect(NUMBER).getText());
+			expect(CLOSE_PARENTHESIS);
+		} catch (SyntaxException e) {
+		}
+		return new SequenceReferenceExpression(noteOrDrumSequenceId, noteSequenceIndex);
 	}
 
 	private void label(Token id) throws SyntaxException {
@@ -357,15 +391,7 @@ public class Parser {
 	private void drumSequence(Token id) throws SyntaxException, SemanticException {
 		expect(DRUM);
 		expect(SEQUENCE);
-		ArrayList<DrumNote> drumNotes = new ArrayList<>();
-		try {
-			while (true) {
-				int drumTokenType = expect(DRUM_INSTRUMENTS).getType();
-				drumNotes.add(drumInstrumentCodes.get(drumTokenType));
-			}
-		} catch (SyntaxException e) {
-		}
-		model.addDrums(id.getText(), drumNotes.toArray(new DrumNote[0]));
+		model.addDrums(id.getText(), drumLiteralExpression().getNotes());
 	}
 
 	private void noteSequence(Token id) throws SyntaxException, SemanticException {
@@ -380,34 +406,13 @@ public class Parser {
 	}
 
 	private void freeNoteSequence(Token id) throws SyntaxException {
-		ArrayList<String> notes = new ArrayList<>();
-		String note = expect(CHORD_LITERAL).getText();
-		notes.add(note);
-		try {
-			while (true) {
-				notes.add(expect(CHORD_LITERAL, UNDERSCORE).getText());
-			}
-		} catch (SyntaxException e) {
-			model.addPitchedNoteSequence(id.getText(), notes.toArray(new String[notes.size()]));
-		}
+		PitchedLiteralExpression noteSequence = pitchedLiteralExpression();
+		model.addPitchedNoteSequence(id.getText(), noteSequence.getNotes());
 	}
 
 	private void chordBasedNoteSequence(Token id) throws SyntaxException, SemanticException {
-		ArrayList<String> notes = new ArrayList<>();
-		notes.add(expect(NUMBER).getText());
-		try {
-			while (true) {
-				notes.add(expect(NUMBER, UNDERSCORE).getText());
-			}
-		} catch (SyntaxException e) {
-			expect(ON);
-			Token chordProgressionId = expect(ID);
-			expect(OPEN_PARENTHESIS);
-			int chordProgressionIndex = Integer.parseInt(expect(NUMBER).getText());
-			expect(CLOSE_PARENTHESIS);
-			model.addPitchedNoteSequence(id.getText(), notes.toArray(new String[notes.size()]),
-					chordProgressionId.getText(), chordProgressionIndex);
-		}
+		ChordBasedPitchedLiteralExpression noteSequence = chordBasedPitchedLiteralExpression();
+		model.addPitchedNoteSequence(id.getText(), noteSequence.getNotes(), noteSequence.getChordProgressionId(), noteSequence.getChordProgressionIndex());
 	}
 
 	private void chordProgression(Token id) throws SyntaxException {
