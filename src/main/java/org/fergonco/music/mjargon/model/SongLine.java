@@ -10,7 +10,7 @@ public interface SongLine {
 
 	boolean isTempo();
 
-	int getTempo();
+	double getTempo();
 
 	boolean isRepeat();
 

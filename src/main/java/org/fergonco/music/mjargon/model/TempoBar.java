@@ -2,9 +2,9 @@ package org.fergonco.music.mjargon.model;
 
 public class TempoBar extends AbstractSongLine implements SongLine {
 
-	private int tempo;
+	private double tempo;
 
-	public TempoBar(int tempo) {
+	public TempoBar(double tempo) {
 		this.tempo = tempo;
 	}
 
@@ -14,7 +14,7 @@ public class TempoBar extends AbstractSongLine implements SongLine {
 	}
 
 	@Override
-	public int getTempo() {
+	public double getTempo() {
 		return tempo;
 	}
 }

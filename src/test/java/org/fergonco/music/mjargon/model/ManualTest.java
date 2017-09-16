@@ -4,7 +4,7 @@ import java.io.File;
 
 public class ManualTest {
 	public static void main(String[] args) throws Exception {
-		ModelTest.testWrite(new File("src/test/resources/noteLiteralsInBar.mjargon"));
+		ModelTest.testWrite(new File("src/test/resources/ternaryTempo.mjargon"));
 		ModelTest.playMidi();
 	}
 }

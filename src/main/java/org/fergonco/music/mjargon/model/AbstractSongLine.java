@@ -20,7 +20,7 @@ public abstract class AbstractSongLine implements SongLine {
 	}
 
 	@Override
-	public int getTempo() {
+	public double getTempo() {
 		return 0;
 	}
 

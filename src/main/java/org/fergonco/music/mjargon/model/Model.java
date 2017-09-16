@@ -100,8 +100,10 @@ public class Model {
 			}
 
 			@Override
-			public void chordBasedPitched(String[] notes, String chordProgressionId, int chordProgressionIndex) throws SemanticException {
-				NoteSequence noteSequence = new PitchedNoteSequence(notes, getChord(chordProgressionId, chordProgressionIndex));
+			public void chordBasedPitched(String[] notes, String chordProgressionId, int chordProgressionIndex)
+					throws SemanticException {
+				NoteSequence noteSequence = new PitchedNoteSequence(notes,
+						getChord(chordProgressionId, chordProgressionIndex));
 				addNoteSequenceToBarline(instrumentIndex, rhythmId, noteSequence, -1);
 			}
 
@@ -201,8 +203,9 @@ public class Model {
 		songlines.add(new Repeat(songlineIndex, times));
 	}
 
-	public void setTempo(int tempo) {
-		songlines.add(new TempoBar(tempo));
+	public void setTempo(int[] length, int bpm) {
+		double total = bpm * length[0] / (double) length[1];
+		songlines.add(new TempoBar(total * 4));
 	}
 
 	public void setDynamics(ArrayList<Dynamic> dynamics) {
