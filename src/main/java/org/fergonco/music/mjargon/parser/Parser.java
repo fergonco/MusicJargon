@@ -1,12 +1,16 @@
 package org.fergonco.music.mjargon.parser;
 
-import static org.fergonco.music.mjargon.lexer.Lexer.*;
-import static org.fergonco.music.mjargon.lexer.Lexer.WITH;
+import static org.fergonco.music.mjargon.lexer.Lexer.BASSDRUM;
+import static org.fergonco.music.mjargon.lexer.Lexer.BD;
+import static org.fergonco.music.mjargon.lexer.Lexer.CHORD;
 import static org.fergonco.music.mjargon.lexer.Lexer.CHORD_LITERAL;
 import static org.fergonco.music.mjargon.lexer.Lexer.CLOSE_PARENTHESIS;
 import static org.fergonco.music.mjargon.lexer.Lexer.COLON;
 import static org.fergonco.music.mjargon.lexer.Lexer.COMMENT;
+import static org.fergonco.music.mjargon.lexer.Lexer.CR;
+import static org.fergonco.music.mjargon.lexer.Lexer.CRASH;
 import static org.fergonco.music.mjargon.lexer.Lexer.DRUM;
+import static org.fergonco.music.mjargon.lexer.Lexer.DRUM_INSTRUMENTS;
 import static org.fergonco.music.mjargon.lexer.Lexer.DYNAMICS;
 import static org.fergonco.music.mjargon.lexer.Lexer.EQUALS;
 import static org.fergonco.music.mjargon.lexer.Lexer.F;
@@ -14,6 +18,12 @@ import static org.fergonco.music.mjargon.lexer.Lexer.FF;
 import static org.fergonco.music.mjargon.lexer.Lexer.FFF;
 import static org.fergonco.music.mjargon.lexer.Lexer.FFFF;
 import static org.fergonco.music.mjargon.lexer.Lexer.FORWARD_SLASH;
+import static org.fergonco.music.mjargon.lexer.Lexer.HH;
+import static org.fergonco.music.mjargon.lexer.Lexer.HHO;
+import static org.fergonco.music.mjargon.lexer.Lexer.HHP;
+import static org.fergonco.music.mjargon.lexer.Lexer.HIHAT;
+import static org.fergonco.music.mjargon.lexer.Lexer.HIHATOPEN;
+import static org.fergonco.music.mjargon.lexer.Lexer.HIHATPEDAL;
 import static org.fergonco.music.mjargon.lexer.Lexer.ID;
 import static org.fergonco.music.mjargon.lexer.Lexer.LINE_BREAK;
 import static org.fergonco.music.mjargon.lexer.Lexer.MF;
@@ -26,28 +36,80 @@ import static org.fergonco.music.mjargon.lexer.Lexer.PP;
 import static org.fergonco.music.mjargon.lexer.Lexer.PPP;
 import static org.fergonco.music.mjargon.lexer.Lexer.PPPP;
 import static org.fergonco.music.mjargon.lexer.Lexer.PROGRESSION;
+import static org.fergonco.music.mjargon.lexer.Lexer.RD;
 import static org.fergonco.music.mjargon.lexer.Lexer.REPEAT;
 import static org.fergonco.music.mjargon.lexer.Lexer.RHYTHM;
 import static org.fergonco.music.mjargon.lexer.Lexer.RHYTHM_EXPRESSION;
+import static org.fergonco.music.mjargon.lexer.Lexer.RIDE;
 import static org.fergonco.music.mjargon.lexer.Lexer.SEQUENCE;
 import static org.fergonco.music.mjargon.lexer.Lexer.SIGNATURE;
+import static org.fergonco.music.mjargon.lexer.Lexer.SN;
+import static org.fergonco.music.mjargon.lexer.Lexer.SNARE;
 import static org.fergonco.music.mjargon.lexer.Lexer.STRING_LITERAL;
+import static org.fergonco.music.mjargon.lexer.Lexer.T1;
+import static org.fergonco.music.mjargon.lexer.Lexer.T2;
+import static org.fergonco.music.mjargon.lexer.Lexer.T3;
+import static org.fergonco.music.mjargon.lexer.Lexer.T4;
+import static org.fergonco.music.mjargon.lexer.Lexer.T5;
+import static org.fergonco.music.mjargon.lexer.Lexer.T6;
 import static org.fergonco.music.mjargon.lexer.Lexer.TEMPO;
 import static org.fergonco.music.mjargon.lexer.Lexer.TIME;
+import static org.fergonco.music.mjargon.lexer.Lexer.TOM1;
+import static org.fergonco.music.mjargon.lexer.Lexer.TOM2;
+import static org.fergonco.music.mjargon.lexer.Lexer.TOM3;
+import static org.fergonco.music.mjargon.lexer.Lexer.TOM4;
+import static org.fergonco.music.mjargon.lexer.Lexer.TOM5;
+import static org.fergonco.music.mjargon.lexer.Lexer.TOM6;
 import static org.fergonco.music.mjargon.lexer.Lexer.UNDERSCORE;
 import static org.fergonco.music.mjargon.lexer.Lexer.VERTICAL_BAR;
 import static org.fergonco.music.mjargon.lexer.Lexer.VOICES;
+import static org.fergonco.music.mjargon.lexer.Lexer.WITH;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.fergonco.music.midi.Dynamic;
 import org.fergonco.music.mjargon.lexer.Lexer;
 import org.fergonco.music.mjargon.lexer.Token;
+import org.fergonco.music.mjargon.model.DrumNote;
 import org.fergonco.music.mjargon.model.Model;
 import org.fergonco.music.mjargon.model.SemanticException;
 
 public class Parser {
+
+	private static Map<Integer, DrumNote> drumInstrumentCodes = new HashMap<>();
+
+	static {
+		drumInstrumentCodes.put(HIHAT, DrumNote.HIHAT);
+		drumInstrumentCodes.put(HH, DrumNote.HIHAT);
+		drumInstrumentCodes.put(HIHATOPEN, DrumNote.HIHATOPEN);
+		drumInstrumentCodes.put(HHO, DrumNote.HIHATOPEN);
+		drumInstrumentCodes.put(HIHATPEDAL, DrumNote.HIHATPEDAL);
+		drumInstrumentCodes.put(HHP, DrumNote.HIHATPEDAL);
+		drumInstrumentCodes.put(BASSDRUM, DrumNote.BASSDRUM);
+		drumInstrumentCodes.put(BD, DrumNote.BASSDRUM);
+		drumInstrumentCodes.put(SNARE, DrumNote.SNARE);
+		drumInstrumentCodes.put(SN, DrumNote.SNARE);
+		drumInstrumentCodes.put(RIDE, DrumNote.RIDE);
+		drumInstrumentCodes.put(RD, DrumNote.RIDE);
+		drumInstrumentCodes.put(CRASH, DrumNote.CRASH);
+		drumInstrumentCodes.put(CR, DrumNote.CRASH);
+		drumInstrumentCodes.put(TOM1, DrumNote.TOM1);
+		drumInstrumentCodes.put(T1, DrumNote.TOM1);
+		drumInstrumentCodes.put(TOM2, DrumNote.TOM2);
+		drumInstrumentCodes.put(T2, DrumNote.TOM2);
+		drumInstrumentCodes.put(TOM3, DrumNote.TOM3);
+		drumInstrumentCodes.put(T3, DrumNote.TOM3);
+		drumInstrumentCodes.put(TOM4, DrumNote.TOM4);
+		drumInstrumentCodes.put(T4, DrumNote.TOM4);
+		drumInstrumentCodes.put(TOM5, DrumNote.TOM5);
+		drumInstrumentCodes.put(T5, DrumNote.TOM5);
+		drumInstrumentCodes.put(TOM6, DrumNote.TOM6);
+		drumInstrumentCodes.put(T6, DrumNote.TOM6);
+	}
+
 	private Token currentToken;
 	private Token lastConsumed;
 
@@ -236,13 +298,18 @@ public class Parser {
 				String rhythmId = expect(ID).getText();
 				model.addPitchedToBarline(instrumentIndex, notes.toArray(new String[notes.size()]), rhythmId);
 			} else if (accept(DRUM_INSTRUMENTS)) {
-				ArrayList<Integer> drumNotes = new ArrayList<>();
+				ArrayList<DrumNote> drumNotes = new ArrayList<>();
 				while (accept(DRUM_INSTRUMENTS)) {
-					drumNotes.add(expect(DRUM_INSTRUMENTS).getType());
+					int drumTokenType = expect(DRUM_INSTRUMENTS).getType();
+					if (!drumInstrumentCodes.containsKey(drumTokenType)) {
+						throw new SemanticException("Unrecognized drum instrument: " + drumTokenType);
+					}
+
+					drumNotes.add(drumInstrumentCodes.get(drumTokenType));
 				}
 				expect(ON);
 				String rhythmId = expect(ID).getText();
-				model.addDrumsToBarline(instrumentIndex, drumNotes.toArray(new Integer[drumNotes.size()]), rhythmId);
+				model.addDrumsToBarline(instrumentIndex, drumNotes.toArray(new DrumNote[drumNotes.size()]), rhythmId);
 			} else {
 				model.addSilenceToBarline(instrumentIndex);
 			}
@@ -290,14 +357,15 @@ public class Parser {
 	private void drumSequence(Token id) throws SyntaxException, SemanticException {
 		expect(DRUM);
 		expect(SEQUENCE);
-		ArrayList<Integer> drumNotes = new ArrayList<>();
+		ArrayList<DrumNote> drumNotes = new ArrayList<>();
 		try {
 			while (true) {
-				drumNotes.add(expect(DRUM_INSTRUMENTS).getType());
+				int drumTokenType = expect(DRUM_INSTRUMENTS).getType();
+				drumNotes.add(drumInstrumentCodes.get(drumTokenType));
 			}
 		} catch (SyntaxException e) {
 		}
-		model.addDrums(id.getText(), drumNotes.toArray(new Integer[0]));
+		model.addDrums(id.getText(), drumNotes.toArray(new DrumNote[0]));
 	}
 
 	private void noteSequence(Token id) throws SyntaxException, SemanticException {

@@ -25,7 +25,7 @@ public class Model {
 		timeSignatures.put(id, new TimeSignature(n1, n2));
 	}
 
-	public void addDrums(String id, Integer[] drumNotes) throws SemanticException {
+	public void addDrums(String id, DrumNote[] drumNotes) throws SemanticException {
 		noteSequences.put(id, new DrumSequence(drumNotes));
 	}
 
@@ -86,7 +86,7 @@ public class Model {
 		addNoteSequenceToBarline(instrumentIndex, rhythmId, noteSequence, -1);
 	}
 
-	public void addDrumsToBarline(int instrumentIndex, Integer[] notes, String rhythmId) throws SemanticException {
+	public void addDrumsToBarline(int instrumentIndex, DrumNote[] notes, String rhythmId) throws SemanticException {
 		NoteSequence noteSequence = new DrumSequence(notes);
 		addNoteSequenceToBarline(instrumentIndex, rhythmId, noteSequence, -1);
 	}
