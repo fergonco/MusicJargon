@@ -1,8 +1,10 @@
 package org.fergonco.music.mjargon.model;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -21,24 +23,9 @@ import org.fergonco.music.mjargon.lexer.LexerException;
 import org.fergonco.music.mjargon.lexer.Token;
 import org.fergonco.music.mjargon.parser.Parser;
 import org.fergonco.music.mjargon.parser.SyntaxException;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class ModelTest {
-
-	@Ignore
-	@Test
-	public void testWriteAndPlayMidi() throws Exception {
-		File[] testCases = getTestCases();
-		for (File testCase : testCases) {
-			try {
-				testWrite(testCase);
-				playMidi();
-			} catch (Exception e) {
-				throw new RuntimeException(testCase.getName(), e);
-			}
-		}
-	}
 
 	@Test
 	public void testWriteMidi() throws Exception {
@@ -64,10 +51,6 @@ public class ModelTest {
 		}
 	}
 
-	@Test
-	public void manualTest() throws Exception {
-	}
-
 	private File[] getTestCases() {
 		File folder = new File("src/test/resources/");
 		File[] testCases = folder.listFiles(new FileFilter() {
@@ -83,13 +66,33 @@ public class ModelTest {
 	static void testWrite(File testCase)
 			throws FileNotFoundException, IOException, LexerException, SyntaxException, SemanticException {
 		Model model = getModel(testCase);
-		File file = new File("/tmp/a.mid");
+		File file = new File("/tmp/a.midi");
 		model.writeMidi(file);
+		byte[] result = readFile(file);
+		File expectedResultFile = new File(testCase.getPath().replaceAll(".mjargon", ".midi"));
+		if (!expectedResultFile.exists()) {
+			fail("No result file for " + testCase.getPath());
+		} else {
+			byte[] expectedResult = readFile(expectedResultFile);
+			assertEquals(expectedResult.length, result.length);
+			for (int i = 0; i < expectedResult.length; i++) {
+				assertEquals(expectedResult[i], result[i]);
+			}
+		}
+	}
+
+	private static byte[] readFile(File file) throws IOException, FileNotFoundException {
+		InputStream stream = new BufferedInputStream(new FileInputStream(file));
+		try {
+			return IOUtils.toByteArray(stream);
+		} finally {
+			stream.close();
+		}
 	}
 
 	static void playMidi()
 			throws MidiUnavailableException, IOException, InvalidMidiDataException, InterruptedException {
-		Sequencer sequencer = MidiPlayer.play(new File("/tmp/a.mid"));
+		Sequencer sequencer = MidiPlayer.play(new File("/tmp/a.midi"));
 		while (sequencer.isRunning()) {
 			synchronized (ModelTest.class) {
 				ModelTest.class.wait(500);
