@@ -4,6 +4,8 @@ public interface NoteSequence {
 
 	PitchArray getNote(int noteIndex);
 
+	PitchArray[] getAllNotes(int numNotes);
+
 	PitchArray[] getAllNotes();
 
 }

@@ -2,6 +2,7 @@ package org.fergonco.music.mjargon.parser;
 
 import static org.fergonco.music.mjargon.lexer.Lexer.BASSDRUM;
 import static org.fergonco.music.mjargon.lexer.Lexer.BD;
+import static org.fergonco.music.mjargon.lexer.Lexer.PLUS;
 import static org.fergonco.music.mjargon.lexer.Lexer.CHORD_LITERAL;
 import static org.fergonco.music.mjargon.lexer.Lexer.CLOSE_PARENTHESIS;
 import static org.fergonco.music.mjargon.lexer.Lexer.COLON;
@@ -300,6 +301,22 @@ public class Parser {
 	}
 
 	private NoteSequenceExpression noteSequenceExpression() throws SyntaxException {
+		ArrayList<NoteSequenceExpression> expressions = new ArrayList<>();
+		NoteSequenceExpression expr1 = singleNoteSequenceExpression();
+		if (accept(PLUS)) {
+			expressions.add(expr1);
+			while (accept(PLUS)) {
+				expect(PLUS);
+				expressions.add(singleNoteSequenceExpression());
+			}
+			return new NoteSequenceCompositeExpression(
+					expressions.toArray(new NoteSequenceExpression[expressions.size()]));
+		} else {
+			return expr1;
+		}
+	}
+
+	private NoteSequenceExpression singleNoteSequenceExpression() throws SyntaxException {
 		if (accept(ID)) {
 			return sequenceReferenceExpression();
 		} else if (accept(UNDERSCORE)) {

@@ -11,7 +11,7 @@ import org.fergonco.music.mjargon.parser.Parser;
 
 public class ManualTest {
 	public static void main(String[] args) throws Exception {
-		InputStream is = new FileInputStream(new File("src/test/resources/ternary.mjargon"));
+		InputStream is = new FileInputStream(new File("src/test/resources/addingSequences.mjargon"));
 		String script = IOUtils.toString(is, "utf-8");
 		is.close();
 		Lexer lexer = new Lexer(script);

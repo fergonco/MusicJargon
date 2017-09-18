@@ -1,0 +1,13 @@
+beat         = rhythm [xxxx] on 4/4
+subbeat      = rhythm [XxXxXxXx] on 4/4
+
+chords1      = sequence D4GB EAC5
+chords2      = sequence EGB CEG
+
+voices   | piano "right hand"           | drums "right hand"                      
+tempo 50 |                              |                               
+         | chords1 + chords2 on beat    | crash + hihat on beat                 
+         | chords2 + chords1 on beat    | crash + hihat on beat                 
+         | chords1 + chords2 on subbeat | crash + hihat on subbeat                 
+         | chords2 + chords1 on subbeat | crash + hihat on subbeat                 
+              

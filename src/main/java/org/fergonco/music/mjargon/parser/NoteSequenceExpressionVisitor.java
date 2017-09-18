@@ -13,4 +13,6 @@ public interface NoteSequenceExpressionVisitor {
 
 	void chordBasedPitched(String[] notes, String chordProgressionId, int chordProgressionIndex) throws SemanticException;
 
+	void composite(NoteSequenceExpression[] expressions) throws SemanticException;
+
 }

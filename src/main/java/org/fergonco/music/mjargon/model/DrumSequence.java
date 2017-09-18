@@ -2,9 +2,7 @@ package org.fergonco.music.mjargon.model;
 
 import java.util.ArrayList;
 
-public class DrumSequence implements NoteSequence {
-
-	private PitchArray[] pitches;
+public class DrumSequence extends AbstractSingleSequence implements NoteSequence {
 
 	public DrumSequence(DrumNote[] drumNotes) {
 		ArrayList<PitchArray> pitches = new ArrayList<>();
@@ -15,16 +13,6 @@ public class DrumSequence implements NoteSequence {
 			pitches.add(pitch);
 		}
 		this.pitches = pitches.toArray(new PitchArray[pitches.size()]);
-	}
-
-	@Override
-	public PitchArray getNote(int noteIndex) {
-		return pitches[noteIndex];
-	}
-
-	@Override
-	public PitchArray[] getAllNotes() {
-		return pitches;
 	}
 
 }

@@ -81,35 +81,34 @@ public class Model {
 
 	public void addSequenceToBarline(final int instrumentIndex, NoteSequenceExpression expression,
 			final String rhythmId) throws SemanticException {
+		NoteSequenceGetter getter = new NoteSequenceGetter();
+		expression.visit(getter);
+		final NoteSequence noteSequence = getter.getNoteSequence();
 		expression.visit(new NoteSequenceExpressionVisitor() {
 
 			@Override
 			public void sequenceReference(String noteOrDrumsSequenceId, int noteIndex) throws SemanticException {
-				if (noteSequences.containsKey(noteOrDrumsSequenceId)) {
-					NoteSequence noteSequence = noteSequences.get(noteOrDrumsSequenceId);
-					addNoteSequenceToBarline(instrumentIndex, rhythmId, noteSequence, noteIndex);
-				} else {
-					throw new SemanticException("No such sequence: " + noteOrDrumsSequenceId);
-				}
+				addNoteSequenceToBarline(instrumentIndex, rhythmId, noteSequence, noteIndex);
 			}
 
 			@Override
 			public void pitched(String[] notes) throws SemanticException {
-				NoteSequence noteSequence = new PitchedNoteSequence(notes);
 				addNoteSequenceToBarline(instrumentIndex, rhythmId, noteSequence, -1);
 			}
 
 			@Override
 			public void chordBasedPitched(String[] notes, String chordProgressionId, int chordProgressionIndex)
 					throws SemanticException {
-				NoteSequence noteSequence = new PitchedNoteSequence(notes,
-						getChord(chordProgressionId, chordProgressionIndex));
 				addNoteSequenceToBarline(instrumentIndex, rhythmId, noteSequence, -1);
 			}
 
 			@Override
 			public void drums(DrumNote[] notes) throws SemanticException {
-				NoteSequence noteSequence = new DrumSequence(notes);
+				addNoteSequenceToBarline(instrumentIndex, rhythmId, noteSequence, -1);
+			}
+
+			@Override
+			public void composite(NoteSequenceExpression[] expressions) throws SemanticException {
 				addNoteSequenceToBarline(instrumentIndex, rhythmId, noteSequence, -1);
 			}
 		});
@@ -212,4 +211,49 @@ public class Model {
 		songlines.add(new DynamicsLine(dynamics));
 	}
 
+	private class NoteSequenceGetter implements NoteSequenceExpressionVisitor {
+
+		private NoteSequence noteSequence;
+
+		@Override
+		public void sequenceReference(String noteOrDrumsSequenceId, int noteIndex) throws SemanticException {
+			if (noteSequences.containsKey(noteOrDrumsSequenceId)) {
+				noteSequence = noteSequences.get(noteOrDrumsSequenceId);
+			} else {
+				throw new SemanticException("No such sequence: " + noteOrDrumsSequenceId);
+			}
+		}
+
+		@Override
+		public void pitched(String[] notes) throws SemanticException {
+			noteSequence = new PitchedNoteSequence(notes);
+		}
+
+		@Override
+		public void chordBasedPitched(String[] notes, String chordProgressionId, int chordProgressionIndex)
+				throws SemanticException {
+			noteSequence = new PitchedNoteSequence(notes, getChord(chordProgressionId, chordProgressionIndex));
+		}
+
+		@Override
+		public void drums(DrumNote[] notes) throws SemanticException {
+			noteSequence = new DrumSequence(notes);
+		}
+
+		@Override
+		public void composite(NoteSequenceExpression[] expressions) throws SemanticException {
+			ArrayList<NoteSequence> sequences = new ArrayList<>();
+			for (NoteSequenceExpression expression : expressions) {
+				NoteSequenceGetter visitor = new NoteSequenceGetter();
+				expression.visit(visitor);
+				sequences.add(visitor.getNoteSequence());
+			}
+			noteSequence = new NoteSequenceComposite(sequences.toArray(new NoteSequence[sequences.size()]));
+		}
+
+		public NoteSequence getNoteSequence() {
+			return noteSequence;
+		}
+
+	}
 }

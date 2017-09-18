@@ -1,8 +1,6 @@
 package org.fergonco.music.mjargon.model;
 
-public class PitchedNoteSequence implements NoteSequence {
-
-	private PitchArray[] chords;
+public class PitchedNoteSequence extends AbstractSingleSequence implements NoteSequence {
 
 	public PitchedNoteSequence(String[] noteIndices, PitchArray chord) {
 		PitchArray[] singleNotes = new PitchArray[noteIndices.length];
@@ -16,25 +14,15 @@ public class PitchedNoteSequence implements NoteSequence {
 				singleNotes[i] = new TiedPichArray();
 			}
 		}
-		chords = singleNotes;
+		pitches = singleNotes;
 	}
 
 	public PitchedNoteSequence(String[] chordStrings) {
-		chords = ChordLiteral.parseSequence(chordStrings);
+		pitches = ChordLiteral.parseSequence(chordStrings);
 	}
 
 	public PitchArray getChord(int chordProgressionIndex) {
-		return chords[chordProgressionIndex];
-	}
-
-	@Override
-	public PitchArray getNote(int noteIndex) {
-		return chords[noteIndex];
-	}
-
-	@Override
-	public PitchArray[] getAllNotes() {
-		return chords;
+		return pitches[chordProgressionIndex];
 	}
 
 }

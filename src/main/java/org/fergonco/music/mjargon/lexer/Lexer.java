@@ -70,6 +70,7 @@ public class Lexer {
 	public static final int TOM6 = 68;
 	public static final int T6 = 69;
 	public static final int OF = 70;
+	public static final int PLUS = 71;
 	public static final int[] DRUM_INSTRUMENTS = new int[] { HIHAT, HH, HIHATOPEN, HHO, HIHATPEDAL, HHP, BASSDRUM, BD,
 			SNARE, SN, RIDE, RD, CRASH, CR, TOM1, T1, TOM2, T2, TOM3, T3, TOM4, T4, TOM5, T5, TOM6, T6 };
 
@@ -215,6 +216,8 @@ public class Lexer {
 					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), UNDERSCORE));
 				} else if (character == '=') {
 					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), EQUALS));
+				} else if (character == '+') {
+					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), PLUS));
 				} else {
 					throw new LexerException("Invalid character: " + character);
 				}

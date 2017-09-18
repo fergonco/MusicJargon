@@ -22,19 +22,20 @@ public class InstrumentBar implements Bar {
 	}
 
 	public Note[] getNotes(Dynamic baseDynamics, Note lastNote) {
+		RhythmComponent[] components = rhythm.getComponents();
+		
 		PitchArray[] pitches = null;
 		if (noteIndex == -1) {
-			pitches = noteSequence.getAllNotes();
+			pitches = noteSequence.getAllNotes(components.length);
 		} else {
 			pitches = new PitchArray[] { noteSequence.getNote(noteIndex) };
 		}
 
 		ArrayList<Note> ret = new ArrayList<>();
-		RhythmComponent[] components = rhythm.getComponents();
 		int pitchesIndex = 0;
 		for (int i = 0; i < components.length; i++) {
 			PitchArray pitch = pitches[pitchesIndex];
-			pitchesIndex = (pitchesIndex + 1) % pitches.length;
+			pitchesIndex++;
 			Dynamic dynamic = components[i].isSilence() ? Dynamic.MUTE : baseDynamics;
 			if (components[i].isAccent()) {
 				dynamic = dynamic.louder().louder();
