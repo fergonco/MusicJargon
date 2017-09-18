@@ -38,11 +38,11 @@ Note that the length of the notes depends on the time signature and it is automa
 
 	quarterRhythm = rhythm [XXXX] on 4/4
 
-Each *X* repressents a quarter note. In this one:
+Each *X* represents a quarter note. In this one:
 
 	eighthRhythm = rhythm [XxXxXxXx] on 4/4
 
-each character repressents a eighth note.
+each character represents a eighth note.
 
 
 So, we could define a We will rock you rhythm like this:
@@ -59,7 +59,7 @@ Voices are the first line on the bar section and define the instruments:
 
 	voices | <instrument_name> "comment" | <instrument_name> "comment" | ...
 
-See TODO for a list of possible instruments.
+See at the end for a list of possible instruments.
 
 Note that some instruments have two voices and they have to be added explicitly, for example the two hands for piano:
 
@@ -83,7 +83,7 @@ The syntax of individual bars is the following:
 
 	<note_sequence> on <rhythm_name>
 
-Where *note_sequence* defines a sequence of notes, which can be pitched notes (C, D, E♯, etc.) or drumm "notes" (hihat, snare, etc.), and *rhythm_name* points to a previously defined rhythm.
+Where *note_sequence* defines a sequence of notes, which can be pitched notes (C, D, E♯, etc.) or drum "notes" (hihat, snare, etc.), and *rhythm_name* points to a previously defined rhythm.
 
 The logic is the same in both pitched and drum sequences: match each *X* or *x* component from the rhythm with the note that takes the same place in the sequence. For example:
 	
@@ -101,7 +101,88 @@ If the sequence is shorter than the rhythm it is rolled over, which is very usef
 
 ### Pitched sequences
 
+Pitched sequences are a sequence of notes, these notes can be single notes or chords and the sequence can mix these. Note sequences are separated by spaces and the syntax for an individual note is:
+
+	<note-name><accidental>?<octave>?
+
+where *note-name* is one of CDEFGAB uppercase letters, accidental is, optional, either the ♯ or the ♭ character and octave is also optional and defines in which octave to play the note.
+
+By default, if there is no accidental, as expected, the pitch of the note is not modified.
+
+The default octave is the last octave specified. Thus, in this sequence, all notes are in the third octave:
+
+	A3 B C D E
+
+For the first note, the default octave is the fourth and
+
+	C
+
+is middle C.
+
+Silences are expressed as -. For example:
+
+	beat = rhythm [xxxx] on 4/4
+	voices    | piano "right hand" | piano "left hand"
+	tempo 100 |                    |
+			  |                    | - - - C4 on beat
+			  | D4GB on whole      | B A G A  on beat
+			  | EAC5 on whole      | A        on whole
+
+Underscore will make the previous note be stretched on the corresponding rhythm component:
+
+	beat = rhythm [xxxx] on 4/4
+	voices    | piano "right hand" | piano "left hand"
+	tempo 100 |                    |
+			  |                    | - - - C4 on beat
+			  | D4GB on whole      | B _ G A  on beat
+			  | EAC5 on whole      | _        on whole
+
+When a sequence is going to be repeated several times in the song, it is possible to give it a name and reuse the name in the bar section:
+
+	beat = rhythm [xxxx] on 4/4
+	seq  = sequence B _ G A
+	voices    | piano "right hand" | piano "left hand"
+	tempo 100 |                    |
+			  |                    | - - - C4 on beat
+			  | D4GB on whole      | seq      on beat
+			  | D4GB on whole      | seq      on beat
+			  | EAC5 on whole      | _        on whole
+
+It is also possible to reference a note in a sequence using parentheses: *seq(1) on beat*
+
+	ts      = time signature 6/8
+	r       = rhythm [XxxXxx] on ts
+	whole   = rhythm [x] on ts
+	chords  = sequence C4EG EGB FAC5 E4G♯B
+
+	voices    | fingered_bass   | overdrive_guitar
+	dynamics  | f               | p
+	tempo 120 |                 |
+			  | C on whole      | chords(0) on r
+			  | E on whole      | chords(1) on r
+			  | F on whole      | chords(2) on r
+			  | E on whole      | chords(3) on r
+
+And finally, when there is such a chord sequence it is possible to define also sequences of single notes based on the notes of the chord:
+
+	ts      = time signature 6/8
+	r       = rhythm [XxxXxx] on ts
+	whole   = rhythm [x] on ts
+	chords  = sequence C4EG EGB FAC5 E4G♯B
+
+	voices    | fingered_bass                 | overdrive_guitar
+	dynamics  | f                             | p
+	tempo 120 |                               |
+			  | 1 2 3 2 3 1 of chords(0) on r | chords(0) on r
+			  | 1 2 3 2 3 1 of chords(1) on r | chords(1) on r
+			  | 1 2 3 2 3 1 of chords(2) on r | chords(2) on r
+			  | 1 2 3 2 3 1 of chords(3) on r | chords(3) on r
+
 ### Drum sequences
+
+Drum sequences have the same behavior as pitched sequences with two differences.
+
+First, instead of note names we have drums instruments:
 
 * hihat
 * hh
@@ -130,6 +211,18 @@ If the sequence is shorter than the rhythm it is rolled over, which is very usef
 * tom6
 * t6
 
+And second, when declared, they use the *drum sequence* keywords:
+
+	beat       = rhythm [xxxx] on 4/4
+	sixteenths = rhythm [x...x...xX..X..X] on 4/4
+	theRhythm  = drum sequence bd sn bd sn sn sn
+	voices    | drums "right hand" | drums "rhythm"
+	tempo 100 |                    |
+			  | hh on beat         | theRhythm on sixteenths
+			  | hh on beat         | theRhythm on sixteenths
+			  | hh on beat         | theRhythm on sixteenths
+			  | hh on beat         | theRhythm on sixteenths
+
 ## Voices not playing a bar
 
 Just leave the bar empty. Empty bars make the corresponding voice mute during the bar.
@@ -146,7 +239,7 @@ Note that in order to define the tempo for a doted quarter note you have to add 
 
 	tempo 3/8=60
 
-The tempo declaration can have any number of | charaters afterwards, with no meaning at all but allowing for nice formatting and alignment.
+The tempo declaration can have any number of | characters afterwards, with no meaning at all but allowing for nice formatting and alignment.
 
 ## Dynamics
 
@@ -177,7 +270,23 @@ For example, in the following section the left hand and right hand of piano are 
 	dynamics |                   | f
 			 | CEG               | C E G on myRhythm
  
+## Repetitions
+
+Labels define anchor points with the following syntax:
+
+	<label_name>: | | ...
+
+The label declaration can have any number of | characters afterwards, with no meaning at all but allowing for nice formatting and alignment.
+
+Then the *repeat* keyword can be used to jump to a label:
+
+	repeat <label_name> <times>
+
+Where *label_name* is the label to jump to and times is the number of times it has to jump.
+
 ## Instruments
+
+A complete list of the instruments that can be used in *voices* section:
 
 * drums
 * piano
