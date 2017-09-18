@@ -12,7 +12,7 @@ accRide        = drum sequence rd
 bassdrumrhythm = drum sequence bd   bd bd   bd bd    sn
 tutupa         = drum sequence bd bd sn
 
-chords = chord progression E3AC4♯ D3GB FAC4 D3FA EG♯B
+chords = sequence E3AC4♯ D3GB FAC4 D3FA EG♯B
 seq1 = sequence A4 B B A C5♯ E
 seq2 = sequence D5 C C B4 B _
 seq3 = sequence A4 B B C5 A4 _

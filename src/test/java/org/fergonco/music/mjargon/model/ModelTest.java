@@ -117,13 +117,4 @@ public class ModelTest {
 		return model;
 	}
 
-	@Test
-	public void chordTiesNotAllowed() throws LexerException, SyntaxException, SemanticException {
-		try {
-			getModel("c = chord progression CEG _ DFA");
-			fail();
-		} catch (Exception e) {
-			getModel("c = chord progression CEG CEG DFA");
-		}
-	}
 }

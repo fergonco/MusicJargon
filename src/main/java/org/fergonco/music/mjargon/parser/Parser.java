@@ -2,7 +2,6 @@ package org.fergonco.music.mjargon.parser;
 
 import static org.fergonco.music.mjargon.lexer.Lexer.BASSDRUM;
 import static org.fergonco.music.mjargon.lexer.Lexer.BD;
-import static org.fergonco.music.mjargon.lexer.Lexer.CHORD;
 import static org.fergonco.music.mjargon.lexer.Lexer.CHORD_LITERAL;
 import static org.fergonco.music.mjargon.lexer.Lexer.CLOSE_PARENTHESIS;
 import static org.fergonco.music.mjargon.lexer.Lexer.COLON;
@@ -36,7 +35,6 @@ import static org.fergonco.music.mjargon.lexer.Lexer.P;
 import static org.fergonco.music.mjargon.lexer.Lexer.PP;
 import static org.fergonco.music.mjargon.lexer.Lexer.PPP;
 import static org.fergonco.music.mjargon.lexer.Lexer.PPPP;
-import static org.fergonco.music.mjargon.lexer.Lexer.PROGRESSION;
 import static org.fergonco.music.mjargon.lexer.Lexer.RD;
 import static org.fergonco.music.mjargon.lexer.Lexer.REPEAT;
 import static org.fergonco.music.mjargon.lexer.Lexer.RHYTHM;
@@ -397,8 +395,6 @@ public class Parser {
 			timeSignature(id);
 		} else if (accept(RHYTHM)) {
 			rhythm(id);
-		} else if (accept(CHORD)) {
-			chordProgression(id);
 		} else if (accept(SEQUENCE)) {
 			noteSequence(id);
 		} else if (accept(DRUM)) {
@@ -432,20 +428,6 @@ public class Parser {
 		ChordBasedPitchedLiteralExpression noteSequence = chordBasedPitchedLiteralExpression();
 		model.addPitchedNoteSequence(id.getText(), noteSequence.getNotes(), noteSequence.getChordProgressionId(),
 				noteSequence.getChordProgressionIndex());
-	}
-
-	private void chordProgression(Token id) throws SyntaxException {
-		expect(CHORD);
-		expect(PROGRESSION);
-		ArrayList<String> chords = new ArrayList<>();
-		chords.add(expect(CHORD_LITERAL).getText());
-		try {
-			while (true) {
-				chords.add(expect(CHORD_LITERAL).getText());
-			}
-		} catch (SyntaxException e) {
-		}
-		model.addPitchedNoteSequence(id.getText(), chords.toArray(new String[chords.size()]));
 	}
 
 	private void rhythm(Token id) throws SyntaxException, SemanticException {

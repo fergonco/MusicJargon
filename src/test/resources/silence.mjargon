@@ -1,6 +1,6 @@
 ts = time signature 4/4
 whole = rhythm [x] on ts
-chords = chord progression C4EG 
+chords = sequence C4EG 
 seq = sequence 1 of chords(0)
 
 voices | acoustic_bass | piano

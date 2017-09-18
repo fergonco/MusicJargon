@@ -17,8 +17,6 @@ public class Lexer {
 	public static final int TIME = 9;
 	public static final int SIGNATURE = 10;
 	public static final int RHYTHM = 11;
-	public static final int CHORD = 12;
-	public static final int PROGRESSION = 13;
 	public static final int SEQUENCE = 14;
 	public static final int REPEAT = 15;
 	public static final int RHYTHM_EXPRESSION = 16;
@@ -77,7 +75,7 @@ public class Lexer {
 
 	private static HashMap<Integer, String> TOKEN_NAMES = new HashMap<>();
 
-	private static int[] KEYWORDS = new int[] { TEMPO, TIME, SIGNATURE, RHYTHM, CHORD, PROGRESSION, SEQUENCE, REPEAT,
+	private static int[] KEYWORDS = new int[] { TEMPO, TIME, SIGNATURE, RHYTHM, SEQUENCE, REPEAT,
 			ON, DYNAMICS, PPPP, PPP, PP, P, MP, MF, F, FF, FFF, FFFF, DRUM, WITH, VOICES, OF };
 	static {
 

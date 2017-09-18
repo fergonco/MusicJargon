@@ -1,7 +1,7 @@
 ts      = time signature 5/8
 r       = rhythm [XxxXx] on ts
 whole   = rhythm [x] on ts
-chords  = chord progression C4EG EGB FAC5 E4G♯B
+chords  = sequence C4EG EGB FAC5 E4G♯B
 seq1    = sequence 1 2 1 3 2 3 of chords(0)
 seq2    = sequence 1 2 1 3 2 3 of chords(1)
 seq3    = sequence 1 2 1 3 2 3 of chords(2)

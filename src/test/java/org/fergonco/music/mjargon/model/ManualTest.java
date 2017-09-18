@@ -4,7 +4,7 @@ import java.io.File;
 
 public class ManualTest {
 	public static void main(String[] args) throws Exception {
-		ModelTest.testWrite(new File("src/test/resources/tie.mjargon"));
+		ModelTest.testWrite(new File("src/test/resources/script.mjargon"));
 		ModelTest.playMidi();
 	}
 }

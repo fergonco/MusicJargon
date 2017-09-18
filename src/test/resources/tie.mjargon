@@ -2,7 +2,7 @@ ts           = time signature 4/4
 beat         = rhythm [xxxx] on ts
 whole        = rhythm [x] on ts
 
-chords       = chord progression D4GB EAC5
+chords       = sequence D4GB EAC5
 
 voices        | piano "right hand"       | violin  
 tempo 100     |                          |                    
