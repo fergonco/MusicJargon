@@ -10,6 +10,10 @@ Currently it is able to output MIDI files.
 
 MusicJargon works by splitting the concept of rhythm and the concept of pitch. In a music staff, each note has a pitch, a strength and a duration which is defined by one or more complex symbols in a pentagram. In MusicJargon there is no pentagram, just a text file with ascii (well, not only) characters. In order to specify "play a C# on the 7th octave very loud and lasting a quarter note" it is necessary to specify things in several places.
 
+## Comments
+
+At any point it is possible to start a line with a single quote in order to make a comment that is not processed by MusicJargon.
+
 ## Time signatures
 
 Time signature expressions follow this notation:
