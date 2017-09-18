@@ -46,13 +46,14 @@ desc(drumLiteralInBar      , 'use drum literals on the instrument bars').
 desc(silenceNotes          , 'add silence notes in a sequence').
 desc(silence               , 'define that an instrument does not play during a bar').
 
-relate(dynamics      , silence            , 'empty bar means silence, empty dynamics bar means no dynamic change').
-relate(instrumentBar , chordProgression).
-relate(instrumentBar , noteSequence).
-relate(instrumentBar , drumSequence).
-relate(instrumentBar , rhythm).
-relate(instrumentBar , silence).
-relate(rhythm        , timeSignature).
+relate(dynamics         , silence            , 'empty bar means silence, empty dynamics bar means no dynamic change').
+relate(chordProgression , noteSequence       , 'They have the same construct in the grammar: pitched sequences').
+relate(instrumentBar    , chordProgression).
+relate(instrumentBar    , noteSequence).
+relate(instrumentBar    , drumSequence).
+relate(instrumentBar    , rhythm).
+relate(instrumentBar    , silence).
+relate(rhythm           , timeSignature).
 
 language.
 lexer.
