@@ -13,8 +13,8 @@ voices      | drums "hihat"         | drums "rhythm"
 dynamics    | mf                    | mf
 tempo 70    |                       |
 a:          |                       |
-            | crash + hh on eighths | snare + bassdrumSn(1:) on mainRhythm
-            | hh on eighths         | bassdrumSn(1:3)        on mainRhythm
+            | crash + hh on eighths | snare + bassdrumSn{1:} on mainRhythm
+            | hh on eighths         | bassdrumSn{1:3}        on mainRhythm
             | hh on eighths         | sn2bd                  on filledPolyRhythm
             | hh on eighths         | sn2bd                  on polyRhythm
 repeat a 10 |                       |

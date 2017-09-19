@@ -225,17 +225,28 @@ public class Model {
 
 		@Override
 		public void composite(NoteSequenceExpression[] expressions) throws SemanticException {
+			NoteSequence[] sequenceArray = getNoteSequences(expressions);
+			noteSequence = new NoteSequenceComposite(sequenceArray);
+		}
+
+		private NoteSequence[] getNoteSequences(NoteSequenceExpression[] expressions) throws SemanticException {
 			ArrayList<NoteSequence> sequences = new ArrayList<>();
 			for (NoteSequenceExpression expression : expressions) {
 				NoteSequenceGetter visitor = new NoteSequenceGetter();
 				expression.visit(visitor);
 				sequences.add(visitor.getNoteSequence());
 			}
-			noteSequence = new NoteSequenceComposite(sequences.toArray(new NoteSequence[sequences.size()]));
+			NoteSequence[] sequenceArray = sequences.toArray(new NoteSequence[sequences.size()]);
+			return sequenceArray;
 		}
 
 		public NoteSequence getNoteSequence() {
 			return noteSequence;
+		}
+
+		@Override
+		public void function(String id, NoteSequenceExpression[] parameters) throws SemanticException {
+			noteSequence = new FunctionNoteSequence(id, getNoteSequences(parameters));
 		}
 
 	}

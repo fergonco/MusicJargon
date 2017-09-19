@@ -39,8 +39,8 @@ public class Lexer {
 	public static final int DRUM = 36;
 	public static final int WITH = 37;
 	public static final int VOICES = 38;
-	public static final int OPEN_PARENTHESIS = 39;
-	public static final int CLOSE_PARENTHESIS = 40;
+	public static final int OPEN_BRACE = 39;
+	public static final int CLOSE_BRACE = 40;
 	public static final int STRING_LITERAL = 42;
 	public static final int UNDERSCORE = 43;
 	public static final int HIHAT = 44;
@@ -71,13 +71,17 @@ public class Lexer {
 	public static final int T6 = 69;
 	public static final int OF = 70;
 	public static final int PLUS = 71;
+	public static final int OPEN_PARENTHESIS = 72;
+	public static final int CLOSE_PARENTHESIS = 73;
+	public static final int COMA = 74;
+	public static final int NOTE = 75;
 	public static final int[] DRUM_INSTRUMENTS = new int[] { HIHAT, HH, HIHATOPEN, HHO, HIHATPEDAL, HHP, BASSDRUM, BD,
 			SNARE, SN, RIDE, RD, CRASH, CR, TOM1, T1, TOM2, T2, TOM3, T3, TOM4, T4, TOM5, T5, TOM6, T6 };
 
 	private static HashMap<Integer, String> TOKEN_NAMES = new HashMap<>();
 
-	private static int[] KEYWORDS = new int[] { TEMPO, TIME, SIGNATURE, RHYTHM, SEQUENCE, REPEAT,
-			ON, DYNAMICS, PPPP, PPP, PP, P, MP, MF, F, FF, FFF, FFFF, DRUM, WITH, VOICES, OF };
+	private static int[] KEYWORDS = new int[] { TEMPO, TIME, SIGNATURE, RHYTHM, SEQUENCE, REPEAT, ON, DYNAMICS, PPPP,
+			PPP, PP, P, MP, MF, F, FF, FFF, FFFF, DRUM, WITH, VOICES, OF, NOTE };
 	static {
 
 		int[] allKeywords = new int[DRUM_INSTRUMENTS.length + KEYWORDS.length];
@@ -204,12 +208,18 @@ public class Lexer {
 					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), LINE_BREAK));
 				} else if (character == '/') {
 					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), FORWARD_SLASH));
+				} else if (character == ',') {
+					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), COMA));
 				} else if (character == '.') {
 					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), DOT));
 				} else if (character == '(') {
 					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), OPEN_PARENTHESIS));
 				} else if (character == ')') {
 					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), CLOSE_PARENTHESIS));
+				} else if (character == '{') {
+					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), OPEN_BRACE));
+				} else if (character == '}') {
+					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), CLOSE_BRACE));
 				} else if (character == '|') {
 					ret.add(new TokenImpl(tokenPosition, String.valueOf(character), VERTICAL_BAR));
 				} else if (character == '_') {

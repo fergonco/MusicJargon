@@ -2,10 +2,11 @@ package org.fergonco.music.mjargon.parser;
 
 import static org.fergonco.music.mjargon.lexer.Lexer.BASSDRUM;
 import static org.fergonco.music.mjargon.lexer.Lexer.BD;
-import static org.fergonco.music.mjargon.lexer.Lexer.PLUS;
 import static org.fergonco.music.mjargon.lexer.Lexer.CHORD_LITERAL;
+import static org.fergonco.music.mjargon.lexer.Lexer.CLOSE_BRACE;
 import static org.fergonco.music.mjargon.lexer.Lexer.CLOSE_PARENTHESIS;
 import static org.fergonco.music.mjargon.lexer.Lexer.COLON;
+import static org.fergonco.music.mjargon.lexer.Lexer.COMA;
 import static org.fergonco.music.mjargon.lexer.Lexer.COMMENT;
 import static org.fergonco.music.mjargon.lexer.Lexer.CR;
 import static org.fergonco.music.mjargon.lexer.Lexer.CRASH;
@@ -28,11 +29,14 @@ import static org.fergonco.music.mjargon.lexer.Lexer.ID;
 import static org.fergonco.music.mjargon.lexer.Lexer.LINE_BREAK;
 import static org.fergonco.music.mjargon.lexer.Lexer.MF;
 import static org.fergonco.music.mjargon.lexer.Lexer.MP;
+import static org.fergonco.music.mjargon.lexer.Lexer.NOTE;
 import static org.fergonco.music.mjargon.lexer.Lexer.NUMBER;
-import static org.fergonco.music.mjargon.lexer.Lexer.ON;
 import static org.fergonco.music.mjargon.lexer.Lexer.OF;
+import static org.fergonco.music.mjargon.lexer.Lexer.ON;
+import static org.fergonco.music.mjargon.lexer.Lexer.OPEN_BRACE;
 import static org.fergonco.music.mjargon.lexer.Lexer.OPEN_PARENTHESIS;
 import static org.fergonco.music.mjargon.lexer.Lexer.P;
+import static org.fergonco.music.mjargon.lexer.Lexer.PLUS;
 import static org.fergonco.music.mjargon.lexer.Lexer.PP;
 import static org.fergonco.music.mjargon.lexer.Lexer.PPP;
 import static org.fergonco.music.mjargon.lexer.Lexer.PPPP;
@@ -319,21 +323,9 @@ public class Parser {
 	private NoteSequenceExpression singleNoteSequenceExpression() throws SyntaxException {
 		if (accept(ID)) {
 			return sequenceReferenceExpression();
-		} else if (accept(UNDERSCORE)) {
-			Token lookAhead = currentToken;
-			while (accept(UNDERSCORE)) {
-				expect(UNDERSCORE);
-			}
-			if (accept(NUMBER)) {
-				currentToken = lookAhead;
-				return chordBasedPitchedLiteralExpression();
-			} else {
-				currentToken = lookAhead;
-				return pitchedLiteralExpression();
-			}
-		} else if (accept(CHORD_LITERAL)) {
+		} else if (accept(CHORD_LITERAL, UNDERSCORE)) {
 			return pitchedLiteralExpression();
-		} else if (accept(NUMBER)) {
+		} else if (accept(NOTE)) {
 			return chordBasedPitchedLiteralExpression();
 		} else if (accept(DRUM_INSTRUMENTS)) {
 			return drumLiteralExpression();
@@ -364,25 +356,49 @@ public class Parser {
 	}
 
 	private ChordBasedPitchedLiteralExpression chordBasedPitchedLiteralExpression() throws SyntaxException {
+		expect(NOTE);
 		ArrayList<String> notes = new ArrayList<>();
 		while (accept(NUMBER, UNDERSCORE)) {
 			notes.add(expect(NUMBER, UNDERSCORE).getText());
 		}
 		expect(OF);
 		Token chordProgressionId = expect(ID);
-		expect(OPEN_PARENTHESIS);
+		expect(OPEN_BRACE);
 		int chordProgressionIndex = Integer.parseInt(expect(NUMBER).getText());
-		expect(CLOSE_PARENTHESIS);
+		expect(CLOSE_BRACE);
 		return new ChordBasedPitchedLiteralExpression(notes.toArray(new String[notes.size()]),
 				chordProgressionId.getText(), chordProgressionIndex);
 	}
 
 	private NoteSequenceExpression sequenceReferenceExpression() throws SyntaxException {
-		Token id = expect(ID);
-		String noteOrDrumSequenceId = id.getText();
+		String sequenceOrFunctionId = expect(ID).getText();
+		if (accept(OPEN_PARENTHESIS)) {
+			return functionExpression(sequenceOrFunctionId);
+		} else {
+			return sequenceReferenceExpression(sequenceOrFunctionId);
+		}
+	}
+
+	private NoteSequenceExpression functionExpression(String functionId) throws SyntaxException {
+		expect(OPEN_PARENTHESIS);
+		ArrayList<NoteSequenceExpression> parameters = new ArrayList<>();
+		NoteSequenceExpression expression;
+		while ((expression = functionParameter()) != null) {
+			parameters.add(expression);
+			expect(COMA, CLOSE_PARENTHESIS);
+		}
+
+		return new FunctionExpression(functionId, parameters.toArray(new NoteSequenceExpression[parameters.size()]));
+	}
+
+	private NoteSequenceExpression functionParameter() throws SyntaxException {
+		return noteSequenceExpression();
+	}
+
+	private NoteSequenceExpression sequenceReferenceExpression(String sequenceOrFunctionId) {
 		SequenceAccesor sequenceAccesor = null;
 		try {
-			expect(OPEN_PARENTHESIS);
+			expect(OPEN_BRACE);
 			sequenceAccesor = new SequenceAccesor(Integer.parseInt(expect(NUMBER).getText()));
 			if (accept(COLON)) {
 				expect(COLON);
@@ -393,10 +409,10 @@ public class Parser {
 				}
 			}
 
-			expect(CLOSE_PARENTHESIS);
+			expect(CLOSE_BRACE);
 		} catch (SyntaxException e) {
 		}
-		return new SequenceReferenceExpression(noteOrDrumSequenceId, sequenceAccesor);
+		return new SequenceReferenceExpression(sequenceOrFunctionId, sequenceAccesor);
 	}
 
 	private void label(Token id) throws SyntaxException {
@@ -436,12 +452,13 @@ public class Parser {
 
 	private void noteSequence(Token id) throws SyntaxException, SemanticException {
 		expect(SEQUENCE);
-		if (accept(NUMBER)) {
+		if (accept(NOTE)) {
 			chordBasedNoteSequence(id);
 		} else if (accept(CHORD_LITERAL)) {
 			freeNoteSequence(id);
 		} else {
-			throw new SyntaxException(lastConsumed.getPosition(), "number or note expression expected");
+			throw new SyntaxException(lastConsumed.getPosition(),
+					"'note' (for chord based sequences) or a sequence of note literals expected");
 		}
 	}
 

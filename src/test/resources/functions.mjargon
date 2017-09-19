@@ -1,0 +1,12 @@
+beat         = rhythm [xxxx] on 4/4
+subbeat      = rhythm [XxXxXxXx] on 4/4
+
+chords      = sequence D4GB EAC5 EGB CEG
+
+voices    | piano "right hand"                        | drums "right hand"                      
+tempo 120 |                                           |                               
+          | arpeggio(chords{0}) on subbeat            | crash + hihat on beat                 
+          | arpeggio(chords{1}) on subbeat            | hihat on beat                 
+          | arpeggio(chords{2}) on subbeat            | hihat on subbeat                 
+          | arpeggio(chords{3}) on subbeat            | hihat on subbeat                 
+              

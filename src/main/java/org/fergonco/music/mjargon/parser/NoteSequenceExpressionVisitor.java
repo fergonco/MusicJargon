@@ -11,9 +11,11 @@ public interface NoteSequenceExpressionVisitor {
 
 	void drums(DrumNote[] notes) throws SemanticException;
 
-	void chordBasedPitched(String[] notes, String chordProgressionId, int chordProgressionIndex) throws SemanticException;
+	void chordBasedPitched(String[] notes, String chordProgressionId, int chordProgressionIndex)
+			throws SemanticException;
 
 	void composite(NoteSequenceExpression[] expressions) throws SemanticException;
 
+	void function(String id, NoteSequenceExpression[] parameters) throws SemanticException;
 
 }

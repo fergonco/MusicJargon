@@ -4,11 +4,11 @@ whole        = rhythm [x] on ts
 
 chords       = sequence D4GB EAC5
 
-voices        | piano "right hand"           | piano "left hand"  
-tempo 100     |                              |                    
-              |                              | - - - C4 on beat        
-              | D4GB on whole                | B A G _  on beat   
-              | EAC5 on whole                | A        on whole  
-              | 1 2 3 2 of chords(0) on beat | G        on whole  
-              | 1 2 3 2 of chords(1) on beat | A        on whole  
+voices        | piano "right hand"                | piano "left hand"  
+tempo 100     |                                   |                    
+              |                                   | - - - C4 on beat        
+              | D4GB on whole                     | B A G _  on beat   
+              | EAC5 on whole                     | A        on whole  
+              | note 1 2 3 2 of chords{0} on beat | G        on whole  
+              | note 1 2 3 2 of chords{1} on beat | A        on whole  
               
