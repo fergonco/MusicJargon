@@ -162,10 +162,10 @@ And when there is such a chord sequence it is possible to define sequences of si
 	voices    | fingered_bass                 | overdrive_guitar
 	dynamics  | f                             | p
 	tempo 120 |                               |
-			  | 1 2 3 2 3 1 of chords(0) on r | chords(0) on r
-			  | 1 2 3 2 3 1 of chords(1) on r | chords(1) on r
-			  | 1 2 3 2 3 1 of chords(2) on r | chords(2) on r
-			  | 1 2 3 2 3 1 of chords(3) on r | chords(3) on r
+	          | 1 2 3 2 3 1 of chords(0) on r | chords(0) on r
+	          | 1 2 3 2 3 1 of chords(1) on r | chords(1) on r
+	          | 1 2 3 2 3 1 of chords(2) on r | chords(2) on r
+	          | 1 2 3 2 3 1 of chords(3) on r | chords(3) on r
 
 ### Drum sequences
 
@@ -207,10 +207,10 @@ And second, when declared, they use the *drum sequence* keywords:
 	theRhythm  = drum sequence bd sn bd sn sn sn
 	voices    | drums "right hand" | drums "rhythm"
 	tempo 100 |                    |
-			  | hh on beat         | theRhythm on sixteenths
-			  | hh on beat         | theRhythm on sixteenths
-			  | hh on beat         | theRhythm on sixteenths
-			  | hh on beat         | theRhythm on sixteenths
+	          | hh on beat         | theRhythm on sixteenths
+	          | hh on beat         | theRhythm on sixteenths
+	          | hh on beat         | theRhythm on sixteenths
+	          | hh on beat         | theRhythm on sixteenths
 
 ### Sequence accesors
 
@@ -234,11 +234,38 @@ This is valid for both pitched and drum sequences:
 	dynamics    | mf                    | mf
 	tempo 70    |                       |
 	a:          |                       |
-				| crash + hh on eighths | snare + bassdrumSn(1:) on mainRhythm
-				| hh on eighths         | bassdrumSn(1:3)        on mainRhythm
-				| hh on eighths         | sn2bd                  on filledPolyRhythm
-				| hh on eighths         | sn2bd                  on polyRhythm
+	            | crash + hh on eighths | snare + bassdrumSn(1:) on mainRhythm
+	            | hh on eighths         | bassdrumSn(1:3)        on mainRhythm
+	            | hh on eighths         | sn2bd                  on filledPolyRhythm
+	            | hh on eighths         | sn2bd                  on polyRhythm
 	repeat a 10 |                       |
+
+### Sequence functions
+
+Sequence functions can be used in bars. They take a number of parameters, that can be numbers, string literals or note sequences and produce a new note sequence.
+
+#### arpeggio
+
+Generates a sequence of the arpeggiated notes of a chord. It receives a chord parameter and an optional string with the 1-based indices of the notes in the chord to use:
+
+	beat         = rhythm [xxxx] on 4/4
+	subbeat      = rhythm [XxXxXxXx] on 4/4
+	chords       = sequence D4GB EAC5 E4GB CEG
+	voices    | piano "right hand"                            | drums "right hand"                      
+			  | arpeggio(chords{0}, "12323")       on subbeat | crash + hihat on beat                 
+			  | arpeggio(chords{1})                on subbeat | hihat on beat                 
+
+#### transpose8
+
+Transposes the input sequence a number of octaves. It receives a note sequence and a number as a parameter:
+
+	beat         = rhythm [xxxx] on 4/4
+	subbeat      = rhythm [XxXxXxXx] on 4/4
+	chords       = sequence D4GB EAC5 E4GB CEG
+	voices    | piano "right hand"                                    | drums "right hand"                      
+			  | transpose8(arpeggio(chords{0}, "12323"), 1 on subbeat | crash + hihat on beat                 
+			  | transpose8(arpeggio(chords{1})        ), 1 on subbeat | hihat on beat                 
+
 
 ## Voices not playing a bar
 
@@ -283,9 +310,9 @@ For example, in the following section the left hand and right hand of piano are 
 	voices   | piano "left hand" | piano "right hand"
 	tempo 70 |                   |
 	dynamics | mf                | mf
-			 | CEG               | C E G on myRhythm
+	         | CEG               | C E G on myRhythm
 	dynamics |                   | f
-			 | CEG               | C E G on myRhythm
+	         | CEG               | C E G on myRhythm
  
 ## Repetitions
 
