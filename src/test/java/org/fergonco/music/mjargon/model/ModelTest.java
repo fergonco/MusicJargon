@@ -12,12 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.MidiUnavailableException;
-import javax.sound.midi.Sequencer;
-
 import org.apache.commons.io.IOUtils;
-import org.fergonco.music.midi.MidiPlayer;
 import org.fergonco.music.mjargon.lexer.Lexer;
 import org.fergonco.music.mjargon.lexer.LexerException;
 import org.fergonco.music.mjargon.lexer.Token;
@@ -87,16 +82,6 @@ public class ModelTest {
 			return IOUtils.toByteArray(stream);
 		} finally {
 			stream.close();
-		}
-	}
-
-	static void playMidi()
-			throws MidiUnavailableException, IOException, InvalidMidiDataException, InterruptedException {
-		Sequencer sequencer = MidiPlayer.play(new File("/tmp/a.midi"));
-		while (sequencer.isRunning()) {
-			synchronized (ModelTest.class) {
-				ModelTest.class.wait(500);
-			}
 		}
 	}
 

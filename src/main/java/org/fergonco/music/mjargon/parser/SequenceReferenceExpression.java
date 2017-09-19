@@ -5,16 +5,16 @@ import org.fergonco.music.mjargon.model.SemanticException;
 public class SequenceReferenceExpression implements NoteSequenceExpression {
 
 	private String sequenceId;
-	private int noteSequenceIndex;
+	private SequenceAccesor sequenceAccesor;
 
-	public SequenceReferenceExpression(String sequenceId, int noteSequenceIndex) {
+	public SequenceReferenceExpression(String sequenceId, SequenceAccesor sequenceAccesor) {
 		this.sequenceId = sequenceId;
-		this.noteSequenceIndex = noteSequenceIndex;
+		this.sequenceAccesor= sequenceAccesor;
 	}
 
 	@Override
 	public void visit(NoteSequenceExpressionVisitor visitor) throws SemanticException {
-		visitor.sequenceReference(sequenceId, noteSequenceIndex);
+		visitor.sequenceReference(sequenceId, sequenceAccesor);
 	}
 
 }

@@ -5,7 +5,7 @@ import org.fergonco.music.mjargon.model.SemanticException;
 
 public interface NoteSequenceExpressionVisitor {
 
-	void sequenceReference(String noteOrDrumsSequenceId, int noteIndex) throws SemanticException;
+	void sequenceReference(String noteOrDrumsSequenceId, SequenceAccesor sequenceAccesor) throws SemanticException;
 
 	void pitched(String[] notes) throws SemanticException;
 
@@ -14,5 +14,6 @@ public interface NoteSequenceExpressionVisitor {
 	void chordBasedPitched(String[] notes, String chordProgressionId, int chordProgressionIndex) throws SemanticException;
 
 	void composite(NoteSequenceExpression[] expressions) throws SemanticException;
+
 
 }

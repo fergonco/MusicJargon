@@ -23,11 +23,6 @@ public class NoteSequenceComposite implements NoteSequence {
 	}
 
 	@Override
-	public PitchArray getNote(int noteIndex) {
-		return notes[noteIndex];
-	}
-
-	@Override
 	public PitchArray[] getAllNotes(int numNotes) {
 		PitchArray[] ret = new PitchArray[numNotes];
 		int noteIndex = 0;

@@ -14,11 +14,6 @@ public abstract class AbstractSingleSequence implements NoteSequence {
 	}
 
 	@Override
-	public PitchArray getNote(int noteIndex) {
-		return pitches[noteIndex];
-	}
-
-	@Override
 	public PitchArray[] getAllNotes() {
 		return pitches;
 	}

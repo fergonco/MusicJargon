@@ -12,24 +12,17 @@ import org.fergonco.music.midi.NoteImpl;
 public class InstrumentBar implements Bar {
 
 	private NoteSequence noteSequence;
-	private int noteIndex;
 	private Rhythm rhythm;
 
-	public InstrumentBar(NoteSequence noteSequence, int noteIndex, Rhythm rhythm) {
+	public InstrumentBar(NoteSequence noteSequence, Rhythm rhythm) {
 		this.noteSequence = noteSequence;
-		this.noteIndex = noteIndex;
 		this.rhythm = rhythm;
 	}
 
 	public Note[] getNotes(Dynamic baseDynamics, Note lastNote) {
 		RhythmComponent[] components = rhythm.getComponents();
-		
-		PitchArray[] pitches = null;
-		if (noteIndex == -1) {
-			pitches = noteSequence.getAllNotes(components.length);
-		} else {
-			pitches = new PitchArray[] { noteSequence.getNote(noteIndex) };
-		}
+
+		PitchArray[] pitches = noteSequence.getAllNotes(components.length);
 
 		ArrayList<Note> ret = new ArrayList<>();
 		int pitchesIndex = 0;

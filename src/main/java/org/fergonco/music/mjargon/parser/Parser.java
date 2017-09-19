@@ -380,14 +380,23 @@ public class Parser {
 	private NoteSequenceExpression sequenceReferenceExpression() throws SyntaxException {
 		Token id = expect(ID);
 		String noteOrDrumSequenceId = id.getText();
-		int noteSequenceIndex = -1;
+		SequenceAccesor sequenceAccesor = null;
 		try {
 			expect(OPEN_PARENTHESIS);
-			noteSequenceIndex = Integer.parseInt(expect(NUMBER).getText());
+			sequenceAccesor = new SequenceAccesor(Integer.parseInt(expect(NUMBER).getText()));
+			if (accept(COLON)) {
+				expect(COLON);
+				if (accept(NUMBER)) {
+					sequenceAccesor.setEndIndex(Integer.parseInt(expect(NUMBER).getText()));
+				} else {
+					sequenceAccesor.setUnbounded();
+				}
+			}
+
 			expect(CLOSE_PARENTHESIS);
 		} catch (SyntaxException e) {
 		}
-		return new SequenceReferenceExpression(noteOrDrumSequenceId, noteSequenceIndex);
+		return new SequenceReferenceExpression(noteOrDrumSequenceId, sequenceAccesor);
 	}
 
 	private void label(Token id) throws SyntaxException {

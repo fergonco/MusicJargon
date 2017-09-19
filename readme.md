@@ -152,22 +152,7 @@ When a sequence is going to be repeated several times in the song, it is possibl
 			  | D4GB on whole      | seq      on beat
 			  | EAC5 on whole      | _        on whole
 
-It is also possible to reference a note in a sequence using parentheses: *seq(1) on beat*
-
-	ts      = time signature 6/8
-	r       = rhythm [XxxXxx] on ts
-	whole   = rhythm [x] on ts
-	chords  = sequence C4EG EGB FAC5 E4G♯B
-
-	voices    | fingered_bass   | overdrive_guitar
-	dynamics  | f               | p
-	tempo 120 |                 |
-			  | C on whole      | chords(0) on r
-			  | E on whole      | chords(1) on r
-			  | F on whole      | chords(2) on r
-			  | E on whole      | chords(3) on r
-
-And finally, when there is such a chord sequence it is possible to define also sequences of single notes based on the notes of the chord:
+And when there is such a chord sequence it is possible to define sequences of single notes based on the notes of a chord of the sequence:
 
 	ts      = time signature 6/8
 	r       = rhythm [XxxXxx] on ts
@@ -226,6 +211,34 @@ And second, when declared, they use the *drum sequence* keywords:
 			  | hh on beat         | theRhythm on sixteenths
 			  | hh on beat         | theRhythm on sixteenths
 			  | hh on beat         | theRhythm on sixteenths
+
+### Sequence accesors
+
+It is possible to access parts of named sequences from bars:
+
+	<sequence_name>(<startIndex>[:[<endIndex>]])
+
+If only *startIndex* is defined, the expression returns the zero-based index-th note in the sequence. If *endIndex* is defined it returns the notes between *startIndex* and *endIndex*, both included. And if the colon appears, but no *endIndex* (e.g.: *seq(1:)*) it returns the notes from *startIndex* until the end of the sequence.
+
+This is valid for both pitched and drum sequences:
+
+	ts = time signature 3/4
+
+	eighths          = rhythm [X.x.X.x.X.x.] on ts
+	mainRhythm       = rhythm [x.xx..xx..x.] on ts
+	polyRhythm       = rhythm [x..x..x..x..] on ts
+	filledPolyRhythm = rhythm [xxXxxXxxXxxX] on ts
+	bassdrumSn       = drum sequence bd sn bd bd bd sn
+	sn2bd            = drum sequence bd bd sn
+	voices      | drums "hihat"         | drums "rhythm"
+	dynamics    | mf                    | mf
+	tempo 70    |                       |
+	a:          |                       |
+				| crash + hh on eighths | snare + bassdrumSn(1:) on mainRhythm
+				| hh on eighths         | bassdrumSn(1:3)        on mainRhythm
+				| hh on eighths         | sn2bd                  on filledPolyRhythm
+				| hh on eighths         | sn2bd                  on polyRhythm
+	repeat a 10 |                       |
 
 ## Voices not playing a bar
 

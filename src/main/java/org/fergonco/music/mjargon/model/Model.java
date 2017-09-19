@@ -12,6 +12,7 @@ import org.fergonco.music.midi.Score;
 import org.fergonco.music.midi.Track;
 import org.fergonco.music.mjargon.parser.NoteSequenceExpression;
 import org.fergonco.music.mjargon.parser.NoteSequenceExpressionVisitor;
+import org.fergonco.music.mjargon.parser.SequenceAccesor;
 
 public class Model {
 
@@ -83,41 +84,14 @@ public class Model {
 			final String rhythmId) throws SemanticException {
 		NoteSequenceGetter getter = new NoteSequenceGetter();
 		expression.visit(getter);
-		final NoteSequence noteSequence = getter.getNoteSequence();
-		expression.visit(new NoteSequenceExpressionVisitor() {
-
-			@Override
-			public void sequenceReference(String noteOrDrumsSequenceId, int noteIndex) throws SemanticException {
-				addNoteSequenceToBarline(instrumentIndex, rhythmId, noteSequence, noteIndex);
-			}
-
-			@Override
-			public void pitched(String[] notes) throws SemanticException {
-				addNoteSequenceToBarline(instrumentIndex, rhythmId, noteSequence, -1);
-			}
-
-			@Override
-			public void chordBasedPitched(String[] notes, String chordProgressionId, int chordProgressionIndex)
-					throws SemanticException {
-				addNoteSequenceToBarline(instrumentIndex, rhythmId, noteSequence, -1);
-			}
-
-			@Override
-			public void drums(DrumNote[] notes) throws SemanticException {
-				addNoteSequenceToBarline(instrumentIndex, rhythmId, noteSequence, -1);
-			}
-
-			@Override
-			public void composite(NoteSequenceExpression[] expressions) throws SemanticException {
-				addNoteSequenceToBarline(instrumentIndex, rhythmId, noteSequence, -1);
-			}
-		});
+		NoteSequence noteSequence = getter.getNoteSequence();
+		addNoteSequenceToBarline(instrumentIndex, rhythmId, noteSequence);
 	}
 
-	private void addNoteSequenceToBarline(int instrumentIndex, String rhythmId, NoteSequence noteSequence,
-			int noteIndex) throws SemanticException {
+	private void addNoteSequenceToBarline(int instrumentIndex, String rhythmId, NoteSequence noteSequence)
+			throws SemanticException {
 		Rhythm rhythm = getRhythmOrFail(rhythmId);
-		setInstrumentBar(instrumentIndex, new InstrumentBar(noteSequence, noteIndex, rhythm));
+		setInstrumentBar(instrumentIndex, new InstrumentBar(noteSequence, rhythm));
 	}
 
 	private Rhythm getRhythmOrFail(String rhythmId) throws SemanticException {
@@ -216,11 +190,20 @@ public class Model {
 		private NoteSequence noteSequence;
 
 		@Override
-		public void sequenceReference(String noteOrDrumsSequenceId, int noteIndex) throws SemanticException {
+		public void sequenceReference(String noteOrDrumsSequenceId, SequenceAccesor sequenceAccesor)
+				throws SemanticException {
 			if (noteSequences.containsKey(noteOrDrumsSequenceId)) {
 				noteSequence = noteSequences.get(noteOrDrumsSequenceId);
 			} else {
 				throw new SemanticException("No such sequence: " + noteOrDrumsSequenceId);
+			}
+			if (sequenceAccesor != null) {
+				if (sequenceAccesor.singleNote()) {
+					noteSequence = new NoteSequenceElement(noteSequence, sequenceAccesor.getIndex());
+				} else {
+					noteSequence = new NoteSubsequence(noteSequence, sequenceAccesor.getIndex(),
+							sequenceAccesor.getEndIndex());
+				}
 			}
 		}
 

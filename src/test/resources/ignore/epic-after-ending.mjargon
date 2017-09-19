@@ -1,0 +1,18 @@
+ts           = time signature 4/4
+beat         = rhythm [xxxx] on ts
+half         = rhythm [xx] on ts
+whole        = rhythm [x] on ts
+
+voices        | piano "right hand"       | piano "left hand"   | pipe_organ "left hand"   | pipe_organ "right hand"
+tempo 100     |                          |                     |                          |
+              |                          | - - - C4 on beat    |                          | 
+              | D4GB on whole            | B A G A  on beat    |                          | 
+              | EAC5 on whole            | A        on whole   | EAC5 on whole            | - - - A4 on beat
+              |                          |                     | E4GB on whole            | E5       on whole
+              |                          |                     | _    on whole            | _ A4     on half
+              |                          |                     | D♯F♯B on whole           | D♯       on whole 
+              |                          |                     | _ on whole               | _        on whole
+              |                          |                     | EGB on whole             | E5       on whole
+              |                          |                     | _   on whole             | _ G      on half
+              |                          |                     | D♯F♯B on whole           | D♯       on whole
+              |                          |                     | _ on whole               | _        on whole
