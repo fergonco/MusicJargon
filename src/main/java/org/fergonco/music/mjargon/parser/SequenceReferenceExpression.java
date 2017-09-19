@@ -2,7 +2,7 @@ package org.fergonco.music.mjargon.parser;
 
 import org.fergonco.music.mjargon.model.SemanticException;
 
-public class SequenceReferenceExpression implements NoteSequenceExpression {
+public class SequenceReferenceExpression implements Expression {
 
 	private String sequenceId;
 	private SequenceAccesor sequenceAccesor;
@@ -13,7 +13,7 @@ public class SequenceReferenceExpression implements NoteSequenceExpression {
 	}
 
 	@Override
-	public void visit(NoteSequenceExpressionVisitor visitor) throws SemanticException {
+	public void visit(ExpressionVisitor visitor) throws SemanticException {
 		visitor.sequenceReference(sequenceId, sequenceAccesor);
 	}
 

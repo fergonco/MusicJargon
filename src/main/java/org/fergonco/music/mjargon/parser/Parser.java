@@ -285,7 +285,7 @@ public class Parser {
 		expect(VERTICAL_BAR);
 		int instrumentIndex = 0;
 		while (true) {
-			NoteSequenceExpression expression = noteSequenceExpression();
+			Expression expression = noteSequenceExpression();
 			if (expression != null) {
 				expect(ON);
 				String rhythmId = expect(ID).getText();
@@ -304,23 +304,22 @@ public class Parser {
 		model.newBarline();
 	}
 
-	private NoteSequenceExpression noteSequenceExpression() throws SyntaxException {
-		ArrayList<NoteSequenceExpression> expressions = new ArrayList<>();
-		NoteSequenceExpression expr1 = singleNoteSequenceExpression();
+	private Expression noteSequenceExpression() throws SyntaxException {
+		ArrayList<Expression> expressions = new ArrayList<>();
+		Expression expr1 = singleNoteSequenceExpression();
 		if (accept(PLUS)) {
 			expressions.add(expr1);
 			while (accept(PLUS)) {
 				expect(PLUS);
 				expressions.add(singleNoteSequenceExpression());
 			}
-			return new NoteSequenceCompositeExpression(
-					expressions.toArray(new NoteSequenceExpression[expressions.size()]));
+			return new NoteSequenceCompositeExpression(expressions.toArray(new Expression[expressions.size()]));
 		} else {
 			return expr1;
 		}
 	}
 
-	private NoteSequenceExpression singleNoteSequenceExpression() throws SyntaxException {
+	private Expression singleNoteSequenceExpression() throws SyntaxException {
 		if (accept(ID)) {
 			return sequenceReferenceExpression();
 		} else if (accept(CHORD_LITERAL, UNDERSCORE)) {
@@ -370,7 +369,7 @@ public class Parser {
 				chordProgressionId.getText(), chordProgressionIndex);
 	}
 
-	private NoteSequenceExpression sequenceReferenceExpression() throws SyntaxException {
+	private Expression sequenceReferenceExpression() throws SyntaxException {
 		String sequenceOrFunctionId = expect(ID).getText();
 		if (accept(OPEN_PARENTHESIS)) {
 			return functionExpression(sequenceOrFunctionId);
@@ -379,23 +378,37 @@ public class Parser {
 		}
 	}
 
-	private NoteSequenceExpression functionExpression(String functionId) throws SyntaxException {
+	private Expression functionExpression(String functionId) throws SyntaxException {
 		expect(OPEN_PARENTHESIS);
-		ArrayList<NoteSequenceExpression> parameters = new ArrayList<>();
-		NoteSequenceExpression expression;
+		ArrayList<Expression> parameters = new ArrayList<>();
+		Expression expression;
 		while ((expression = functionParameter()) != null) {
 			parameters.add(expression);
 			expect(COMA, CLOSE_PARENTHESIS);
 		}
 
-		return new FunctionExpression(functionId, parameters.toArray(new NoteSequenceExpression[parameters.size()]));
+		return new FunctionExpression(functionId, parameters.toArray(new Expression[parameters.size()]));
 	}
 
-	private NoteSequenceExpression functionParameter() throws SyntaxException {
-		return noteSequenceExpression();
+	private Expression functionParameter() throws SyntaxException {
+		if (accept(NUMBER)) {
+			return numberExpression();
+		} else if (accept(STRING_LITERAL)) {
+			return stringExpression();
+		} else {
+			return noteSequenceExpression();
+		}
 	}
 
-	private NoteSequenceExpression sequenceReferenceExpression(String sequenceOrFunctionId) {
+	private Expression stringExpression() throws SyntaxException {
+		return new StringExpression(trimDelimiters(expect(STRING_LITERAL).getText()));
+	}
+
+	private Expression numberExpression() throws NumberFormatException, SyntaxException {
+		return new NumberExpression(Integer.parseInt(expect(NUMBER).getText()));
+	}
+
+	private Expression sequenceReferenceExpression(String sequenceOrFunctionId) {
 		SequenceAccesor sequenceAccesor = null;
 		try {
 			expect(OPEN_BRACE);
@@ -480,11 +493,11 @@ public class Parser {
 			expect(ON);
 			if (accept(ID)) {
 				Token timeSignature = expect(ID);
-				model.addRhythmWithTimeSignatureId(id.getText(), trimRhythmExpressionDelimiters(expr.getText()),
+				model.addRhythmWithTimeSignatureId(id.getText(), trimDelimiters(expr.getText()),
 						timeSignature.getText());
 			} else if (accept(NUMBER)) {
 				int[] timeSignature = getFractionExpression();
-				model.addRhythmWithTimeSignatureLiteral(id.getText(), trimRhythmExpressionDelimiters(expr.getText()),
+				model.addRhythmWithTimeSignatureLiteral(id.getText(), trimDelimiters(expr.getText()),
 						timeSignature);
 			} else {
 				throw new SyntaxException(lastConsumed.getPosition(), "Time signature variable or literal expected");
@@ -492,13 +505,13 @@ public class Parser {
 		} else if (accept(WITH)) {
 			expect(WITH);
 			int[] noteLength = getFractionExpression();
-			model.addRhythmWithNoteLength(id.getText(), trimRhythmExpressionDelimiters(expr.getText()), noteLength[1]);
+			model.addRhythmWithNoteLength(id.getText(), trimDelimiters(expr.getText()), noteLength[1]);
 		} else {
 			throw new SyntaxException(lastConsumed.getPosition(), "WITH or OR expected");
 		}
 	}
 
-	private String trimRhythmExpressionDelimiters(String text) {
+	private String trimDelimiters(String text) {
 		return text.substring(1, text.length() - 1);
 	}
 

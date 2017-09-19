@@ -2,7 +2,7 @@ package org.fergonco.music.mjargon.parser;
 
 import org.fergonco.music.mjargon.model.SemanticException;
 
-public class PitchedLiteralExpression implements NoteSequenceExpression {
+public class PitchedLiteralExpression implements Expression {
 
 	private String[] notes;
 
@@ -11,7 +11,7 @@ public class PitchedLiteralExpression implements NoteSequenceExpression {
 	}
 
 	@Override
-	public void visit(NoteSequenceExpressionVisitor visitor) throws SemanticException {
+	public void visit(ExpressionVisitor visitor) throws SemanticException {
 		visitor.pitched(notes);
 	}
 

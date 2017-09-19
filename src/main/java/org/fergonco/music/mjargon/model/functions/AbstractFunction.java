@@ -1,15 +1,19 @@
 package org.fergonco.music.mjargon.model.functions;
 
-import org.fergonco.music.mjargon.model.NoteSequence;
 import org.fergonco.music.mjargon.model.SemanticException;
+import org.fergonco.music.mjargon.model.Value;
 
 public abstract class AbstractFunction implements Function {
 
-	protected NoteSequence[] parameters;
+	private Value[] parameters;
 
 	@Override
-	public void setParameters(NoteSequence[] parameters) throws SemanticException {
+	public void setParameters(Value[] parameters) throws SemanticException {
 		this.parameters = parameters;
+	}
+	
+	public Value[] getParameters() {
+		return parameters;
 	}
 
 }

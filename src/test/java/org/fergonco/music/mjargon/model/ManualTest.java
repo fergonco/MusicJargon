@@ -14,7 +14,7 @@ import org.fergonco.music.mjargon.parser.Parser;
 
 public class ManualTest {
 	public static void main(String[] args) throws Exception {
-		String scriptName = "functions";
+		String scriptName = "tie";
 		InputStream is = new FileInputStream(new File("src/test/resources/" + scriptName + ".mjargon"));
 		String script = IOUtils.toString(is, "utf-8");
 		is.close();
@@ -30,5 +30,7 @@ public class ManualTest {
 				ModelTest.class.wait(500);
 			}
 		}
+		sequencer.stop();
+		sequencer.close();
 	}
 }

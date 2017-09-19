@@ -2,16 +2,16 @@ package org.fergonco.music.mjargon.parser;
 
 import org.fergonco.music.mjargon.model.SemanticException;
 
-public class NoteSequenceCompositeExpression implements NoteSequenceExpression {
+public class NoteSequenceCompositeExpression implements Expression {
 
-	private NoteSequenceExpression[] expressions;
+	private Expression[] expressions;
 
-	public NoteSequenceCompositeExpression(NoteSequenceExpression[] expressions) {
+	public NoteSequenceCompositeExpression(Expression[] expressions) {
 		this.expressions = expressions;
 	}
 
 	@Override
-	public void visit(NoteSequenceExpressionVisitor visitor) throws SemanticException {
+	public void visit(ExpressionVisitor visitor) throws SemanticException {
 		visitor.composite(expressions);
 	}
 

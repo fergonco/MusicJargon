@@ -1,6 +1,6 @@
 package org.fergonco.music.mjargon.model;
 
-public abstract class AbstractSingleSequence implements NoteSequence {
+public abstract class AbstractSingleSequence extends AbstractNoteSequence implements NoteSequence {
 
 	protected PitchArray[] pitches;
 
@@ -17,4 +17,5 @@ public abstract class AbstractSingleSequence implements NoteSequence {
 	public PitchArray[] getAllNotes() {
 		return pitches;
 	}
+
 }

@@ -10,8 +10,8 @@ import org.fergonco.music.midi.InstrumentNames;
 import org.fergonco.music.midi.Note;
 import org.fergonco.music.midi.Score;
 import org.fergonco.music.midi.Track;
-import org.fergonco.music.mjargon.parser.NoteSequenceExpression;
-import org.fergonco.music.mjargon.parser.NoteSequenceExpressionVisitor;
+import org.fergonco.music.mjargon.parser.Expression;
+import org.fergonco.music.mjargon.parser.ExpressionVisitor;
 import org.fergonco.music.mjargon.parser.SequenceAccesor;
 
 public class Model {
@@ -80,11 +80,11 @@ public class Model {
 		this.instruments = instruments;
 	}
 
-	public void addSequenceToBarline(final int instrumentIndex, NoteSequenceExpression expression,
+	public void addSequenceToBarline(final int instrumentIndex, Expression expression,
 			final String rhythmId) throws SemanticException {
-		NoteSequenceGetter getter = new NoteSequenceGetter();
+		ValueGetter getter = new ValueGetter();
 		expression.visit(getter);
-		NoteSequence noteSequence = getter.getNoteSequence();
+		NoteSequence noteSequence = getter.getValue().toNoteSequence();
 		addNoteSequenceToBarline(instrumentIndex, rhythmId, noteSequence);
 	}
 
@@ -185,68 +185,79 @@ public class Model {
 		songlines.add(new DynamicsLine(dynamics));
 	}
 
-	private class NoteSequenceGetter implements NoteSequenceExpressionVisitor {
+	private class ValueGetter implements ExpressionVisitor {
 
-		private NoteSequence noteSequence;
+		private Value value;
 
 		@Override
 		public void sequenceReference(String noteOrDrumsSequenceId, SequenceAccesor sequenceAccesor)
 				throws SemanticException {
+			NoteSequence sequence;
 			if (noteSequences.containsKey(noteOrDrumsSequenceId)) {
-				noteSequence = noteSequences.get(noteOrDrumsSequenceId);
+				sequence = noteSequences.get(noteOrDrumsSequenceId);
 			} else {
 				throw new SemanticException("No such sequence: " + noteOrDrumsSequenceId);
 			}
 			if (sequenceAccesor != null) {
 				if (sequenceAccesor.singleNote()) {
-					noteSequence = new NoteSequenceElement(noteSequence, sequenceAccesor.getIndex());
+					sequence = new NoteSequenceElement(sequence, sequenceAccesor.getIndex());
 				} else {
-					noteSequence = new NoteSubsequence(noteSequence, sequenceAccesor.getIndex(),
-							sequenceAccesor.getEndIndex());
+					sequence = new NoteSubsequence(sequence, sequenceAccesor.getIndex(), sequenceAccesor.getEndIndex());
 				}
 			}
+			value = sequence;
 		}
 
 		@Override
 		public void pitched(String[] notes) throws SemanticException {
-			noteSequence = new PitchedNoteSequence(notes);
+			value = new PitchedNoteSequence(notes);
 		}
 
 		@Override
 		public void chordBasedPitched(String[] notes, String chordProgressionId, int chordProgressionIndex)
 				throws SemanticException {
-			noteSequence = new PitchedNoteSequence(notes, getChord(chordProgressionId, chordProgressionIndex));
+			value = new PitchedNoteSequence(notes, getChord(chordProgressionId, chordProgressionIndex));
 		}
 
 		@Override
 		public void drums(DrumNote[] notes) throws SemanticException {
-			noteSequence = new DrumSequence(notes);
+			value = new DrumSequence(notes);
 		}
 
 		@Override
-		public void composite(NoteSequenceExpression[] expressions) throws SemanticException {
-			NoteSequence[] sequenceArray = getNoteSequences(expressions);
-			noteSequence = new NoteSequenceComposite(sequenceArray);
-		}
-
-		private NoteSequence[] getNoteSequences(NoteSequenceExpression[] expressions) throws SemanticException {
+		public void composite(Expression[] expressions) throws SemanticException {
 			ArrayList<NoteSequence> sequences = new ArrayList<>();
-			for (NoteSequenceExpression expression : expressions) {
-				NoteSequenceGetter visitor = new NoteSequenceGetter();
+			for (Expression expression : expressions) {
+				ValueGetter visitor = new ValueGetter();
 				expression.visit(visitor);
-				sequences.add(visitor.getNoteSequence());
+				sequences.add(visitor.getValue().toNoteSequence());
 			}
-			NoteSequence[] sequenceArray = sequences.toArray(new NoteSequence[sequences.size()]);
-			return sequenceArray;
+			value = new NoteSequenceComposite(sequences.toArray(new NoteSequence[sequences.size()]));
 		}
 
-		public NoteSequence getNoteSequence() {
-			return noteSequence;
+		public Value getValue() {
+			return value;
 		}
 
 		@Override
-		public void function(String id, NoteSequenceExpression[] parameters) throws SemanticException {
-			noteSequence = new FunctionNoteSequence(id, getNoteSequences(parameters));
+		public void function(String id, Expression[] parameters) throws SemanticException {
+			ArrayList<Value> values = new ArrayList<>();
+			for (Expression expression : parameters) {
+				ValueGetter visitor = new ValueGetter();
+				expression.visit(visitor);
+				values.add(visitor.getValue());
+			}
+			value = new FunctionNoteSequence(id, values.toArray(new Value[values.size()]));
+		}
+
+		@Override
+		public void number(int number) {
+			value = new NumberValue(number);
+		}
+
+		@Override
+		public void string(String string) {
+			value = new StringValue(string);
 		}
 
 	}

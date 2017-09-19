@@ -2,7 +2,7 @@ package org.fergonco.music.mjargon.parser;
 
 import org.fergonco.music.mjargon.model.SemanticException;
 
-public class ChordBasedPitchedLiteralExpression implements NoteSequenceExpression {
+public class ChordBasedPitchedLiteralExpression implements Expression {
 
 	private String[] notes;
 	private String chordProgressionId;
@@ -15,7 +15,7 @@ public class ChordBasedPitchedLiteralExpression implements NoteSequenceExpressio
 	}
 
 	@Override
-	public void visit(NoteSequenceExpressionVisitor visitor) throws SemanticException {
+	public void visit(ExpressionVisitor visitor) throws SemanticException {
 		visitor.chordBasedPitched(notes, chordProgressionId, chordProgressionIndex);
 	}
 

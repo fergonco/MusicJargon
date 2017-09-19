@@ -2,7 +2,7 @@ package org.fergonco.music.mjargon.model;
 
 import java.util.ArrayList;
 
-public class NoteSequenceComposite implements NoteSequence {
+public class NoteSequenceComposite extends AbstractNoteSequence implements NoteSequence {
 
 	private PitchArray[] notes;
 	private int repeatingIndex;
@@ -17,7 +17,7 @@ public class NoteSequenceComposite implements NoteSequence {
 				allSequenceNotes.add(note);
 			}
 		}
-		
+
 		this.notes = allSequenceNotes.toArray(new PitchArray[allSequenceNotes.size()]);
 		this.repeatingIndex = repeatingIndex;
 	}
@@ -28,7 +28,7 @@ public class NoteSequenceComposite implements NoteSequence {
 		int noteIndex = 0;
 		for (int i = 0; i < ret.length; i++) {
 			ret[i] = notes[noteIndex];
-			noteIndex ++;
+			noteIndex++;
 			if (noteIndex == notes.length) {
 				noteIndex = repeatingIndex;
 			}

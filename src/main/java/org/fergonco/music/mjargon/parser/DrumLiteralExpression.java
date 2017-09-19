@@ -3,7 +3,7 @@ package org.fergonco.music.mjargon.parser;
 import org.fergonco.music.mjargon.model.DrumNote;
 import org.fergonco.music.mjargon.model.SemanticException;
 
-public class DrumLiteralExpression implements NoteSequenceExpression {
+public class DrumLiteralExpression implements Expression {
 
 	private DrumNote[] notes;
 
@@ -12,7 +12,7 @@ public class DrumLiteralExpression implements NoteSequenceExpression {
 	}
 
 	@Override
-	public void visit(NoteSequenceExpressionVisitor visitor) throws SemanticException {
+	public void visit(ExpressionVisitor visitor) throws SemanticException {
 		visitor.drums(notes);
 	}
 

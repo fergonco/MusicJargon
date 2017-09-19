@@ -4,12 +4,14 @@ import java.util.HashMap;
 
 import org.fergonco.music.mjargon.model.functions.Arpeggio;
 import org.fergonco.music.mjargon.model.functions.Function;
+import org.fergonco.music.mjargon.model.functions.Transpose8;
 
-public class FunctionNoteSequence implements NoteSequence {
+public class FunctionNoteSequence extends AbstractNoteSequence implements NoteSequence {
 	private static HashMap<String, Class<? extends Function>> functions = new HashMap<>();
 	static {
 		try {
 			add(Arpeggio.class);
+			add(Transpose8.class);
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
@@ -22,10 +24,10 @@ public class FunctionNoteSequence implements NoteSequence {
 
 	private Function function;
 
-	public FunctionNoteSequence(String functionId, NoteSequence[] parameters) throws SemanticException {
+	public FunctionNoteSequence(String functionId, Value[] values) throws SemanticException {
 		try {
 			function = functions.get(functionId).newInstance();
-			function.setParameters(parameters);
+			function.setParameters(values);
 		} catch (InstantiationException | IllegalAccessException e) {
 			/*
 			 * Should never happen in normal conditions, it was already

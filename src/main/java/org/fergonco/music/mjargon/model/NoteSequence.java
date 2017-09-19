@@ -1,6 +1,6 @@
 package org.fergonco.music.mjargon.model;
 
-public interface NoteSequence {
+public interface NoteSequence extends Value {
 
 	PitchArray[] getAllNotes(int numNotes);
 
