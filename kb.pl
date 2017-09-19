@@ -21,6 +21,8 @@ functionality(literalTimeSignatures).
 functionality(chordProgression).
 functionality(noteSequence).
 functionality(drumSequence).
+functionality(sequenceAccesors).
+functionality(sequenceConcatenation).
 functionality(instrumentBar).
 functionality(noteLiteralInBar).
 functionality(tiedNotes).
@@ -39,6 +41,8 @@ desc(literalTimeSignatures , 'be able to specify the time signature as a literal
 desc(chordProgression      , 'define a chord progression').
 desc(noteSequence          , 'define a note sequence, either based on a chord progression or specifying the notes explicitely. Define that a note takes two or more places in the sequence (tie)').
 desc(drumSequence          , 'define a drums instrument sequence (bass drum, snare, hihat, etc.). It has to be flexible enough to be able to use any midi drum instrument').
+desc(sequenceAccesors      , 'Access single notes and ranges in both pitched and drum sequences.').
+desc(sequenceConcatenation , 'Concatenate two sequences in bars. Only the last one is repeated').
 desc(instrumentBar         , 'define what an instrument has to do in a specific bar (the sequence of notes to play): a combination of a note sequence with a rhythm. If the sequence has more notes than the rhythm, the remaining are ignored. If it has less, it is looped').
 desc(noteLiteralInBar      , 'use note literals on the instrument bars to define the note sequence, for single notes and chords').
 desc(tiedNotes             , 'make a note last two or more rhythm components on any type of note literal. Also the last one from a rhythm by specifying a tie on the first of the next bar').
