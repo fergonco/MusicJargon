@@ -125,18 +125,18 @@ Silences are expressed as -. For example:
 	beat = rhythm [xxxx] on 4/4
 	voices    | piano "right hand" | piano "left hand"
 	tempo 100 |                    |
-			  |                    | - - - C4 on beat
-			  | D4GB on whole      | B A G A  on beat
-			  | EAC5 on whole      | A        on whole
+	          |                    | - - - C4 on beat
+	          | D4GB on whole      | B A G A  on beat
+	          | EAC5 on whole      | A        on whole
 
 Underscore will make the previous note be stretched on the corresponding rhythm component:
 
 	beat = rhythm [xxxx] on 4/4
 	voices    | piano "right hand" | piano "left hand"
 	tempo 100 |                    |
-			  |                    | - - - C4 on beat
-			  | D4GB on whole      | B _ G A  on beat
-			  | EAC5 on whole      | _        on whole
+	          |                    | - - - C4 on beat
+	          | D4GB on whole      | B _ G A  on beat
+	          | EAC5 on whole      | _        on whole
 
 When a sequence is going to be repeated several times in the song, it is possible to give it a name and reuse the name in the bar section:
 
@@ -144,10 +144,10 @@ When a sequence is going to be repeated several times in the song, it is possibl
 	seq  = sequence B _ G A
 	voices    | piano "right hand" | piano "left hand"
 	tempo 100 |                    |
-			  |                    | - - - C4 on beat
-			  | D4GB on whole      | seq      on beat
-			  | D4GB on whole      | seq      on beat
-			  | EAC5 on whole      | _        on whole
+	          |                    | - - - C4 on beat
+	          | D4GB on whole      | seq      on beat
+	          | D4GB on whole      | seq      on beat
+	          | EAC5 on whole      | _        on whole
 
 And when there is such a chord sequence it is possible to define sequences of single notes based on the notes of a chord of the sequence:
 
