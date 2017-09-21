@@ -9,12 +9,12 @@ MusicJargon is a high level musical notation that allows to represent aurally pe
 
 Currently it is able to output MIDI files.
 
-MusicJargon is open source and [hosted in GitHub](https://github.com/fergonco/MusicJargon/).
+MusicJargon is open source.
 
 See:
 
-* [How to download and use it](/usage.html)
-* [A tutorial](/tutorial.html)
+* [How to download and use it](usage)
+* [A tutorial](tutorial)
 * [Reference](reference)
 
 Writen by [Fernando González Cortés](http://fergonco.org/).
