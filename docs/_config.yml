@@ -26,7 +26,7 @@ github_username:  fergonco
 
 # Build settings
 markdown: kramdown
-theme: jekyll-theme-midnight
+theme: jekyll-theme-architect
 gems:
   - jekyll-feed
 exclude:
