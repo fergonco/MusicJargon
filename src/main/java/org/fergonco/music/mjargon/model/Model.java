@@ -1,7 +1,11 @@
 package org.fergonco.music.mjargon.model;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -80,8 +84,8 @@ public class Model {
 		this.instruments = instruments;
 	}
 
-	public void addSequenceToBarline(final int instrumentIndex, Expression expression,
-			final String rhythmId) throws SemanticException {
+	public void addSequenceToBarline(final int instrumentIndex, Expression expression, final String rhythmId)
+			throws SemanticException {
 		ValueGetter getter = new ValueGetter();
 		expression.visit(getter);
 		NoteSequence noteSequence = getter.getValue().toNoteSequence();
@@ -123,7 +127,13 @@ public class Model {
 	}
 
 	public void writeMidi(File output) throws IOException {
-		Score score = new Score(output);
+		BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(output));
+		writeMidi(bos);
+		bos.close();
+	}
+
+	public void writeMidi(OutputStream stream) throws IOException {
+		Score score = new Score(stream);
 		Track[] tracks = new Track[instruments.length];
 		for (int i = 0; i < tracks.length; i++) {
 			tracks[i] = new Track();

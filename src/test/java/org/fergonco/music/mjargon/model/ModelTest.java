@@ -69,7 +69,7 @@ public class ModelTest {
 			fail("No result file for " + testCase.getPath());
 		} else {
 			byte[] expectedResult = readFile(expectedResultFile);
-			assertEquals(expectedResult.length, result.length);
+			assertEquals(testCase.getName(), expectedResult.length, result.length);
 			for (int i = 0; i < expectedResult.length; i++) {
 				assertEquals(expectedResult[i], result[i]);
 			}
