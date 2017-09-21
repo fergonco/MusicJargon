@@ -15,7 +15,7 @@ See:
 
 * [How to download and use it](/usage.html)
 * [A tutorial](/tutorial.html)
-* [Reference](/reference.html)
+* [Reference](reference)
 
 Writen by [Fernando González Cortés](http://fergonco.org/).
 
