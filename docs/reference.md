@@ -52,7 +52,7 @@ So, we could define a We will rock you rhythm like this:
 
 ## Bar section
 
-Once there is a rhythm, one can place notes over it. We enter the bars section, which defines instruments, matches notes with rhythms, sets tempo, changes dynamics, etc. As opposed to pentagrams, MusicJargon lays the song vertically and the *|* character separates the different voices that sound at the same time.
+Once there is a rhythm, one can place notes over it. We enter the bars section, which defines instruments, matches notes with rhythms, sets tempo, changes dynamics, etc. As opposed to pentagrams, MusicJargon lays the song vertically and the *\|* character separates the different voices that sound at the same time.
 
 ## Voices
 
@@ -66,7 +66,7 @@ Note that some instruments have two voices and they have to be added explicitly,
 
 	voices | piano "left hand" | piano "right hand"
 
-Note also that the vertical bar *|* separates both instruments
+Note also that the vertical bar *\|* separates both instruments
 
 ## Bar
 
@@ -78,7 +78,7 @@ Bars come vertically after one another under the corresponding instrument:
 	       | <bar>             | <bar>
 	       | ...               | ...
 
-Note that formatting is not important but instead the number of | characters is taken into account to know to which voice belongs each bar. An editor with block editing capabilities or aligning capabilities is recommended.
+Note that formatting is not important but instead the number of \| characters is taken into account to know to which voice belongs each bar. An editor with block editing capabilities or aligning capabilities is recommended.
 
 The syntax of individual bars is the following:
 
