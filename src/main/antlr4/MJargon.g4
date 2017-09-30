@@ -49,9 +49,9 @@ drumSequenceExpression: instruments+=DRUM_INSTRUMENT+;
 
 labelDeclaration: COLON VERTICAL_BAR*;
 
-barline: (VERTICAL_BAR {$expressions.add(null);} expressions+=expression)+ VERTICAL_BAR?;
+barline: (VERTICAL_BAR {$expressions.add(null);} expressions+=expression?)+ VERTICAL_BAR?;
 
-tempo: TEMPO bpmOrNumerator=NUMBER (SLASH denominator=NUMBER EQUALS bpm=NUMBER)?;
+tempo: TEMPO bpmOrNumerator=NUMBER (SLASH denominator=NUMBER EQUALS bpm=NUMBER)? VERTICAL_BAR*;
 
 voices: VOICES (VERTICAL_BAR instrumentNames+=ID STRING_LITERAL?)+ VERTICAL_BAR?;
 
