@@ -22,7 +22,9 @@ declaration: id=ID (variableDeclaration | labelDeclaration);
 
 variableDeclaration: EQUALS value=expression;
 
-expression: (
+expression: left=leftExpression (OPEN_BRACE index=NUMBER (colon=COLON toIndex=NUMBER?)? CLOSE_BRACE)? (ON rhythm=expression)?;
+
+leftExpression: (
 	  numericExpression
 	| stringLiteral
 	| referenceExpression
@@ -35,11 +37,7 @@ numericExpression: numerator=NUMBER (SLASH denominator=NUMBER)?;
 
 stringLiteral: text=STRING_LITERAL;
 
-referenceExpression: id=ID 
-	( 
-	(OPEN_BRACE index=NUMBER (colon=COLON toIndex=NUMBER?)? CLOSE_BRACE)? (ON rhythm=expression)?
-	| OPEN_PARENTHESIS parameterValues+=expression (COMA parameterValues+=expression)* CLOSE_PARENTHESIS
-	);
+referenceExpression: id=ID (OPEN_PARENTHESIS parameterValues+=expression (COMA parameterValues+=expression)* CLOSE_PARENTHESIS)?;
 
 rhythmExpression: value=RHYTHMEXPRESSION ON timeSignature=expression;
 

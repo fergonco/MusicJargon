@@ -1,35 +1,39 @@
 package org.fergonco.music.mjargon.model;
 
-public abstract class AbstractValue implements Value{
+public abstract class AbstractValue implements Value {
 
+	private UnsupportedOperationException UOE() {
+		return new UnsupportedOperationException(this.getClass().getCanonicalName());
+	}
+	
 	@Override
 	public SequenceAndRhythm toAural() {
-		throw new UnsupportedOperationException();
+		throw UOE();
 	}
 
 	@Override
 	public NoteSequence toNoteSequence() {
-		throw new UnsupportedOperationException();
+		throw UOE();
 	}
 
 	@Override
 	public Rhythm toRhythm() {
-		throw new UnsupportedOperationException();
+		throw UOE();
 	}
 
 	@Override
 	public TimeSignature toTimeSignature() {
-		throw new UnsupportedOperationException();
+		throw UOE();
 	}
 
 	@Override
 	public int toInt() {
-		throw new UnsupportedOperationException();
+		throw UOE();
 	}
 
 	@Override
 	public String toStringLiteral() {
-		throw new UnsupportedOperationException();
+		throw UOE();
 	}
 
 }

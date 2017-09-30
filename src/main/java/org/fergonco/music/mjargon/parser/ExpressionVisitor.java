@@ -8,6 +8,7 @@ import org.antlr.v4.runtime.Token;
 import org.fergonco.music.mjargon.antlr.MJargonBaseVisitor;
 import org.fergonco.music.mjargon.antlr.MJargonLexer;
 import org.fergonco.music.mjargon.antlr.MJargonParser.DrumSequenceExpressionContext;
+import org.fergonco.music.mjargon.antlr.MJargonParser.ExpressionContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.NumericExpressionContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.PitchSequenceExpressionContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.ReferenceExpressionContext;
@@ -78,6 +79,32 @@ public class ExpressionVisitor extends MJargonBaseVisitor<Value> {
 	}
 
 	@Override
+	public Value visitExpression(ExpressionContext ctx) {
+		Value value = super.visitLeftExpression(ctx.left);
+		SequenceAccessor sequenceAccessor = null;
+		if (ctx.index != null) {
+			sequenceAccessor = new SequenceAccessor(Integer.parseInt(ctx.index.getText()));
+		}
+		if (ctx.toIndex != null) {
+			sequenceAccessor.setEndIndex(Integer.parseInt(ctx.toIndex.getText()));
+		} else if (ctx.colon != null) {
+			sequenceAccessor.setUnbounded();
+		}
+		if (sequenceAccessor != null) {
+			if (sequenceAccessor.singleNote()) {
+				value = new NoteSequenceElement(value, sequenceAccessor.getIndex());
+			} else {
+				value = new NoteSubsequence(value, sequenceAccessor.getIndex(), sequenceAccessor.getEndIndex());
+			}
+		}
+		if (ctx.rhythm != null) {
+			value = new SequenceAndRhythm(value, new ExpressionVisitor(model).visit(ctx.rhythm));
+		}
+		
+		return value;
+	}
+
+	@Override
 	public Value visitStringLiteral(StringLiteralContext ctx) {
 		return new StringValue(ctx.text.getText());
 	}
@@ -92,27 +119,7 @@ public class ExpressionVisitor extends MJargonBaseVisitor<Value> {
 				throw new RuntimeException(e);
 			}
 		} else {
-			SequenceAccessor sequenceAccessor = null;
-			if (ctx.index != null) {
-				sequenceAccessor = new SequenceAccessor(Integer.parseInt(ctx.index.getText()));
-			}
-			if (ctx.toIndex != null) {
-				sequenceAccessor.setEndIndex(Integer.parseInt(ctx.toIndex.getText()));
-			} else if (ctx.colon != null) {
-				sequenceAccessor.setUnbounded();
-			}
-			Value value = model.getReference(id);
-			if (sequenceAccessor != null) {
-				if (sequenceAccessor.singleNote()) {
-					value = new NoteSequenceElement(value, sequenceAccessor.getIndex());
-				} else {
-					value = new NoteSubsequence(value, sequenceAccessor.getIndex(), sequenceAccessor.getEndIndex());
-				}
-			}
-			if (ctx.rhythm != null) {
-				return new SequenceAndRhythm(value, new ExpressionVisitor(model).visit(ctx.rhythm));
-			}
-			return value;
+			return model.getReference(id);
 		}
 	}
 

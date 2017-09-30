@@ -143,7 +143,6 @@ public class ScriptLineVisitor extends MJargonBaseVisitor<Object> {
 			if (expect) {
 				instrumentExpressions.add(expressionContext);
 				if (expressionContext == null) {
-					instrumentExpressions.add(null);
 					expect = true;
 				} else {
 					expect = false;

@@ -15,6 +15,9 @@ public interface MJargonListener extends ParseTreeListener {
 	void enterBarline(MJargonParser.BarlineContext ctx);
 	void exitBarline(MJargonParser.BarlineContext ctx);
 
+	void enterLeftExpression(MJargonParser.LeftExpressionContext ctx);
+	void exitLeftExpression(MJargonParser.LeftExpressionContext ctx);
+
 	void enterVoices(MJargonParser.VoicesContext ctx);
 	void exitVoices(MJargonParser.VoicesContext ctx);
 

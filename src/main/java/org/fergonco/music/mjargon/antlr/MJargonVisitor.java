@@ -12,6 +12,8 @@ public interface MJargonVisitor<T> extends ParseTreeVisitor<T> {
 
 	T visitBarline(MJargonParser.BarlineContext ctx);
 
+	T visitLeftExpression(MJargonParser.LeftExpressionContext ctx);
+
 	T visitVoices(MJargonParser.VoicesContext ctx);
 
 	T visitTempo(MJargonParser.TempoContext ctx);

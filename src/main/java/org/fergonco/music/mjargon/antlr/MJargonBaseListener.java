@@ -18,6 +18,9 @@ public class MJargonBaseListener implements MJargonListener {
 	@Override public void enterBarline(MJargonParser.BarlineContext ctx) { }
 	@Override public void exitBarline(MJargonParser.BarlineContext ctx) { }
 
+	@Override public void enterLeftExpression(MJargonParser.LeftExpressionContext ctx) { }
+	@Override public void exitLeftExpression(MJargonParser.LeftExpressionContext ctx) { }
+
 	@Override public void enterVoices(MJargonParser.VoicesContext ctx) { }
 	@Override public void exitVoices(MJargonParser.VoicesContext ctx) { }
 

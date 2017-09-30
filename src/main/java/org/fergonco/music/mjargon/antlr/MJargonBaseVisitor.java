@@ -13,6 +13,8 @@ public class MJargonBaseVisitor<T> extends AbstractParseTreeVisitor<T> implement
 
 	@Override public T visitBarline(MJargonParser.BarlineContext ctx) { return visitChildren(ctx); }
 
+	@Override public T visitLeftExpression(MJargonParser.LeftExpressionContext ctx) { return visitChildren(ctx); }
+
 	@Override public T visitVoices(MJargonParser.VoicesContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitTempo(MJargonParser.TempoContext ctx) { return visitChildren(ctx); }
