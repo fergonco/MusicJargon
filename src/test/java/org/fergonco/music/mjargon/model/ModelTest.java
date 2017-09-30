@@ -12,12 +12,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.commons.io.IOUtils;
-import org.fergonco.music.mjargon.lexer.Lexer;
-import org.fergonco.music.mjargon.lexer.LexerException;
-import org.fergonco.music.mjargon.lexer.Token;
-import org.fergonco.music.mjargon.parser.Parser;
-import org.fergonco.music.mjargon.parser.SyntaxException;
+import org.fergonco.music.mjargon.antlr.MJargonLexer;
+import org.fergonco.music.mjargon.antlr.MJargonParser;
+import org.fergonco.music.mjargon.antlr.MJargonParser.ScriptContext;
+import org.fergonco.music.mjargon.parser.ScriptLineVisitor;
 import org.junit.Test;
 
 public class ModelTest {
@@ -58,8 +59,7 @@ public class ModelTest {
 		return testCases;
 	}
 
-	static void testWrite(File testCase)
-			throws FileNotFoundException, IOException, LexerException, SyntaxException, SemanticException {
+	static void testWrite(File testCase) throws Exception {
 		Model model = getModel(testCase);
 		File file = new File("/tmp/a.midi");
 		model.writeMidi(file);
@@ -85,8 +85,7 @@ public class ModelTest {
 		}
 	}
 
-	private static Model getModel(File testCase)
-			throws FileNotFoundException, IOException, LexerException, SyntaxException, SemanticException {
+	private static Model getModel(File testCase) throws Exception {
 		InputStream is = new FileInputStream(testCase);
 		String script = IOUtils.toString(is, "utf-8");
 		is.close();
@@ -94,11 +93,12 @@ public class ModelTest {
 		return getModel(script);
 	}
 
-	private static Model getModel(String script) throws LexerException, SyntaxException, SemanticException {
-		Lexer lexer = new Lexer(script);
-		Token token = lexer.process();
-		Parser parser = new Parser();
-		Model model = parser.parse(token);
+	private static Model getModel(String script) throws Exception {
+		MJargonLexer lexer = new MJargonLexer(new ANTLRInputStream(script));
+		MJargonParser parser = new MJargonParser(new CommonTokenStream(lexer));
+		Model model = new Model();
+		ScriptContext root = parser.script();
+		new ScriptLineVisitor(model).visit(root);
 		return model;
 	}
 

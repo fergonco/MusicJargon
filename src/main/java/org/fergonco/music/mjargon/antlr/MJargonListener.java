@@ -54,12 +54,6 @@ public interface MJargonListener extends ParseTreeListener {
 	void enterComment(MJargonParser.CommentContext ctx);
 	void exitComment(MJargonParser.CommentContext ctx);
 
-	void enterOnRhythm(MJargonParser.OnRhythmContext ctx);
-	void exitOnRhythm(MJargonParser.OnRhythmContext ctx);
-
-	void enterParameters(MJargonParser.ParametersContext ctx);
-	void exitParameters(MJargonParser.ParametersContext ctx);
-
 	void enterLabelDeclaration(MJargonParser.LabelDeclarationContext ctx);
 	void exitLabelDeclaration(MJargonParser.LabelDeclarationContext ctx);
 

@@ -5,13 +5,17 @@ import java.util.HashMap;
 import org.fergonco.music.mjargon.model.functions.Arpeggio;
 import org.fergonco.music.mjargon.model.functions.Function;
 import org.fergonco.music.mjargon.model.functions.Transpose8;
+import org.fergonco.music.mjargon.model.functions.ValueType;
+import org.fergonco.music.mjargon.model.functions.chordNotes;
 
-public class FunctionNoteSequence extends AbstractNoteSequence implements NoteSequence {
+public class FunctionValue extends AbstractValue implements Value {
+
 	private static HashMap<String, Class<? extends Function>> functions = new HashMap<>();
 	static {
 		try {
 			add(Arpeggio.class);
 			add(Transpose8.class);
+			add(chordNotes.class);
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
@@ -24,7 +28,7 @@ public class FunctionNoteSequence extends AbstractNoteSequence implements NoteSe
 
 	private Function function;
 
-	public FunctionNoteSequence(String functionId, Value[] values) throws SemanticException {
+	public FunctionValue(String functionId, Value[] values) throws SemanticException {
 		try {
 			function = functions.get(functionId).newInstance();
 			function.setParameters(values);
@@ -38,13 +42,32 @@ public class FunctionNoteSequence extends AbstractNoteSequence implements NoteSe
 	}
 
 	@Override
-	public PitchArray[] getAllNotes(int numNotes) {
-		return function.getNotes(numNotes);
+	public ValueType getType() {
+		return function.getType();
 	}
 
-	@Override
-	public PitchArray[] getAllNotes() {
-		return function.getAllNotes();
+	public SequenceAndRhythm toAural() {
+		return function.toAural();
+	}
+
+	public NoteSequence toNoteSequence() {
+		return function.toNoteSequence();
+	}
+
+	public Rhythm toRhythm() {
+		return function.toRhythm();
+	}
+
+	public TimeSignature toTimeSignature() {
+		return function.toTimeSignature();
+	}
+
+	public int toInt() {
+		return function.toInt();
+	}
+
+	public String toStringLiteral() {
+		return function.toStringLiteral();
 	}
 
 }

@@ -2,7 +2,7 @@ package org.fergonco.music.mjargon.model;
 
 import org.fergonco.music.mjargon.model.functions.ValueType;
 
-public abstract class AbstractNoteSequence implements NoteSequence {
+public abstract class AbstractNoteSequence extends AbstractValue implements NoteSequence {
 
 	@Override
 	public NoteSequence toNoteSequence() {

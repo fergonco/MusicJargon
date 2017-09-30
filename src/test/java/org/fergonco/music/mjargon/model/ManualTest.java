@@ -6,22 +6,26 @@ import java.io.InputStream;
 
 import javax.sound.midi.Sequencer;
 
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.commons.io.IOUtils;
 import org.fergonco.music.midi.MidiPlayer;
-import org.fergonco.music.mjargon.lexer.Lexer;
-import org.fergonco.music.mjargon.lexer.Token;
-import org.fergonco.music.mjargon.parser.Parser;
+import org.fergonco.music.mjargon.antlr.MJargonLexer;
+import org.fergonco.music.mjargon.antlr.MJargonParser;
+import org.fergonco.music.mjargon.antlr.MJargonParser.ScriptContext;
+import org.fergonco.music.mjargon.parser.ScriptLineVisitor;
 
 public class ManualTest {
 	public static void main(String[] args) throws Exception {
-		String scriptName = "AnotherOneBitesTheDust";
+		String scriptName = "ternary";
 		InputStream is = new FileInputStream(new File("src/test/resources/" + scriptName + ".mjargon"));
 		String script = IOUtils.toString(is, "utf-8");
 		is.close();
-		Lexer lexer = new Lexer(script);
-		Token token = lexer.process();
-		Parser parser = new Parser();
-		Model model = parser.parse(token);
+		MJargonLexer lexer = new MJargonLexer(new ANTLRInputStream(script));
+		MJargonParser parser = new MJargonParser(new CommonTokenStream(lexer));
+		Model model = new Model();
+		ScriptContext root = parser.script();
+		new ScriptLineVisitor(model).visit(root);
 		File midi = new File("src/test/resources/" + scriptName + ".midi");
 		model.writeMidi(midi);
 		Sequencer sequencer = MidiPlayer.play(midi);

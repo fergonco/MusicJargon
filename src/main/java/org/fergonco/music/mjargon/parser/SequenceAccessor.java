@@ -1,11 +1,11 @@
 package org.fergonco.music.mjargon.parser;
 
-public class SequenceAccesor {
+public class SequenceAccessor {
 
 	private int startIndex;
 	private Integer endIndex = null;
 
-	public SequenceAccesor(int startIndex) {
+	public SequenceAccessor(int startIndex) {
 		this.startIndex = startIndex;
 	}
 

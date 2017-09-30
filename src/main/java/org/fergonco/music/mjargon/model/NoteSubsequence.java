@@ -2,8 +2,8 @@ package org.fergonco.music.mjargon.model;
 
 public class NoteSubsequence extends AbstractSingleSequence implements NoteSequence {
 
-	public NoteSubsequence(NoteSequence noteSequence, int subsequenceStart, int subsequenceEnd) {
-		PitchArray[] allNotes = noteSequence.getAllNotes();
+	public NoteSubsequence(Value sequence, int subsequenceStart, int subsequenceEnd) {
+		PitchArray[] allNotes = sequence.toNoteSequence().getAllNotes();
 		if (subsequenceEnd == -1) {
 			subsequenceEnd = allNotes.length - 1;
 		}

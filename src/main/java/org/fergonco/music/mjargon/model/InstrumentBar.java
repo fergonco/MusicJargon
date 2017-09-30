@@ -14,9 +14,9 @@ public class InstrumentBar implements Bar {
 	private NoteSequence noteSequence;
 	private Rhythm rhythm;
 
-	public InstrumentBar(NoteSequence noteSequence, Rhythm rhythm) {
-		this.noteSequence = noteSequence;
-		this.rhythm = rhythm;
+	public InstrumentBar(Value value){
+		this.noteSequence = value.toAural().getSequence();
+		this.rhythm = value.toAural().getRhythm();
 	}
 
 	public Note[] getNotes(Dynamic baseDynamics, Note lastNote) {
@@ -27,8 +27,9 @@ public class InstrumentBar implements Bar {
 		ArrayList<Note> ret = new ArrayList<>();
 		int pitchesIndex = 0;
 		for (int i = 0; i < components.length; i++) {
-			PitchArray pitch = pitches[pitchesIndex];
+			PitchArray pitch = pitches[pitchesIndex % pitches.length];
 			pitchesIndex++;
+			
 			Dynamic dynamic = components[i].isSilence() ? Dynamic.MUTE : baseDynamics;
 			if (components[i].isAccent()) {
 				dynamic = dynamic.louder().louder();

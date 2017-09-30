@@ -1,11 +1,12 @@
 package org.fergonco.music.mjargon.model.functions;
 
+import org.fergonco.music.mjargon.model.NoteSequence;
 import org.fergonco.music.mjargon.model.PitchArray;
 import org.fergonco.music.mjargon.model.PitchArrayImpl;
 import org.fergonco.music.mjargon.model.SemanticException;
 import org.fergonco.music.mjargon.model.Value;
 
-public class Transpose8 extends AbstractFunction implements Function {
+public class Transpose8 extends AbstractFunction implements Function, NoteSequence {
 
 	@Override
 	public String getId() {
@@ -28,7 +29,7 @@ public class Transpose8 extends AbstractFunction implements Function {
 	}
 
 	@Override
-	public PitchArray[] getNotes(int numNotes) {
+	public PitchArray[] getAllNotes(int numNotes) {
 		PitchArray[] notes = getParameters()[0].toNoteSequence().getAllNotes(numNotes);
 		int numOctaves = getParameters()[1].toInt();
 		PitchArrayImpl[] newNotes = new PitchArrayImpl[notes.length];
@@ -45,6 +46,12 @@ public class Transpose8 extends AbstractFunction implements Function {
 	@Override
 	public PitchArray[] getAllNotes() {
 		PitchArray chord = getParameters()[0].toNoteSequence().getAllNotes()[0];
-		return getNotes(chord.pitchCount());
+		return getAllNotes(chord.pitchCount());
 	}
+
+	@Override
+	public ValueType getType() {
+		return ValueType.SEQUENCE;
+	}
+
 }

@@ -2,7 +2,7 @@ package org.fergonco.music.mjargon.model;
 
 import org.fergonco.music.mjargon.model.functions.ValueType;
 
-public class NumberValue implements Value {
+public class NumberValue extends AbstractValue implements Value {
 
 	private int number;
 

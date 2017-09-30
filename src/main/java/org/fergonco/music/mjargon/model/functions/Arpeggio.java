@@ -2,12 +2,13 @@ package org.fergonco.music.mjargon.model.functions;
 
 import java.util.ArrayList;
 
+import org.fergonco.music.mjargon.model.NoteSequence;
 import org.fergonco.music.mjargon.model.PitchArray;
 import org.fergonco.music.mjargon.model.PitchArrayImpl;
 import org.fergonco.music.mjargon.model.SemanticException;
 import org.fergonco.music.mjargon.model.Value;
 
-public class Arpeggio extends AbstractFunction implements Function {
+public class Arpeggio extends AbstractFunction implements Function, NoteSequence {
 
 	@Override
 	public String getId() {
@@ -28,9 +29,14 @@ public class Arpeggio extends AbstractFunction implements Function {
 		}
 		super.setParameters(parameters);
 	}
+	
+	@Override
+	public NoteSequence toNoteSequence() {
+		return this;
+	}
 
 	@Override
-	public PitchArray[] getNotes(int numNotes) {
+	public PitchArray[] getAllNotes(int numNotes) {
 		PitchArray chord = getParameters()[0].toNoteSequence().getAllNotes()[0];
 		int[] chordNoteIndices = getChordNoteIndices(chord, numNotes);
 		ArrayList<PitchArray> ret = new ArrayList<>();
@@ -63,6 +69,12 @@ public class Arpeggio extends AbstractFunction implements Function {
 	@Override
 	public PitchArray[] getAllNotes() {
 		PitchArray chord = getParameters()[0].toNoteSequence().getAllNotes()[0];
-		return getNotes(chord.pitchCount());
+		return getAllNotes(chord.pitchCount());
 	}
+
+	@Override
+	public ValueType getType() {
+		return ValueType.SEQUENCE;
+	}
+
 }

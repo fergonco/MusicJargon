@@ -6,11 +6,7 @@ public abstract class AbstractSingleSequence extends AbstractNoteSequence implem
 
 	@Override
 	public PitchArray[] getAllNotes(int numNotes) {
-		PitchArray[] ret = new PitchArray[numNotes];
-		for (int i = 0; i < ret.length; i++) {
-			ret[i] = pitches[i % pitches.length];
-		}
-		return ret;
+		return pitches;
 	}
 
 	@Override

@@ -79,6 +79,7 @@
 				<version>4.0</version>
 				<configuration>
 					<outputDirectory>src/main/java/org/fergonco/music/mjargon/antlr</outputDirectory>
+					<visitor>true</visitor>
 				</configuration>
 				<executions>
 					<execution>

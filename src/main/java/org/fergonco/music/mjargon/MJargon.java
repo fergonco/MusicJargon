@@ -9,12 +9,15 @@ import java.io.PipedOutputStream;
 
 import javax.sound.midi.Sequencer;
 
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.commons.io.IOUtils;
 import org.fergonco.music.midi.MidiPlayer;
-import org.fergonco.music.mjargon.lexer.Lexer;
-import org.fergonco.music.mjargon.lexer.Token;
+import org.fergonco.music.mjargon.antlr.MJargonLexer;
+import org.fergonco.music.mjargon.antlr.MJargonParser;
+import org.fergonco.music.mjargon.antlr.MJargonParser.ScriptContext;
 import org.fergonco.music.mjargon.model.Model;
-import org.fergonco.music.mjargon.parser.Parser;
+import org.fergonco.music.mjargon.parser.ScriptLineVisitor;
 
 public class MJargon {
 
@@ -30,10 +33,11 @@ public class MJargon {
 		InputStream is = new FileInputStream(new File(args[0]));
 		String script = IOUtils.toString(is, "utf-8");
 		is.close();
-		Lexer lexer = new Lexer(script);
-		Token token = lexer.process();
-		Parser parser = new Parser();
-		final Model model = parser.parse(token);
+		MJargonLexer lexer = new MJargonLexer(new ANTLRInputStream(script));
+		MJargonParser parser = new MJargonParser(new CommonTokenStream(lexer));
+		final Model model = new Model();
+		ScriptContext root = parser.script();
+		new ScriptLineVisitor(model).visit(root);
 		final PipedOutputStream midiOutputStream = new PipedOutputStream();
 		new Thread(new Runnable() {
 

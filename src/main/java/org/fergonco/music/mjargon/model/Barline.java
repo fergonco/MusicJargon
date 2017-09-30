@@ -4,14 +4,10 @@ public class Barline extends AbstractSongLine implements SongLine {
 
 	private Bar[] bars;
 
-	public Barline(int numInstruments) {
-		bars = new Bar[numInstruments];
+	public Barline(Bar[] bars) {
+		this.bars = bars;
 	}
 
-	public void setInstrumentBar(int instrumentIndex, Bar bar) {
-		bars[instrumentIndex] = bar;
-	}
-	
 	@Override
 	public boolean isBarline() {
 		return true;

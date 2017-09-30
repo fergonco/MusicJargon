@@ -57,12 +57,6 @@ public class MJargonBaseListener implements MJargonListener {
 	@Override public void enterComment(MJargonParser.CommentContext ctx) { }
 	@Override public void exitComment(MJargonParser.CommentContext ctx) { }
 
-	@Override public void enterOnRhythm(MJargonParser.OnRhythmContext ctx) { }
-	@Override public void exitOnRhythm(MJargonParser.OnRhythmContext ctx) { }
-
-	@Override public void enterParameters(MJargonParser.ParametersContext ctx) { }
-	@Override public void exitParameters(MJargonParser.ParametersContext ctx) { }
-
 	@Override public void enterLabelDeclaration(MJargonParser.LabelDeclarationContext ctx) { }
 	@Override public void exitLabelDeclaration(MJargonParser.LabelDeclarationContext ctx) { }
 

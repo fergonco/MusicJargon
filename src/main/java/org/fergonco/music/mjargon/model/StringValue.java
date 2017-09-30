@@ -2,7 +2,7 @@ package org.fergonco.music.mjargon.model;
 
 import org.fergonco.music.mjargon.model.functions.ValueType;
 
-public class StringValue implements Value {
+public class StringValue extends AbstractValue implements Value {
 
 	private String string;
 
