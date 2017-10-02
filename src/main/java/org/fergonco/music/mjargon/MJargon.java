@@ -39,11 +39,11 @@ public class MJargon {
 		MJargonParser parser = new MJargonParser(new CommonTokenStream(lexer));
 		final Model model = new Model();
 		ScriptContext root = parser.script();
-		ScriptLineVisitor visitor = new ScriptLineVisitor(model);
-		visitor.visit(root);
-		List<MJargonError> errors = visitor.getErrors();
+		new ScriptLineVisitor(model).visit(root);
+		model.validate();
+		List<MJargonError> errors = model.getErrors();
 		for (MJargonError mJargonError : errors) {
-			System.err.println("ERROR at line " + mJargonError.getLine() + ": " + mJargonError.getMessage());
+			System.err.println(mJargonError);
 		}
 		final PipedOutputStream midiOutputStream = new PipedOutputStream();
 		new Thread(new Runnable() {

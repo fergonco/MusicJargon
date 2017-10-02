@@ -16,7 +16,8 @@ public class ChordNotes extends AbstractFunction implements Function, NoteSequen
 	}
 
 	@Override
-	public void setParameters(Value[] parameters) throws SemanticException {
+	public void validate() throws SemanticException {
+		Value[] parameters = getParameters();
 		if (parameters.length < 2) {
 			throw new SemanticException(getId() + " takes a chord and a variable number of índices in the chord");
 		} else {
@@ -29,7 +30,6 @@ public class ChordNotes extends AbstractFunction implements Function, NoteSequen
 				}
 			}
 		}
-		super.setParameters(parameters);
 	}
 
 	@Override

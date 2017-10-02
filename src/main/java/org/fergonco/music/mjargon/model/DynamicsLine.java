@@ -21,4 +21,8 @@ public class DynamicsLine extends AbstractSongLine implements SongLine {
 	public Dynamic[] getDynamics() {
 		return dynamics.toArray(new Dynamic[dynamics.size()]);
 	}
+
+	@Override
+	public void validate(Model model) throws SemanticException {
+	}
 }

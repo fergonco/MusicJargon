@@ -14,7 +14,8 @@ public class Transpose8 extends AbstractFunction implements Function, NoteSequen
 	}
 
 	@Override
-	public void setParameters(Value[] parameters) throws SemanticException {
+	public void validate() throws SemanticException {
+		Value[] parameters = getParameters();
 		if (parameters.length != 2) {
 			throw new SemanticException("octave takes a sequence and a number as parameters");
 		} else {
@@ -25,7 +26,6 @@ public class Transpose8 extends AbstractFunction implements Function, NoteSequen
 				throw new SemanticException("Second argument must be a number");
 			}
 		}
-		super.setParameters(parameters);
 	}
 
 	@Override

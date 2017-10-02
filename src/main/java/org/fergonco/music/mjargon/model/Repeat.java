@@ -2,12 +2,13 @@ package org.fergonco.music.mjargon.model;
 
 public class Repeat extends AbstractSongLine implements SongLine {
 
-	private int songlineIndex;
+	private String label;
+	private Integer labelIndex;
 	private int currentRepetition = 0;
 	private int times;
 
-	public Repeat(int songlineIndex, int times) {
-		this.songlineIndex = songlineIndex;
+	public Repeat(String label, int times) {
+		this.label = label;
 		this.times = times;
 	}
 
@@ -19,6 +20,15 @@ public class Repeat extends AbstractSongLine implements SongLine {
 	@Override
 	public int getTarget() {
 		currentRepetition++;
-		return currentRepetition < times ? songlineIndex : -1;
+		return currentRepetition < times ? labelIndex : -1;
+	}
+
+	@Override
+	public void validate(Model model) throws SemanticException {
+		Integer labelIndex = model.getLabel(label);
+		if (labelIndex == null) {
+			throw new SemanticException("Unknown label: " + label);
+		}
+		this.labelIndex = labelIndex;
 	}
 }

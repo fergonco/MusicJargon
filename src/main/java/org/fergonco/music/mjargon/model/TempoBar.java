@@ -17,4 +17,8 @@ public class TempoBar extends AbstractSongLine implements SongLine {
 	public double getTempo() {
 		return tempo;
 	}
+
+	@Override
+	public void validate(Model model) throws SemanticException {
+	}
 }

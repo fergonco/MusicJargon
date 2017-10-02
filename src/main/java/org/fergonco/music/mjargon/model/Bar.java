@@ -5,4 +5,6 @@ import org.fergonco.music.midi.Note;
 
 public interface Bar {
 	Note[] getNotes(Dynamic baseDynamics, Note lastNote);
+
+	void validate() throws SemanticException;
 }

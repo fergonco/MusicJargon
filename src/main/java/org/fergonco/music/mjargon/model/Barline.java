@@ -18,4 +18,11 @@ public class Barline extends AbstractSongLine implements SongLine {
 		return bars;
 	}
 
+	@Override
+	public void validate(Model model) throws SemanticException {
+		for (Bar bar : bars) {
+			bar.validate();
+		}
+	}
+
 }

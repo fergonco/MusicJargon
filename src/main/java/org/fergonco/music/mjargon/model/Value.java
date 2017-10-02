@@ -18,4 +18,6 @@ public interface Value {
 
 	ValueType getType();
 
+	void validate() throws SemanticException;
+
 }

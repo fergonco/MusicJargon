@@ -7,25 +7,39 @@ import org.fergonco.music.mjargon.model.functions.ValueType;
 
 public class Rhythm extends AbstractValue implements Value {
 
-	private ArrayList<RhythmComponent> components = new ArrayList<>();
+	private ArrayList<RhythmComponent> components = null;
+	private String expression;
+	private Value timeSignature;
 
 	public Rhythm(String expression, Value timeSignature) {
-		int length = expression.length();
-		Duration subdivisionDuration = timeSignature.toFraction().getSubdivisionDuration(length);
-		RhythmComponent current = null;
-		for (int i = 0; i < length; i++) {
-			char symbol = expression.charAt(i);
-			if (current == null) {
-				current = new RhythmComponent(subdivisionDuration, symbol);
-			} else {
-				RhythmComponent next = current.process(symbol, subdivisionDuration);
-				if (next != null) {
-					components.add(current);
-					current = next;
+		this.expression = expression;
+		this.timeSignature = timeSignature;
+	}
+
+	@Override
+	public void validate() throws SemanticException {
+		if (components == null) {
+			components = new ArrayList<>();
+			if (timeSignature.getType() != ValueType.FRACTION) {
+				throw new SemanticException("Rhythms require a time signature expression");
+			}
+			int length = expression.length();
+			Duration subdivisionDuration = timeSignature.toFraction().getSubdivisionDuration(length);
+			RhythmComponent current = null;
+			for (int i = 0; i < length; i++) {
+				char symbol = expression.charAt(i);
+				if (current == null) {
+					current = new RhythmComponent(subdivisionDuration, symbol);
+				} else {
+					RhythmComponent next = current.process(symbol, subdivisionDuration);
+					if (next != null) {
+						components.add(current);
+						current = next;
+					}
 				}
 			}
+			components.add(current);
 		}
-		components.add(current);
 	}
 
 	public RhythmComponent[] getComponents() {
@@ -36,7 +50,7 @@ public class Rhythm extends AbstractValue implements Value {
 	public Rhythm toRhythm() {
 		return this;
 	}
-	
+
 	@Override
 	public ValueType getType() {
 		return ValueType.RHYTHM;

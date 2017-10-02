@@ -30,4 +30,8 @@ public class NumberValue extends AbstractValue implements Value {
 		return ValueType.NUMBER;
 	}
 
+	@Override
+	public void validate() throws SemanticException {
+	}
+
 }

@@ -18,7 +18,8 @@ public class Concat extends AbstractFunction implements Function, NoteSequence {
 	}
 
 	@Override
-	public void setParameters(Value[] parameters) throws SemanticException {
+	public void validate() throws SemanticException {
+		Value[] parameters = getParameters();
 		if (parameters.length < 2) {
 			throw new SemanticException(getId() + " takes at least two sequences");
 		} else {
@@ -28,7 +29,6 @@ public class Concat extends AbstractFunction implements Function, NoteSequence {
 				}
 			}
 		}
-		super.setParameters(parameters);
 	}
 
 	@Override

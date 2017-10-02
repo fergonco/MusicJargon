@@ -36,4 +36,8 @@ public class FractionValue extends AbstractValue implements Value {
 	public ValueType getType() {
 		return ValueType.FRACTION;
 	}
+
+	@Override
+	public void validate() throws SemanticException {
+	}
 }

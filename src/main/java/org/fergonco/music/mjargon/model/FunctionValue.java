@@ -29,11 +29,12 @@ public class FunctionValue extends AbstractValue implements Value {
 	}
 
 	private Function function;
+	private Value[] parameters;
 
-	public FunctionValue(String functionId, Value[] values) throws SemanticException {
+	public FunctionValue(String functionId, Value[] values) {
 		try {
 			function = functions.get(functionId).newInstance();
-			function.setParameters(values);
+			parameters = values;
 		} catch (InstantiationException | IllegalAccessException e) {
 			/*
 			 * Should never happen in normal conditions, it was already
@@ -41,6 +42,14 @@ public class FunctionValue extends AbstractValue implements Value {
 			 */
 			throw new RuntimeException(e);
 		}
+	}
+
+	@Override
+	public void validate() throws SemanticException {
+		for (Value value : parameters) {
+			value.validate();
+		}
+		function.setParameters(parameters);
 	}
 
 	@Override

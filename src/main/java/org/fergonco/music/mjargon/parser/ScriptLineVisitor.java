@@ -20,7 +20,6 @@ import org.fergonco.music.mjargon.antlr.MJargonParser.VoicesContext;
 import org.fergonco.music.mjargon.model.Bar;
 import org.fergonco.music.mjargon.model.InstrumentBar;
 import org.fergonco.music.mjargon.model.Model;
-import org.fergonco.music.mjargon.model.SemanticException;
 import org.fergonco.music.mjargon.model.SilenceBar;
 import org.fergonco.music.mjargon.model.Value;
 
@@ -43,7 +42,6 @@ public class ScriptLineVisitor extends MJargonBaseVisitor<Object> {
 
 	private Model model;
 	private String declarationId;
-	private ArrayList<MJargonError> errors = new ArrayList<>();
 
 	public ScriptLineVisitor(Model model) {
 		this.model = model;
@@ -80,11 +78,7 @@ public class ScriptLineVisitor extends MJargonBaseVisitor<Object> {
 	public Object visitRepeat(RepeatContext ctx) {
 		String label = ctx.labelId.getText();
 		int times = Integer.parseInt(ctx.times.getText());
-		try {
-			model.repeat(label, times);
-		} catch (SemanticException e) {
-			registerError(e, ctx.getStart().getLine());
-		}
+		model.repeat(label, times);
 		return super.visitRepeat(ctx);
 	}
 
@@ -162,14 +156,6 @@ public class ScriptLineVisitor extends MJargonBaseVisitor<Object> {
 			values[i] = new ExpressionVisitor(model).visit(expressions.get(i));
 		}
 		return values;
-	}
-
-	private void registerError(SemanticException e, int line) {
-		errors.add(new MJargonError(e.getMessage(), line));
-	}
-
-	public List<MJargonError> getErrors() {
-		return errors;
 	}
 
 }

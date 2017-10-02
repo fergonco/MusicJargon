@@ -24,7 +24,6 @@ import org.fergonco.music.mjargon.model.NoteSubsequence;
 import org.fergonco.music.mjargon.model.NumberValue;
 import org.fergonco.music.mjargon.model.PitchedNoteSequence;
 import org.fergonco.music.mjargon.model.Rhythm;
-import org.fergonco.music.mjargon.model.SemanticException;
 import org.fergonco.music.mjargon.model.SequenceAndRhythm;
 import org.fergonco.music.mjargon.model.StringValue;
 import org.fergonco.music.mjargon.model.Value;
@@ -113,11 +112,7 @@ public class ExpressionVisitor extends MJargonBaseVisitor<Value> {
 	public Value visitReferenceExpression(ReferenceExpressionContext ctx) {
 		String id = ctx.id.getText();
 		if (ctx.parameterValues.size() > 0) {
-			try {
-				return new FunctionValue(id, ScriptLineVisitor.getValues(model, ctx.parameterValues));
-			} catch (SemanticException e) {
-				throw new RuntimeException(e);
-			}
+			return new FunctionValue(id, ScriptLineVisitor.getValues(model, ctx.parameterValues));
 		} else {
 			return model.getReference(id);
 		}

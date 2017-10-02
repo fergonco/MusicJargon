@@ -16,7 +16,8 @@ public class Arpeggio extends AbstractFunction implements Function, NoteSequence
 	}
 
 	@Override
-	public void setParameters(Value[] parameters) throws SemanticException {
+	public void validate() throws SemanticException {
+		Value[] parameters = getParameters();
 		if (parameters.length != 1 && parameters.length != 2) {
 			throw new SemanticException("arpeggio takes a sequence an an optional string as parameters");
 		} else {
@@ -27,7 +28,6 @@ public class Arpeggio extends AbstractFunction implements Function, NoteSequence
 				throw new SemanticException("arpeggio second parameter must be a string");
 			}
 		}
-		super.setParameters(parameters);
 	}
 	
 	@Override

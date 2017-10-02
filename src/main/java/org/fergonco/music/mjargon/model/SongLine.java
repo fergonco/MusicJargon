@@ -20,4 +20,6 @@ public interface SongLine {
 
 	Dynamic[] getDynamics();
 
+	void validate(Model model) throws SemanticException;
+
 }

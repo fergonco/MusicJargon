@@ -24,5 +24,9 @@ public class PitchedNoteSequence extends AbstractSingleSequence implements NoteS
 	public PitchArray getChord(int chordProgressionIndex) {
 		return pitches[chordProgressionIndex];
 	}
+	
+	@Override
+	public void validate() {
+	}
 
 }

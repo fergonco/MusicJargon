@@ -2,19 +2,24 @@ package org.fergonco.music.mjargon.parser;
 
 public class MJargonError {
 
-	private String msg;
+	private String message;
 	private int line;
 
 	public MJargonError(String msg, int line) {
-		this.msg = msg;
+		this.message = msg;
 		this.line = line;
 	}
 
 	public int getLine() {
 		return line;
 	}
-	
+
 	public String getMessage() {
-		return msg;
+		return message;
+	}
+
+	@Override
+	public String toString() {
+		return "Error at line " + line + ": " + message;
 	}
 }

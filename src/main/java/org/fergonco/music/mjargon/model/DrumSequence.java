@@ -15,4 +15,8 @@ public class DrumSequence extends AbstractSingleSequence implements NoteSequence
 		this.pitches = pitches.toArray(new PitchArray[pitches.size()]);
 	}
 
+	@Override
+	public void validate() throws SemanticException {
+	}
+
 }

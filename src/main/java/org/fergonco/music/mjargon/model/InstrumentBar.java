@@ -8,28 +8,35 @@ import org.fergonco.music.midi.Duration;
 import org.fergonco.music.midi.Dynamic;
 import org.fergonco.music.midi.Note;
 import org.fergonco.music.midi.NoteImpl;
+import org.fergonco.music.mjargon.model.functions.ValueType;
 
 public class InstrumentBar implements Bar {
 
-	private NoteSequence noteSequence;
-	private Rhythm rhythm;
+	private Value value;
 
-	public InstrumentBar(Value value){
-		this.noteSequence = value.toAural().getSequence();
-		this.rhythm = value.toAural().getRhythm();
+	public InstrumentBar(Value value) {
+		this.value = value;
+	}
+
+	@Override
+	public void validate() throws SemanticException {
+		value.validate();
+		if (value.getType() != ValueType.AURAL) {
+			throw new SemanticException("Instrument bars require aural expressions");
+		}
 	}
 
 	public Note[] getNotes(Dynamic baseDynamics, Note lastNote) {
-		RhythmComponent[] components = rhythm.getComponents();
+		RhythmComponent[] components = value.toAural().getRhythm().getComponents();
 
-		PitchArray[] pitches = noteSequence.getAllNotes(components.length);
+		PitchArray[] pitches = value.toAural().getSequence().getAllNotes(components.length);
 
 		ArrayList<Note> ret = new ArrayList<>();
 		int pitchesIndex = 0;
 		for (int i = 0; i < components.length; i++) {
 			PitchArray pitch = pitches[pitchesIndex % pitches.length];
 			pitchesIndex++;
-			
+
 			Dynamic dynamic = components[i].isSilence() ? Dynamic.MUTE : baseDynamics;
 			if (components[i].isAccent()) {
 				dynamic = dynamic.louder().louder();

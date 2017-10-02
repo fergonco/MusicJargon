@@ -30,4 +30,8 @@ public class StringValue extends AbstractValue implements Value {
 		return ValueType.STRING;
 	}
 
+	@Override
+	public void validate() throws SemanticException {
+	}
+
 }

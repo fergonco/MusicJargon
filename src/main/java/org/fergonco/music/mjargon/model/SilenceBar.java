@@ -12,4 +12,8 @@ public class SilenceBar implements Bar {
 		return new Note[] { new NoteImpl(0, new Duration(1), Dynamic.MUTE.getLevel()) };
 	}
 
+	@Override
+	public void validate() {
+	}
+
 }

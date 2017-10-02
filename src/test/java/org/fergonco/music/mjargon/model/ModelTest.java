@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -18,6 +19,7 @@ import org.apache.commons.io.IOUtils;
 import org.fergonco.music.mjargon.antlr.MJargonLexer;
 import org.fergonco.music.mjargon.antlr.MJargonParser;
 import org.fergonco.music.mjargon.antlr.MJargonParser.ScriptContext;
+import org.fergonco.music.mjargon.parser.MJargonError;
 import org.fergonco.music.mjargon.parser.ScriptLineVisitor;
 import org.junit.Test;
 
@@ -99,6 +101,11 @@ public class ModelTest {
 		Model model = new Model();
 		ScriptContext root = parser.script();
 		new ScriptLineVisitor(model).visit(root);
+		model.validate();
+		List<MJargonError> errors = model.getErrors();
+		if (errors.size() > 0) {
+			throw new RuntimeException(errors.get(0).toString());
+		}
 		return model;
 	}
 
