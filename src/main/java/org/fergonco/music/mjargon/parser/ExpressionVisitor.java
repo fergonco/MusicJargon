@@ -100,13 +100,13 @@ public class ExpressionVisitor extends MJargonBaseVisitor<Value> {
 		if (ctx.rhythm != null) {
 			value = new SequenceAndRhythm(value, new ExpressionVisitor(model).visit(ctx.rhythm));
 		}
-		
+
 		return value;
 	}
 
 	@Override
 	public Value visitStringLiteral(StringLiteralContext ctx) {
-		return new StringValue(ctx.text.getText());
+		return new StringValue(trimDelimiters(ctx.text.getText()));
 	}
 
 	@Override
@@ -125,7 +125,15 @@ public class ExpressionVisitor extends MJargonBaseVisitor<Value> {
 
 	@Override
 	public Value visitRhythmExpression(RhythmExpressionContext ctx) {
-		return new Rhythm(trimDelimiters(ctx.value.getText()), new ExpressionVisitor(model).visit(ctx.timeSignature));
+		String rhythmExpression = trimDelimiters(ctx.value.getText());
+		Value timeSignature = null;
+		if (ctx.timeSignature != null) {
+			timeSignature = new ExpressionVisitor(model).visit(ctx.timeSignature);
+		} else if (ctx.beatDuration != null) {
+			int noteDenominator = new ExpressionVisitor(model).visit(ctx.beatDuration).toFraction().getDenominator();
+			timeSignature = new FractionValue(rhythmExpression.length(), noteDenominator);
+		}
+		return new Rhythm(rhythmExpression, timeSignature);
 	}
 
 	@Override

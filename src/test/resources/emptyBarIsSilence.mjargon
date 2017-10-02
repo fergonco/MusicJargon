@@ -1,6 +1,6 @@
-ts           = time signature 4/4
-beat         = rhythm [xxxx] on ts
-whole        = rhythm [x] on ts
+ts           = 4/4
+beat         = [xxxx] on ts
+whole        = [x] on ts
 
 voices        | piano "right hand"       | piano "left hand"  
 tempo 100     |                          |                    

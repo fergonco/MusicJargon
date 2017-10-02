@@ -11,7 +11,7 @@ public class Rhythm extends AbstractValue implements Value {
 
 	public Rhythm(String expression, Value timeSignature) {
 		int length = expression.length();
-		Duration subdivisionDuration = timeSignature.toTimeSignature().getSubdivisionDuration(length);
+		Duration subdivisionDuration = timeSignature.toFraction().getSubdivisionDuration(length);
 		RhythmComponent current = null;
 		for (int i = 0; i < length; i++) {
 			char symbol = expression.charAt(i);

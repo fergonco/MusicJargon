@@ -60,8 +60,8 @@ public class FunctionValue extends AbstractValue implements Value {
 		return function.toRhythm();
 	}
 
-	public TimeSignature toTimeSignature() {
-		return function.toTimeSignature();
+	public FractionValue toFraction() {
+		return function.toFraction();
 	}
 
 	public int toInt() {

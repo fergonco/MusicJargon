@@ -1,11 +1,11 @@
-ts = time signature 6/8
+ts = 6/8
 
-subbeat    = rhythm [X.x.x.X.x.x.] on ts 
-mainRhythm = rhythm [x.....x..x..] on ts
-beat       = rhythm [x.....x.....] on ts
+subbeat    = [X.x.x.X.x.x.] on ts 
+mainRhythm = [x.....x..x..] on ts
+beat       = [x.....x.....] on ts
 
-bassSnare = drum sequence bd sn sn
-pedal     = drum sequence hhp
+bassSnare = bd sn sn
+pedal     = hhp
 
 voices     | drums            | drums                   | drums
 dynamics   | p                | p                       | p

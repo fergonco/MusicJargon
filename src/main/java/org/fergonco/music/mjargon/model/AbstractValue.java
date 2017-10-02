@@ -22,7 +22,7 @@ public abstract class AbstractValue implements Value {
 	}
 
 	@Override
-	public TimeSignature toTimeSignature() {
+	public FractionValue toFraction() {
 		throw UOE();
 	}
 

@@ -10,7 +10,7 @@ public interface Value {
 	
 	Rhythm toRhythm();
 	
-	TimeSignature toTimeSignature();
+	FractionValue toFraction();
 	
 	int toInt();
 	

@@ -1,7 +1,7 @@
-ts = time signature 4/4
-whole = rhythm [x] on ts
-chords = sequence C4EG 
-seq = sequence note 1 of chords{0}
+ts = 4/4
+whole = [x] on ts
+chords = C4EG 
+seq = C4
 
 voices | acoustic_bass | piano
        | seq on whole  | seq on whole

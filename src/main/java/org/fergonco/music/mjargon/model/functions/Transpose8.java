@@ -54,4 +54,8 @@ public class Transpose8 extends AbstractFunction implements Function, NoteSequen
 		return ValueType.SEQUENCE;
 	}
 
+	@Override
+	public NoteSequence toNoteSequence() {
+		return this;
+	}
 }

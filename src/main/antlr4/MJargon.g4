@@ -39,7 +39,7 @@ stringLiteral: text=STRING_LITERAL;
 
 referenceExpression: id=ID (OPEN_PARENTHESIS parameterValues+=expression (COMA parameterValues+=expression)* CLOSE_PARENTHESIS)?;
 
-rhythmExpression: value=RHYTHMEXPRESSION ON timeSignature=expression;
+rhythmExpression: value=RHYTHMEXPRESSION (ON timeSignature=expression | WITH beatDuration=expression);
 
 pitchSequenceExpression: (notes+=CHORD_LITERAL | notes+=UNDERSCORE)+;
 
@@ -74,7 +74,7 @@ drumSequenceExpression: (
 
 labelDeclaration: COLON VERTICAL_BAR*;
 
-barline: (VERTICAL_BAR {$expressions.add(null);} expressions+=expression?)+ VERTICAL_BAR?;
+barline: (VERTICAL_BAR {$expressions.add(null);} expressions+=expression?)+ {$expressions.add(null);};
 
 tempo: TEMPO bpmOrNumerator=NUMBER (SLASH denominator=NUMBER EQUALS bpm=NUMBER)? VERTICAL_BAR*;
 
@@ -98,6 +98,7 @@ CLOSE_PARENTHESIS: ')';
 UNDERSCORE: '_';
 COMMENT: '\'' ~( '\r' | '\n' )*;
 ON: 'on';
+WITH: 'with';
 TEMPO: 'tempo';
 REPEAT: 'repeat';
 VOICES: 'voices';

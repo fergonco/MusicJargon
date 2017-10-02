@@ -1,5 +1,6 @@
 package org.fergonco.music.mjargon.model;
 
+import org.fergonco.music.midi.Duration;
 import org.fergonco.music.mjargon.model.functions.ValueType;
 
 public class FractionValue extends AbstractValue implements Value {
@@ -11,12 +12,26 @@ public class FractionValue extends AbstractValue implements Value {
 		this.numerator = numerator;
 		this.denominator = denominator;
 	}
-	
+
 	@Override
-	public TimeSignature toTimeSignature() {
-		return new TimeSignature(numerator, denominator);
+	public FractionValue toFraction() {
+		return this;
 	}
-	
+
+	public int getNumerator() {
+		return numerator;
+	}
+
+	public int getDenominator() {
+		return denominator;
+	}
+
+	public Duration getSubdivisionDuration(int length) {
+		double totalLength = numerator / (double) denominator;
+		double lengthPerSubdivision = totalLength / length;
+		return new Duration(lengthPerSubdivision);
+	}
+
 	@Override
 	public ValueType getType() {
 		return ValueType.FRACTION;

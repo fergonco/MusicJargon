@@ -1,14 +1,14 @@
-ts = time signature 3/4
+ts = 3/4
 
-'                           x...x...x...
-eighths           = rhythm [X.x.X.x.X.x.] on ts
-mainRhythm        = rhythm [x.xx..xx..x.] on ts
-polyRhythm        = rhythm [x..x..x..x..] on ts
-filledPolyRhythm  = rhythm [xxXxxXxxXxxX] on ts
-whole             = rhythm [x] on ts
+'                    x...x...x...
+eighths           = [X.x.X.x.X.x.] on ts
+mainRhythm        = [x.xx..xx..x.] on ts
+polyRhythm        = [x..x..x..x..] on ts
+filledPolyRhythm  = [xxXxxXxxXxxX] on ts
+whole             = [x] on ts
 
-bassdrumSn = drum sequence bd bd bd bd bd sn
-sn2bd      = drum sequence bd bd sn
+bassdrumSn = bd bd bd bd bd sn
+sn2bd      = bd bd sn
              
 voices       | drums "hihat" | drums "rhythm"          
 dynamics     |    mf         | mf                      
