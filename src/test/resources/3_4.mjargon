@@ -1,37 +1,35 @@
-ts = time signature 3/4
+ts = 3/4
 
-subbeat    = rhythm [X.x.X.x.X.x.] on ts
-beat       = rhythm [X...X...X...] on ts
-main       = rhythm [x.xx..xx..x.] on ts
-poly       = rhythm [x..x..x..x..] on ts
-sixteenths = rhythm [xxxxxxxxxxxx] on ts
-whole      = rhythm [x...........] on ts
+subbeat    = [X.x.X.x.X.x.] on ts
+beat       = [X...X...X...] on ts
+main       = [x.xx..xx..x.] on ts
+poly       = [x..x..x..x..] on ts
+sixteenths = [xxxxxxxxxxxx] on ts
+whole      = [x...........] on ts
 
-accHihat       = drum sequence hh
-accRide        = drum sequence rd
-bassdrumrhythm = drum sequence bd   bd bd   bd bd    sn
-tutupa         = drum sequence bd bd sn
+bassdrumrhythm = bd   bd bd   bd bd    sn
+tutupa         = bd bd sn
 
-chords = sequence E3AC4♯ D3GB FAC4 D3FA EG♯B
-seq1 = sequence A4 B B A C5♯ E
-seq2 = sequence D5 C C B4 B _
-seq3 = sequence A4 B B C5 A4 _
-seq4 = sequence A4 B C5 F
-seq5 = sequence E5
+chords = E3AC4♯ D3GB FAC4 D3FA EG♯B
+seq1 = A4 B B A C5♯ E
+seq2 = D5 C C B4 B _
+seq3 = A4 B B C5 A4 _
+seq4 = A4 B C5 F
+seq5 = E5
              
 voices       |  drums "hihat"    | drums "rhythm"         | piano "left hand"   | piano "right hand"
 dynamics     |     mf            | mf                     | ff                  | ff
 tempo 70     |                   |                        |                     | 
 a:           |                   |                        |                     | 
-             |  accHihat on subbeat | bassdrumrhythm on main | chords{0} on whole  | seq1 on main 
-             |  accHihat on subbeat | bassdrumrhythm on main | chords{1} on whole  | seq2 on main 
-             |  accHihat on subbeat | bassdrumrhythm on main | chords{2} on whole  | seq3 on main 
-             |  accRide on poly     | tutupa on sixteenths   | chords{3} on whole  | seq4 on poly 
-             |  accHihat on subbeat | bassdrumrhythm on main | chords{4} on whole  | seq5 on whole
-             |  accRide on main     | bassdrumrhythm on main | chords{0} on whole  | seq1 on main 
-             |  accRide on main     | bassdrumrhythm on main | chords{1} on whole  | seq2 on main 
-             |  accRide on main     | bassdrumrhythm on main | chords{2} on whole  | seq3 on main 
-             |  accRide on main     | tutupa on sixteenths   | chords{3} on whole  | seq4 on poly 
-             |  accRide on main     | bassdrumrhythm on main | chords{4} on whole  | seq5 on whole
+             |  hh on subbeat    | bassdrumrhythm on main | chords{0} on whole  | seq1 on main 
+             |  hh on subbeat    | bassdrumrhythm on main | chords{1} on whole  | seq2 on main 
+             |  hh on subbeat    | bassdrumrhythm on main | chords{2} on whole  | seq3 on main 
+             |  rd on poly       | tutupa on sixteenths   | chords{3} on whole  | seq4 on poly 
+             |  hh on subbeat    | bassdrumrhythm on main | chords{4} on whole  | seq5 on whole
+             |  rd on main       | bassdrumrhythm on main | chords{0} on whole  | seq1 on main 
+             |  rd on main       | bassdrumrhythm on main | chords{1} on whole  | seq2 on main 
+             |  rd on main       | bassdrumrhythm on main | chords{2} on whole  | seq3 on main 
+             |  rd on main       | tutupa on sixteenths   | chords{3} on whole  | seq4 on poly 
+             |  rd on main       | bassdrumrhythm on main | chords{4} on whole  | seq5 on whole
 repeat a 10  |                   |                        |                     | 
                         

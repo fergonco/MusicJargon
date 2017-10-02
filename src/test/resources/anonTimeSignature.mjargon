@@ -1,6 +1,6 @@
-r1 = rhythm [x.x.x.x.] on 4/4 
+r1 = [x.x.x.x.] on 4/4 
 
-chords = sequence C4EG EGB FAC5 E4G♯B
+chords = C4EG EGB FAC5 E4G♯B
 
 voices   | piano
 tempo 160|
