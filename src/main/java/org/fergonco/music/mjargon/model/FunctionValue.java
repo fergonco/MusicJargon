@@ -3,10 +3,11 @@ package org.fergonco.music.mjargon.model;
 import java.util.HashMap;
 
 import org.fergonco.music.mjargon.model.functions.Arpeggio;
+import org.fergonco.music.mjargon.model.functions.ChordNotes;
+import org.fergonco.music.mjargon.model.functions.Concat;
 import org.fergonco.music.mjargon.model.functions.Function;
 import org.fergonco.music.mjargon.model.functions.Transpose8;
 import org.fergonco.music.mjargon.model.functions.ValueType;
-import org.fergonco.music.mjargon.model.functions.chordNotes;
 
 public class FunctionValue extends AbstractValue implements Value {
 
@@ -15,7 +16,8 @@ public class FunctionValue extends AbstractValue implements Value {
 		try {
 			add(Arpeggio.class);
 			add(Transpose8.class);
-			add(chordNotes.class);
+			add(ChordNotes.class);
+			add(Concat.class);
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}

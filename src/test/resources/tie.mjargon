@@ -1,8 +1,8 @@
-ts           = time signature 4/4
-beat         = rhythm [xxxx] on ts
-whole        = rhythm [x] on ts
+ts           = 4/4
+beat         = [xxxx] on ts
+whole        = [x] on ts
 
-chords       = sequence D4GB EAC5
+chords       = D4GB EAC5
 
 voices        | piano "right hand"       | violin  
 tempo 100     |                          |                    
@@ -11,5 +11,4 @@ tempo 100     |                          |
               | EAC5 on whole            | _        on whole  
               | D4GB on whole            | B _ G A  on beat   
               | EAC5 on whole            | _ _ _ _  on beat  
-              | EAC5 on whole            | note _ 1 _ 2  of chords{1} on beat  
               

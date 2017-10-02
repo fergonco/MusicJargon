@@ -8,7 +8,7 @@ import org.fergonco.music.mjargon.model.PitchArrayImpl;
 import org.fergonco.music.mjargon.model.SemanticException;
 import org.fergonco.music.mjargon.model.Value;
 
-public class chordNotes extends AbstractFunction implements Function, NoteSequence {
+public class ChordNotes extends AbstractFunction implements Function, NoteSequence {
 
 	@Override
 	public String getId() {
