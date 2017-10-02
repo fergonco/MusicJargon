@@ -14,6 +14,7 @@ import org.fergonco.music.midi.InstrumentNames;
 import org.fergonco.music.midi.Note;
 import org.fergonco.music.midi.Score;
 import org.fergonco.music.midi.Track;
+import org.fergonco.music.mjargon.parser.InvalidReferenceException;
 import org.fergonco.music.mjargon.parser.MJargonError;
 
 public class Model {
@@ -27,8 +28,12 @@ public class Model {
 	public void addVariable(String id, Value value) {
 		variables.put(id, value);
 	}
-	public Value getReference(String id) {
-		return variables.get(id);
+	public Value getReference(String id) throws InvalidReferenceException {
+		Value value = variables.get(id);
+		if (value == null) {
+			throw new InvalidReferenceException("Reference not found: " + id);
+		}
+		return value;
 	}
 	public void setInstruments(String[] instruments) {
 		this.instruments = instruments;
