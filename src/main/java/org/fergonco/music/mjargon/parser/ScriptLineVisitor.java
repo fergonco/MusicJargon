@@ -43,6 +43,7 @@ public class ScriptLineVisitor extends MJargonBaseVisitor<Object> {
 
 	private Model model;
 	private String declarationId;
+	private ArrayList<MJargonError> errors = new ArrayList<>();
 
 	public ScriptLineVisitor(Model model) {
 		this.model = model;
@@ -164,7 +165,11 @@ public class ScriptLineVisitor extends MJargonBaseVisitor<Object> {
 	}
 
 	private void registerError(SemanticException e, int line) {
-		System.out.println("Error at line: " + line);
-		e.printStackTrace();
+		errors.add(new MJargonError(e.getMessage(), line));
 	}
+
+	public List<MJargonError> getErrors() {
+		return errors;
+	}
+
 }

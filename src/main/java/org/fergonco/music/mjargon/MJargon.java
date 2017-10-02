@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
+import java.util.List;
 
 import javax.sound.midi.Sequencer;
 
@@ -17,6 +18,7 @@ import org.fergonco.music.mjargon.antlr.MJargonLexer;
 import org.fergonco.music.mjargon.antlr.MJargonParser;
 import org.fergonco.music.mjargon.antlr.MJargonParser.ScriptContext;
 import org.fergonco.music.mjargon.model.Model;
+import org.fergonco.music.mjargon.parser.MJargonError;
 import org.fergonco.music.mjargon.parser.ScriptLineVisitor;
 
 public class MJargon {
@@ -37,7 +39,12 @@ public class MJargon {
 		MJargonParser parser = new MJargonParser(new CommonTokenStream(lexer));
 		final Model model = new Model();
 		ScriptContext root = parser.script();
-		new ScriptLineVisitor(model).visit(root);
+		ScriptLineVisitor visitor = new ScriptLineVisitor(model);
+		visitor.visit(root);
+		List<MJargonError> errors = visitor.getErrors();
+		for (MJargonError mJargonError : errors) {
+			System.err.println("ERROR at line " + mJargonError.getLine() + ": " + mJargonError.getMessage());
+		}
 		final PipedOutputStream midiOutputStream = new PipedOutputStream();
 		new Thread(new Runnable() {
 
