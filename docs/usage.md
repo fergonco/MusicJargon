@@ -6,6 +6,7 @@ title: Music Jargon
 ## Downloads
 
 * [0.1 version](/assets/0.1/mjargon.jar)
+* [0.2 version](/assets/0.2/mjargon.jar)
 
 ## Usage
 
