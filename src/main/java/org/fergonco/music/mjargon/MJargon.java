@@ -24,13 +24,13 @@ import org.fergonco.music.mjargon.parser.ScriptLineVisitor;
 public class MJargon {
 
 	public static void main(String[] args) throws Exception {
+		System.out.println("Version: " + MJargon.class.getPackage().getImplementationVersion());
 		if (args.length != 1) {
 			System.out.println("Usage:");
 			System.out.println("MJargon <file>");
 			System.exit(1);
 		}
 
-		System.out.println("Version: " + MJargon.class.getPackage().getImplementationVersion());
 
 		InputStream is = new FileInputStream(new File(args[0]));
 		String script = IOUtils.toString(is, "utf-8");
