@@ -4,3 +4,5 @@
 *.swp
 target/
 src/main/java/org/fergonco/music/mjargon/antlr/
+docs/.sass-cache/
+docs/_site/

@@ -2,17 +2,17 @@ quarter = [xxxx] on 4/4
 eighth  = [XxXxXxXx] on 4/4
 r1      = [X...X...X......x] on 4/4
 r2      = [X.x.X.xX......xx] on 4/4
-rif1 = E3 E E E
-rif2 = E3 E G E A A G 
-voices         | acoustic_bass        | electric_guitar           | drums "right hand" | drums "rhythm"
-tempo 110      |                      |                           |                    |
-               | - - - - - A3 G on r2 |                           |                    | 
-start:         |                      |                           |                    |
-               | rif1 on r1           |                           | hihat on eighth    | bd sn on quarter
-               | rif2 on r2           |                           | hihat on eighth    | bd sn on quarter
-repeat start 2 |                      |                           |                    |
-may:           |                      |                           |                    |
-dynamics       |                      | ppp                       |                    |
-               | rif1 on r1           | transpose8(rif1, 1) on r1 | hihat on eighth    | bd sn on quarter
-               | E3 E G E A - - on r2 | E4 E G E A - -      on r2 | hihat on eighth    | bd sn on quarter
-repeat may 2   |                      |                           |                    |
+riff1   = E3 E E E
+riff2   = E3 E G E A A G 
+voices         | acoustic_bass        | electric_guitar            | drums "right hand" | drums "rhythm"
+tempo 110      |                      |                            |                    |
+               | - - - - - A3 G on r2 |                            |                    |
+start:         |                      |                            |                    |
+               | riff1 on r1          |                            | hihat on eighth    | bd sn on quarter
+               | riff2 on r2          |                            | hihat on eighth    | bd sn on quarter
+repeat start 2 |                      |                            |                    |
+may:           |                      |                            |                    |
+dynamics       |                      | ppp                        |                    |
+               | riff1 on r1          | transpose8(riff1, 1) on r1 | hihat on eighth    | bd sn on quarter
+               | E3 E G E A - - on r2 | E4 E G E A - -      on r2  | hihat on eighth    | bd sn on quarter
+repeat may 2   |                      |                            |                    |

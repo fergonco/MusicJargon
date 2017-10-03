@@ -5,104 +5,59 @@ title: Music Jargon
 
 # Reference
 
-MusicJargon works by splitting the concept of rhythm and the concept of pitch. In a music staff, each note has a pitch, a strength and a duration which is defined by one or more complex symbols in a pentagram. In MusicJargon there is no pentagram, just a text file with ascii (well, not only) characters. In order to specify "play a C# on the 7th octave very loud and lasting a quarter note" it is necessary to specify things in several places.
+MusicJargon separates the different aspects of music and allows to transform and combine them to produce something we can hear. In a music staff, each note has a pitch, a strength and a duration which is defined by one or more complex symbols in a pentagram. In MusicJargon these concepts are independent and can be defined in one place and be reused on different places, combined differently, etc. For example it is possible to define a rhythm that will be reused in two parts of a song with a different sequence of notes.
 
-## Comments
+More concretely, MusicJargon has the following data types:
 
-At any point it is possible to start a line with a single quote in order to make a comment that is not processed by MusicJargon.
+* Aural: something we can hear. Basically it is a combination of a rhythm and a sequence of notes or drum instruments.
+* Rhythms.
+* Pitched sequences: notes like C♯, but also chords.
+* Drum sequences: drum instrument names like: hihat, bassdrum, snare, etc.
+* Numbers
+* Fractions: For time signatures 12/8 and note durations 1/8.
+* Text
 
-## Time signatures
+## Numbers, fractions and text
 
-Time signature expressions follow this notation:
+Text is anything between single quotes, "for example this".
 
-	<number>/<number>
+Numbers are just integers, like 1, 2, 4.
 
-They can be used as literals when defining rhythms or declaring a named time_signature:
-
-	<name> = time signature <time_signature_literal>
+And fractions are two numbers separated by a slash, like 4/4 or 1/8.
 
 ## Rhythms
 
-Rhythms define note duration and a dynamic variation (the base dynamic is defined in the bar section). They are defined this way:
+Rhythms define note duration and a dynamic variation over the base dynamics. They are defined this way:
 
-	<name> = rhythm [<rhythm_literal>] on <time_signature>
+	[<rhythm_literal>] on <time_signature>
+
+or this way:
+
+	[<rhythm_literal>] with <note_length>
 
 *rhythm_literal* is a sequence of *X* *x* and *.*, with these meanings:
 
 * *.*: no beat
 * *x*: normal note
-* *X*: slightly higher note
+* *X*: slightly louder note
 
-and *time_signature* is a time signature expression.
+*time_signature* and *note_length* are fraction expressions. In the case of *note_length* the fraction represents the length of each character. So:
 
-Note that the length of the notes depends on the time signature and it is automatically calculated. For example, in this rhythm:
+	[XxXxXxXx] with 1/8
 
-	quarterRhythm = rhythm [XXXX] on 4/4
+Would be 8 eighth notes, forming a typical 4/4 time signature.
 
-Each *X* represents a quarter note. In this one:
+If defined with a time signature expression the length of the character is calculated in order to match the given time signature. For example, in this rhythm each *X* represents a quarter note:
 
-	eighthRhythm = rhythm [XxXxXxXx] on 4/4
+	[XXXX] on 4/4
 
-each character represents a eighth note.
+While in this one each character represents a eighth note:
 
+	[XxXxXxXx] on 4/4
 
-So, we could define a We will rock you rhythm like this:
+## Pitched sequences
 
-	wwry = rhythm [xxX.xxX.] on 4/4
-
-## Bar section
-
-Once there is a rhythm, one can place notes over it. We enter the bars section, which defines instruments, matches notes with rhythms, sets tempo, changes dynamics, etc. As opposed to pentagrams, MusicJargon lays the song vertically and the *\|* character separates the different voices that sound at the same time.
-
-## Voices
-
-Voices are the first line on the bar section and define the instruments:
-
-	voices | <instrument_name> "comment" | <instrument_name> "comment" | ...
-
-See at the end for a list of possible instruments.
-
-Note that some instruments have two voices and they have to be added explicitly, for example the two hands for piano:
-
-	voices | piano "left hand" | piano "right hand"
-
-Note also that the vertical bar *\|* separates both instruments
-
-## Bar
-
-Bars come vertically after one another under the corresponding instrument:
-
-	voices | piano "left hand" | piano "right hand"
-	       | <bar>             | <bar>
-	       | <bar>             | <bar>
-	       | <bar>             | <bar>
-	       | ...               | ...
-
-Note that formatting is not important but instead the number of \| characters is taken into account to know to which voice belongs each bar. An editor with block editing capabilities or aligning capabilities is recommended.
-
-The syntax of individual bars is the following:
-
-	<note_sequence> on <rhythm_name>
-
-Where *note_sequence* defines a sequence of notes, which can be pitched notes (C, D, E♯, etc.) or drum "notes" (hihat, snare, etc.), and *rhythm_name* points to a previously defined rhythm.
-
-The logic is the same in both pitched and drum sequences: match each *X* or *x* component from the rhythm with the note that takes the same place in the sequence. For example:
-	
-	myRhythm = rhythm [XxX.X...] on 4/4
-	voices | piano
-	       | A B C D on myRythm
-
-would play a *A* eighth note, a B eighth note, a C quarter note and a D half note.
-
-If the sequence is shorter than the rhythm it is rolled over, which is very useful for drum sequences. For example, this would play an accented hihat (hh) eighth note, followed by a normal open hihat eighth note and, as the sequence is over, it will start again with another two hihat and open hihat eighth notes until the rhythm is filled:
-
-	theBeat = rhythm [XxXxXxXx] on 4/4
-	voices | drums
-	       | hh hho on theBeat
-
-### Pitched sequences
-
-Pitched sequences are a sequence of notes, these notes can be single notes or chords and the sequence can mix these. Note sequences are separated by spaces and the syntax for an individual note is:
+Pitched sequences are a sequence of notes, these notes can be single notes or chords and the sequence can mix these. Notes are separated by spaces and the syntax for an individual note is:
 
 	<note-name><accidental>?<octave>?
 
@@ -114,61 +69,21 @@ The default octave is the last octave specified. Thus, in this sequence, all not
 
 	A3 B C D E
 
-For the first note, the default octave is the fourth and
+For the first note, the default octave is the fourth so this is middle C:
 
 	C
 
-is middle C.
+Silences are expressed as -. For example, the next expression means A, silence, C:
 
-Silences are expressed as -. For example:
+	A - C
 
-	beat = rhythm [xxxx] on 4/4
-	voices    | piano "right hand" | piano "left hand"
-	tempo 100 |                    |
-	          |                    | - - - C4 on beat
-	          | D4GB on whole      | B A G A  on beat
-	          | EAC5 on whole      | A        on whole
+Underscore repeats the previous note "tying" them. The next sequence means A, still A, C:
 
-Underscore will make the previous note be stretched on the corresponding rhythm component:
+	A _ C
 
-	beat = rhythm [xxxx] on 4/4
-	voices    | piano "right hand" | piano "left hand"
-	tempo 100 |                    |
-	          |                    | - - - C4 on beat
-	          | D4GB on whole      | B _ G A  on beat
-	          | EAC5 on whole      | _        on whole
+## Drum sequences
 
-When a sequence is going to be repeated several times in the song, it is possible to give it a name and reuse the name in the bar section:
-
-	beat = rhythm [xxxx] on 4/4
-	seq  = sequence B _ G A
-	voices    | piano "right hand" | piano "left hand"
-	tempo 100 |                    |
-	          |                    | - - - C4 on beat
-	          | D4GB on whole      | seq      on beat
-	          | D4GB on whole      | seq      on beat
-	          | EAC5 on whole      | _        on whole
-
-And when there is such a chord sequence it is possible to define sequences of single notes based on the notes of a chord of the sequence:
-
-	ts      = time signature 6/8
-	r       = rhythm [XxxXxx] on ts
-	whole   = rhythm [x] on ts
-	chords  = sequence C4EG EGB FAC5 E4G♯B
-
-	voices    | fingered_bass                 | overdrive_guitar
-	dynamics  | f                             | p
-	tempo 120 |                               |
-	          | 1 2 3 2 3 1 of chords(0) on r | chords(0) on r
-	          | 1 2 3 2 3 1 of chords(1) on r | chords(1) on r
-	          | 1 2 3 2 3 1 of chords(2) on r | chords(2) on r
-	          | 1 2 3 2 3 1 of chords(3) on r | chords(3) on r
-
-### Drum sequences
-
-Drum sequences have the same behavior as pitched sequences with two differences.
-
-First, instead of note names we have drums instruments:
+Drum sequences have the same structure as pitched sequences with the only difference that they use drums instruments instead of note names:
 
 * hihat
 * hh
@@ -197,76 +112,148 @@ First, instead of note names we have drums instruments:
 * tom6
 * t6
 
-And second, when declared, they use the *drum sequence* keywords:
+For example:
 
-	beat       = rhythm [xxxx] on 4/4
-	sixteenths = rhythm [x...x...xX..X..X] on 4/4
-	theRhythm  = drum sequence bd sn bd sn sn sn
-	voices    | drums "right hand" | drums "rhythm"
-	tempo 100 |                    |
-	          | hh on beat         | theRhythm on sixteenths
-	          | hh on beat         | theRhythm on sixteenths
-	          | hh on beat         | theRhythm on sixteenths
-	          | hh on beat         | theRhythm on sixteenths
+	hihat hihatopen hihat hihatopen hihat hihatopen hihat hihatopen 
 
-### Sequence accesors
+## Aural
 
-It is possible to access parts of named sequences from bars:
+Sequences and rhythms are combined on aural expressions, which have this syntax:
 
-	<sequence_name>(<startIndex>[:[<endIndex>]])
+	<sequence> on <rhythm>
+
+Where *sequence* is a pitched or drum sequence expression and *rhythm* is a rhythm expression.
+
+In this expression each component of the rhythm is matched with the component in the sequence that has the same place in order to produce a note of the known length, pitch and dynamics.
+
+For example:
+
+	hihat hihatopen hihat hihatopen hihat hihatopen hihat hihatopen on [XxXxXxXx]
+
+Or:
+
+	C D E F G A B on [xxxxxxx.]
+
+If the sequence is shorter than the rhythm it is rolled over, which is very useful for drum sequences. For example, the previous drum aural expression can be defined so:
+
+	hihat hihatopen on [XxXxXxXx]
+
+When the sequence is over after the second eighth note, it will start again with another two hihat and open hihat eighth notes until the rhythm is filled.
+
+## Named expressions
+
+MusicJargon allows to associate a name to any expression. The syntax is:
+
+	<name> = <expression>
+
+Where *name* is the name given to the expression and *expression* is the expression we want to associate with the name.
+
+Once an expression has a name it can be reused in other expressions. For example, let *beat* be defined as:
+
+	beat = [XXXX] on 4/4
+
+We could have an aural expression so:
+
+	hihat on beat
+
+This is quite useful to define rhythms and sequences in one place and not to type them over and over.
+
+## Functions
+
+MusicJargon allows the usage of functions, with this syntax:
+
+	<functionName>(<params>)
+
+where *functionName* is the name of the function and *params* is a comma separated list of expressions that are passed as parameters to the function.
+
+They take any number of parameters as input and produce a single result. The types of the parameters and results can be any of the types supported by MusicJargon. On example of function is the *transpose8* one, which transposes the notes of a sequence one or more octaves up or down:
+
+	transpose8(C5 D B A, 1)
+
+See at the end of this reference for a [list of available functions](#list-of-functions).
+
+### Sequence accessors
+
+It is possible to access parts of sequences using the *{}* accessor operator:
+
+	<sequence_expression>(<startIndex>[:[<endIndex>]])
 
 If only *startIndex* is defined, the expression returns the zero-based index-th note in the sequence. If *endIndex* is defined it returns the notes between *startIndex* and *endIndex*, both included. And if the colon appears, but no *endIndex* (e.g.: *seq(1:)*) it returns the notes from *startIndex* until the end of the sequence.
 
 This is valid for both pitched and drum sequences:
 
-	ts = time signature 3/4
+	eighths          = [X.x.X.x.X.x.] on 3/4
+	mainRhythm       = [x.xx..xx..x.] on 3/4
+	polyRhythm       = [x..x..x..x..] on 3/4
+	filledPolyRhythm = [xxXxxXxxXxxX] on 3/4
+	bassdrumSn       = bd sn bd bd bd sn
+	sn2bd            = bd bd sn
 
-	eighths          = rhythm [X.x.X.x.X.x.] on ts
-	mainRhythm       = rhythm [x.xx..xx..x.] on ts
-	polyRhythm       = rhythm [x..x..x..x..] on ts
-	filledPolyRhythm = rhythm [xxXxxXxxXxxX] on ts
-	bassdrumSn       = drum sequence bd sn bd bd bd sn
-	sn2bd            = drum sequence bd bd sn
-	voices      | drums "hihat"         | drums "rhythm"
-	dynamics    | mf                    | mf
-	tempo 70    |                       |
-	a:          |                       |
-	            | crash + hh on eighths | snare + bassdrumSn(1:) on mainRhythm
-	            | hh on eighths         | bassdrumSn(1:3)        on mainRhythm
-	            | hh on eighths         | sn2bd                  on filledPolyRhythm
-	            | hh on eighths         | sn2bd                  on polyRhythm
-	repeat a 10 |                       |
+	voices | drums "hihat"                | drums "rhythm"
+	       | concat(crash, hh) on eighths | snare + bassdrumSn(1:) on mainRhythm
+	       | hh                on eighths | bassdrumSn(1:3)        on mainRhythm
+	       | hh                on eighths | sn2bd                  on filledPolyRhythm
+	       | hh                on eighths | sn2bd                  on polyRhythm
 
-### Sequence functions
+## Songlines
 
-Sequence functions can be used in bars. They take a number of parameters, that can be numbers, string literals or note sequences and produce a new note sequence.
+As opposed to pentagrams, MusicJargon defines a song vertically by means of *songline* statements. These statements define the instruments that are used, the bars for each instrument, set the tempo, define the base dynamic, etc. 
 
-#### arpeggio
+On the same line, the data for different instruments is separated with the *\|* character.
 
-Generates a sequence of the arpeggiated notes of a chord. It receives a chord parameter and an optional string with the 1-based indices of the notes in the chord to use:
+## Voices
 
-	beat         = rhythm [xxxx] on 4/4
-	subbeat      = rhythm [XxXxXxXx] on 4/4
-	chords       = sequence D4GB EAC5 E4GB CEG
-	voices    | piano "right hand"                            | drums "right hand"                      
-			  | arpeggio(chords{0}, "12323")       on subbeat | crash + hihat on beat                 
-			  | arpeggio(chords{1})                on subbeat | hihat on beat                 
+The voices *songline* defines the different instruments that will play the song. It is defined so:
 
-#### transpose8
+	voices | <instrument_name> "comment" | <instrument_name> "comment" | ...
 
-Transposes the input sequence a number of octaves. It receives a note sequence and a number as a parameter:
+Where *instrument_name* is the name of one of the [available instruments](#instruments) and *comment* is any text that helps the author to identify the instrument.
 
-	beat         = rhythm [xxxx] on 4/4
-	subbeat      = rhythm [XxXxXxXx] on 4/4
-	chords       = sequence D4GB EAC5 E4GB CEG
-	voices    | piano "right hand"                                    | drums "right hand"                      
-			  | transpose8(arpeggio(chords{0}, "12323"), 1 on subbeat | crash + hihat on beat                 
-			  | transpose8(arpeggio(chords{1})        ), 1 on subbeat | hihat on beat                 
+Note that some instruments have two voices and they have to be added explicitly, for example the two hands for piano:
 
+	voices | piano "left hand" | piano "right hand"
+
+Note also that the vertical bar *\|* separates both instruments.
+
+## Bar
+
+Bars come vertically after one another under the corresponding instrument:
+
+	voices | piano "left hand" | piano "right hand"
+	       | <bar>             | <bar>
+	       | <bar>             | <bar>
+	       | <bar>             | <bar>
+	       | ...               | ...
+
+Note that formatting is not important but instead the number of \| characters is taken into account to know to which voice belongs each bar. An editor with block editing capabilities or aligning capabilities is recommended.
+
+A bar is any aural expression.
 
 ## Voices not playing a bar
 
 Just leave the bar empty. Empty bars make the corresponding voice mute during the bar.
+
+	voices | piano "left hand" | piano "right hand"
+	       | <bar>             | <bar>
+	       |                   | <bar>
+	       | <bar>             |       
+	       | ...               | ...
+
+## Comments
+
+At any point it is possible to start a line with a single quote in order to make a comment that is not processed by MusicJargon.
+
+
+	voices | piano "left hand" | piano "right hand"
+	       | <bar>             | <bar>
+	       | <bar>             | <bar>
+	       | <bar>             | <bar>
+	       | <bar>             | <bar>
+	' **********  chorus !!!  ************
+	       | <bar>             | <bar>
+	       | <bar>             | <bar>
+	       | <bar>             | <bar>
+	       | ...               | ...
 
 ## Tempo
 
@@ -284,7 +271,7 @@ The tempo declaration can have any number of | characters afterwards, with no me
 
 ## Dynamics
 
-Dynamics can appear at any place in the bar section. Its syntax is:
+Dynamics change the base dynamics. Its syntax is:
 
 	dynamics | <dynamic> | <dynamic> | ...
 
@@ -324,6 +311,70 @@ Then the *repeat* keyword can be used to jump to a label:
 	repeat <label_name> <times>
 
 Where *label_name* is the label to jump to and times is the number of times it has to jump.
+
+
+
+
+
+
+
+
+
+
+And when there is such a chord sequence it is possible to define sequences of single notes based on the notes of a chord of the sequence:
+
+	ts      = time signature 6/8
+	r       = rhythm [XxxXxx] on ts
+	whole   = rhythm [x] on ts
+	chords  = sequence C4EG EGB FAC5 E4G♯B
+
+	voices    | fingered_bass                 | overdrive_guitar
+	dynamics  | f                             | p
+	tempo 120 |                               |
+	          | 1 2 3 2 3 1 of chords(0) on r | chords(0) on r
+	          | 1 2 3 2 3 1 of chords(1) on r | chords(1) on r
+	          | 1 2 3 2 3 1 of chords(2) on r | chords(2) on r
+	          | 1 2 3 2 3 1 of chords(3) on r | chords(3) on r
+
+
+
+## List of functions
+
+### arpeggio
+
+Generates a sequence of the arpeggiated notes of a chord. It receives a chord parameter and an optional string with the 1-based indices of the notes in the chord to use:
+
+	beat         = rhythm [xxxx] on 4/4
+	subbeat      = rhythm [XxXxXxXx] on 4/4
+	chords       = sequence D4GB EAC5 E4GB CEG
+	voices    | piano "right hand"                            | drums "right hand"                      
+			  | arpeggio(chords{0}, "12323")       on subbeat | crash + hihat on beat                 
+			  | arpeggio(chords{1})                on subbeat | hihat on beat                 
+
+### transpose8
+
+Transposes the input sequence a number of octaves. It receives a note sequence and a number as a parameter:
+
+	beat         = rhythm [xxxx] on 4/4
+	subbeat      = rhythm [XxXxXxXx] on 4/4
+	chords       = sequence D4GB EAC5 E4GB CEG
+	voices    | piano "right hand"                                    | drums "right hand"                      
+			  | transpose8(arpeggio(chords{0}, "12323"), 1 on subbeat | crash + hihat on beat                 
+			  | transpose8(arpeggio(chords{1})        ), 1 on subbeat | hihat on beat                 
+
+### chordNotes
+
+Takes a chord and a list of numbers that are interpreted as 1-based indices on the notes of the chord and returns these as a pitched sequence:
+
+	' C C E E G G
+	chordNotes(CEG, 1, 1, 2, 2, 3, 3)
+
+### concat
+
+Returns a sequence resulting of the concatenation of two or more sequences. When matching a rhythm, if the sequence is to short, only the last sequence will be rolled over.
+
+	' One crash and 7 hihats
+	concat(crash, hihat) on [XxXxXxXx]
 
 ## Instruments
 
