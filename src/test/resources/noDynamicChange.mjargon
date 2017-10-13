@@ -3,9 +3,8 @@ whole = [x] on ts
 chords = C4EG 
 
 voices   | acoustic_bass | piano
-tempo 250|               | 
 dynamics | ffff          | ffff
-         | C on whole    | C on whole
+tempo 250| C on whole    | C on whole
 dynamics |               | pppp
          | C on whole    | C on whole
 dynamics | ffff          | ffff

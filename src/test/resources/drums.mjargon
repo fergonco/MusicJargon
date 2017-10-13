@@ -9,9 +9,8 @@ pedal     = hhp
 
 voices     | drums            | drums                   | drums
 dynamics   | p                | p                       | p
-tempo 120  |                  |                         |
 a:         |                  |                         |
-           | hihat on subbeat | bassSnare on mainRhythm | pedal on beat
+tempo 120  | hihat on subbeat | bassSnare on mainRhythm | pedal on beat
            | hihat on subbeat | bassSnare on mainRhythm | pedal on beat
            | hihat on subbeat | bassSnare on mainRhythm | pedal on beat
            | hihat on subbeat | bassSnare on mainRhythm | pedal on beat

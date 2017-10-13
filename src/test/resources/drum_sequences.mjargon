@@ -12,9 +12,8 @@ sn2bd      = bd bd sn
              
 voices       | drums "hihat" | drums "rhythm"          
 dynamics     |    mf         | mf                      
-tempo 70     |               |                         
 a:           |               |                         
-             | hh on eighths | sn2bd on mainRhythm
+tempo 70     | hh on eighths | sn2bd on mainRhythm
              | hh on eighths | sn2bd on mainRhythm
              | hh on eighths | sn2bd on filledPolyRhythm
              | hh on eighths | sn2bd on polyRhythm

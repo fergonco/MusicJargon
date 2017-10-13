@@ -5,8 +5,7 @@ whole        = [x] on ts
 chords       = D4GB EAC5
 
 voices        | piano "right hand"       | violin  
-tempo 100     |                          |                    
-              |                          | - - - C4 on beat        
+tempo 100     |                          | - - - C4 on beat        
               | D4GB on whole            | B _ G A  on beat   
               | EAC5 on whole            | _        on whole  
               | D4GB on whole            | B _ G A  on beat   

@@ -76,7 +76,7 @@ labelDeclaration: COLON VERTICAL_BAR*;
 
 barline: (VERTICAL_BAR {$expressions.add(null);} expressions+=expression?)+ {$expressions.add(null);};
 
-tempo: TEMPO bpmOrNumerator=NUMBER (SLASH denominator=NUMBER EQUALS bpm=NUMBER)? VERTICAL_BAR*;
+tempo: TEMPO bpmOrNumerator=NUMBER (SLASH denominator=NUMBER EQUALS bpm=NUMBER)? barline;
 
 voices: VOICES (VERTICAL_BAR instrumentNames+=ID STRING_LITERAL?)+ VERTICAL_BAR?;
 

@@ -19,9 +19,8 @@ seq5 = E5
              
 voices       |  drums "hihat"    | drums "rhythm"         | piano "left hand"   | piano "right hand"
 dynamics     |     mf            | mf                     | ff                  | ff
-tempo 70     |                   |                        |                     | 
 a:           |                   |                        |                     | 
-             |  hh on subbeat    | bassdrumrhythm on main | chords{0} on whole  | seq1 on main 
+tempo 70     |  hh on subbeat    | bassdrumrhythm on main | chords{0} on whole  | seq1 on main 
              |  hh on subbeat    | bassdrumrhythm on main | chords{1} on whole  | seq2 on main 
              |  hh on subbeat    | bassdrumrhythm on main | chords{2} on whole  | seq3 on main 
              |  rd on poly       | tutupa on sixteenths   | chords{3} on whole  | seq4 on poly 

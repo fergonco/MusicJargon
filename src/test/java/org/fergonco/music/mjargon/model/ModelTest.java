@@ -73,7 +73,7 @@ public class ModelTest {
 			byte[] expectedResult = readFile(expectedResultFile);
 			assertEquals(testCase.getName(), expectedResult.length, result.length);
 			for (int i = 0; i < expectedResult.length; i++) {
-				assertEquals(expectedResult[i], result[i]);
+				assertEquals(testCase.getName(), expectedResult[i], result[i]);
 			}
 		}
 	}
