@@ -1,19 +1,18 @@
 package org.fergonco.music.mjargon.model;
 
-import org.fergonco.music.midi.Duration;
 import org.fergonco.music.midi.Dynamic;
 import org.fergonco.music.midi.Note;
-import org.fergonco.music.midi.NoteImpl;
 
-public class SilenceBar implements Bar {
+public class InstrumentRepeatBar implements Bar {
 
 	@Override
 	public Note[] getNotes(Model model, int songlineIndex, int voiceIndex, Dynamic baseDynamics, Note lastNote) {
-		return new Note[] { new NoteImpl(0, new Duration(1), Dynamic.MUTE.getLevel()) };
+		Bar instrumentBar = model.getBar(songlineIndex, -1, voiceIndex);
+		return instrumentBar.getNotes(model, songlineIndex - 1, voiceIndex, baseDynamics, lastNote);
 	}
 
 	@Override
-	public void validate() {
+	public void validate() throws SemanticException {
 	}
 
 }

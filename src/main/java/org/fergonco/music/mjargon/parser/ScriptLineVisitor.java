@@ -12,6 +12,7 @@ import org.fergonco.music.mjargon.antlr.MJargonParser.BarlineContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.DeclarationContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.DynamicsContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.ExpressionContext;
+import org.fergonco.music.mjargon.antlr.MJargonParser.ExpressionOrReferenceContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.LabelDeclarationContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.RepeatContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.TempoContext;
@@ -19,6 +20,7 @@ import org.fergonco.music.mjargon.antlr.MJargonParser.VariableDeclarationContext
 import org.fergonco.music.mjargon.antlr.MJargonParser.VoicesContext;
 import org.fergonco.music.mjargon.model.Bar;
 import org.fergonco.music.mjargon.model.InstrumentBar;
+import org.fergonco.music.mjargon.model.InstrumentRepeatBar;
 import org.fergonco.music.mjargon.model.Model;
 import org.fergonco.music.mjargon.model.SilenceBar;
 import org.fergonco.music.mjargon.model.Value;
@@ -115,14 +117,18 @@ public class ScriptLineVisitor extends MJargonBaseVisitor<Object> {
 
 	@Override
 	public Object visitBarline(BarlineContext ctx) {
-		List<ExpressionContext> barExpressions = ctx.expressions;
-		List<ExpressionContext> instrumentExpressions = getPerInstrument(barExpressions);
+		List<ExpressionOrReferenceContext> barExpressions = ctx.expressions;
+		List<ExpressionOrReferenceContext> instrumentExpressions = getPerInstrument(barExpressions);
 
 		List<Bar> bars = new ArrayList<>();
-		for (ExpressionContext expressionContext : instrumentExpressions) {
+		for (ExpressionOrReferenceContext expressionContext : instrumentExpressions) {
 			if (expressionContext != null) {
-				Value value = new ExpressionVisitor(model).visit(expressionContext);
-				bars.add(new InstrumentBar(value));
+				if (expressionContext.same != null) {
+					bars.add(new InstrumentRepeatBar());
+				} else {
+					Value value = new ExpressionVisitor(model).visit(expressionContext.expr);
+					bars.add(new InstrumentBar(value));
+				}
 			} else {
 				bars.add(new SilenceBar());
 			}

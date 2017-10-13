@@ -8,10 +8,10 @@ voices         | acoustic_bass        | electric_guitar            | drums "righ
 tempo 110      | - - - - - A3 G on r2 |                            |                    |
 start:         |                      |                            |                    |
                | riff1 on r1          |                            | hihat on eighth    | bd sn on quarter
-               | riff2 on r2          |                            | hihat on eighth    | bd sn on quarter
+               | riff2 on r2          |                            | %                  | %
 repeat start 2 |                      |                            |                    |
 may:           |                      |                            |                    |
 dynamics       |                      | ppp                        |                    |
-               | riff1 on r1          | transpose8(riff1, 1) on r1 | hihat on eighth    | bd sn on quarter
-               | E3 E G E A - - on r2 | E4 E G E A - -      on r2  | hihat on eighth    | bd sn on quarter
+               | riff1 on r1          | transpose8(riff1, 1) on r1 | %                  | %
+               | E3 E G E A - - on r2 | E4 E G E A - -      on r2  | %                  | %
 repeat may 2   |                      |                            |                    |

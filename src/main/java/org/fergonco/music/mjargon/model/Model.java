@@ -28,6 +28,7 @@ public class Model {
 	public void addVariable(String id, Value value) {
 		variables.put(id, value);
 	}
+
 	public Value getReference(String id) throws InvalidReferenceException {
 		Value value = variables.get(id);
 		if (value == null) {
@@ -35,6 +36,7 @@ public class Model {
 		}
 		return value;
 	}
+
 	public void setInstruments(String[] instruments) {
 		this.instruments = instruments;
 	}
@@ -53,6 +55,20 @@ public class Model {
 		bos.close();
 	}
 
+	public Bar getBar(int songlineIndex, int barOffset, int voiceIndex) {
+		int instrumentBarlines = 0;
+		Bar bar = null;
+		do {
+			songlineIndex--;
+			SongLine songLine = songlines.get(songlineIndex);
+			if (songLine.isBarline()) {
+				bar = songLine.getBars()[voiceIndex];
+				instrumentBarlines++;
+			}
+		} while (instrumentBarlines < -barOffset);
+		return bar;
+	}
+
 	public void writeMidi(OutputStream stream) throws IOException {
 		Score score = new Score(stream);
 		Track[] tracks = new Track[instruments.length];
@@ -69,7 +85,8 @@ public class Model {
 			if (songline.isBarline()) {
 				Bar[] bars = songline.getBars();
 				for (int i = 0; i < bars.length; i++) {
-					Note[] notes = bars[i].getNotes(currentDynamics[i], tracks[i].getLastNote());
+					Note[] notes = bars[i].getNotes(this, songlineIndex, i, currentDynamics[i],
+							tracks[i].getLastNote());
 					for (Note note : notes) {
 						tracks[i].addNote(note);
 					}
@@ -111,6 +128,7 @@ public class Model {
 	public void setDynamics(ArrayList<Dynamic> dynamics) {
 		songlines.add(new DynamicsLine(dynamics));
 	}
+
 	public void validate() {
 		for (SongLine songLine : songlines) {
 			try {
@@ -128,6 +146,7 @@ public class Model {
 	public List<MJargonError> getErrors() {
 		return errors;
 	}
+
 	public Integer getLabel(String label) {
 		return labels.get(label);
 	}

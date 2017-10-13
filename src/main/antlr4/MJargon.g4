@@ -74,7 +74,9 @@ drumSequenceExpression: (
 
 labelDeclaration: COLON VERTICAL_BAR*;
 
-barline: (VERTICAL_BAR {$expressions.add(null);} expressions+=expression?)+ {$expressions.add(null);};
+barline: (VERTICAL_BAR {$expressions.add(null);} expressions+=expressionOrReference?)+ {$expressions.add(null);};
+
+expressionOrReference: same=SAME | expr=expression;
 
 tempo: TEMPO bpmOrNumerator=NUMBER (SLASH denominator=NUMBER EQUALS bpm=NUMBER)? barline;
 
@@ -91,6 +93,7 @@ VERTICAL_BAR: '|';
 COLON: ':';
 COMA: ',';
 EQUALS: '=';
+SAME: '%';
 OPEN_BRACE: '{';
 CLOSE_BRACE: '}';
 OPEN_PARENTHESIS: '(';

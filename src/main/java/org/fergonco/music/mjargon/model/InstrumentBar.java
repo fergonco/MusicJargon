@@ -26,7 +26,7 @@ public class InstrumentBar implements Bar {
 		}
 	}
 
-	public Note[] getNotes(Dynamic baseDynamics, Note lastNote) {
+	public Note[] getNotes(Model model, int songlineIndex, int voiceIndex, Dynamic baseDynamics, Note lastNote) {
 		RhythmComponent[] components = value.toAural().getRhythm().getComponents();
 
 		PitchArray[] pitches = value.toAural().getSequence().getAllNotes(components.length);
