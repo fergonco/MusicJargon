@@ -70,7 +70,12 @@ public class Model {
 	}
 
 	public void writeMidi(OutputStream stream) throws IOException {
-		Score score = new Score(stream);
+		Score score = getScore();
+		score.write(stream);
+	}
+
+	public Score getScore() {
+		Score score = new Score();
 		Track[] tracks = new Track[instruments.length];
 		for (int i = 0; i < tracks.length; i++) {
 			tracks[i] = new Track();
@@ -113,7 +118,7 @@ public class Model {
 		}
 
 		score.addTracks(tracks);
-		score.write();
+		return score;
 	}
 
 	public void repeat(String label, int times) {
