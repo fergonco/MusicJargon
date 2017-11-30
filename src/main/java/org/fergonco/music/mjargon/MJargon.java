@@ -1,9 +1,12 @@
 package org.fergonco.music.mjargon;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.util.List;
@@ -25,12 +28,24 @@ public class MJargon {
 
 	public static void main(String[] args) throws Exception {
 		System.out.println("Version: " + MJargon.class.getPackage().getImplementationVersion());
-		if (args.length != 1) {
+		String inputFile = null;
+		String outputFile = null;
+		boolean getOutput = false;
+		for (String arg : args) {
+			if (getOutput) {
+				outputFile = arg;
+				getOutput = false;
+			} else if (arg.equals("-o")) {
+				getOutput = true;
+			} else {
+				inputFile = arg;
+			}
+		}
+		if (inputFile == null) {
 			System.out.println("Usage:");
-			System.out.println("MJargon <file>");
+			System.out.println("MJargon [-o <output_midi>] <file>");
 			System.exit(1);
 		}
-
 
 		InputStream is = new FileInputStream(new File(args[0]));
 		String script = IOUtils.toString(is, "utf-8");
@@ -45,7 +60,13 @@ public class MJargon {
 		for (MJargonError mJargonError : errors) {
 			System.err.println(mJargonError);
 		}
-		final PipedOutputStream midiOutputStream = new PipedOutputStream();
+		OutputStream outputStream;
+		if (outputFile != null) {
+			outputStream = new BufferedOutputStream(new FileOutputStream(outputFile));
+		} else {
+			outputStream = new PipedOutputStream();
+		}
+		final OutputStream midiOutputStream = outputStream;
 		new Thread(new Runnable() {
 
 			@Override
@@ -63,13 +84,15 @@ public class MJargon {
 				}
 			}
 		}).start();
-		Sequencer sequencer = MidiPlayer.play(new PipedInputStream(midiOutputStream));
-		while (sequencer.isRunning()) {
-			synchronized (MJargon.class) {
-				MJargon.class.wait(500);
+		if (outputFile == null) {
+			Sequencer sequencer = MidiPlayer.play(new PipedInputStream((PipedOutputStream) midiOutputStream));
+			while (sequencer.isRunning()) {
+				synchronized (MJargon.class) {
+					MJargon.class.wait(500);
+				}
 			}
+			sequencer.stop();
+			sequencer.close();
 		}
-		sequencer.stop();
-		sequencer.close();
 	}
 }
