@@ -24,7 +24,7 @@ public class Repeat extends AbstractSongLine implements SongLine {
 	}
 
 	@Override
-	public void validate(Model model) throws SemanticException {
+	public void validate(Model model, int songlineIndex) throws SemanticException {
 		Integer labelIndex = model.getLabel(label);
 		if (labelIndex == null) {
 			throw new SemanticException("Unknown label: " + label);

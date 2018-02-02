@@ -13,7 +13,7 @@ public class SilenceBar implements Bar {
 	}
 
 	@Override
-	public void validate() {
+	public void validate(Model model, int songlineIndex, int voiceIndex) {
 	}
 
 }

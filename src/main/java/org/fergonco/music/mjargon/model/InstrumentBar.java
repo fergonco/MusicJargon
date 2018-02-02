@@ -19,7 +19,7 @@ public class InstrumentBar implements Bar {
 	}
 
 	@Override
-	public void validate() throws SemanticException {
+	public void validate(Model model, int songlineIndex, int voiceIndex) throws SemanticException {
 		value.validate();
 		if (value.getType() != ValueType.AURAL) {
 			throw new SemanticException("Instrument bars require aural expressions");

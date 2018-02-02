@@ -56,17 +56,17 @@ public class Model {
 	}
 
 	public Bar getBar(int songlineIndex, int barOffset, int voiceIndex) {
+		SongLine songLine = songlines.get(songlineIndex);
+		int direction = (int) Math.signum(barOffset);
 		int instrumentBarlines = 0;
-		Bar bar = null;
-		do {
-			songlineIndex--;
-			SongLine songLine = songlines.get(songlineIndex);
-			if (songLine.isBarline()) {
-				bar = songLine.getBars()[voiceIndex];
-				instrumentBarlines++;
-			}
-		} while (instrumentBarlines < -barOffset);
-		return bar;
+		while (instrumentBarlines < Math.abs(barOffset)) {
+			do {
+				songlineIndex += direction;
+				songLine = songlines.get(songlineIndex);
+			} while (!songLine.isBarline());
+			instrumentBarlines++;
+		}
+		return songLine.getBars()[voiceIndex];
 	}
 
 	public void writeMidi(OutputStream stream) throws IOException {
@@ -130,9 +130,9 @@ public class Model {
 	}
 
 	public void validate() {
-		for (SongLine songLine : songlines) {
+		for (int i = 0; i < songlines.size(); i++) {
 			try {
-				songLine.validate(this);
+				songlines.get(i).validate(this, i);
 			} catch (SemanticException e) {
 				registerError(e, -1);
 			}

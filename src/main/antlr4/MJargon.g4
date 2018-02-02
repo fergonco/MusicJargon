@@ -78,7 +78,11 @@ labelDeclaration: COLON barline;
 
 barline: (VERTICAL_BAR {$expressions.add(null);} expressions+=expressionOrReference?)+ {$expressions.add(null);};
 
-expressionOrReference: same=SAME | expr=expression;
+expressionOrReference: 
+	same=SAME 
+	| LIKE label=ID (shiftSign=(PLUS | SILENCE) shiftAmount=NUMBER)? 
+	| plus=PLUS
+	| expr=expression;
 
 tempo: TEMPO bpmOrNumerator=NUMBER (SLASH denominator=NUMBER EQUALS bpm=NUMBER)? VERTICAL_BAR*;
 
@@ -96,6 +100,8 @@ COLON: ':';
 COMA: ',';
 EQUALS: '=';
 SAME: '%';
+LIKE: 'like';
+PLUS: '+';
 OPEN_BRACE: '{';
 CLOSE_BRACE: '}';
 OPEN_PARENTHESIS: '(';

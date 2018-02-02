@@ -8,6 +8,7 @@ import java.util.Map;
 import org.antlr.v4.runtime.Token;
 import org.fergonco.music.midi.Dynamic;
 import org.fergonco.music.mjargon.antlr.MJargonBaseVisitor;
+import org.fergonco.music.mjargon.antlr.MJargonLexer;
 import org.fergonco.music.mjargon.antlr.MJargonParser.BarlineContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.DeclarationContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.DynamicsContext;
@@ -124,7 +125,18 @@ public class ScriptLineVisitor extends MJargonBaseVisitor<Object> {
 		for (ExpressionOrReferenceContext expressionContext : instrumentExpressions) {
 			if (expressionContext != null) {
 				if (expressionContext.same != null) {
-					bars.add(new InstrumentRepeatBar());
+					bars.add(InstrumentRepeatBar.lastOne());
+				} else if (expressionContext.label != null) {
+					int shift = 0;
+					if (expressionContext.shiftAmount != null) {
+						shift = Integer.parseInt(expressionContext.shiftAmount.getText());
+						if (expressionContext.shiftSign.getType() == MJargonLexer.SILENCE) {
+							shift = -shift;
+						}
+					}
+					bars.add(InstrumentRepeatBar.labelReference(expressionContext.label.getText(), shift));
+				} else if (expressionContext.plus != null) {
+					bars.add(InstrumentRepeatBar.plusOne());
 				} else {
 					Value value = new ExpressionVisitor(model).visit(expressionContext.expr);
 					bars.add(new InstrumentBar(value));

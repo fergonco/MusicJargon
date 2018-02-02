@@ -23,6 +23,6 @@ public class DynamicsLine extends AbstractSongLine implements SongLine {
 	}
 
 	@Override
-	public void validate(Model model) throws SemanticException {
+	public void validate(Model model, int songlineIndex) throws SemanticException {
 	}
 }
