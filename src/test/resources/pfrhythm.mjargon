@@ -7,7 +7,7 @@ bassmain= [x.....x.X.x...x...x...x.X...x...] on ts
 
 theRhythm  = bd bd sn bd bd bd bd bd sn bd bd bd
 
-chords = C2EG EGB FAC3 E2G♯B
+chords = C2EG EGB FAC3 E2G#B
 seq1 = chordNotes(chords{0},1,1,2,1,1,1,1,2,3)
 seq2 = chordNotes(chords{1},1,1,2,1,1,1,1,2,3)
 seq3 = chordNotes(chords{2},1,1,2,1,1,1,1,2,3)

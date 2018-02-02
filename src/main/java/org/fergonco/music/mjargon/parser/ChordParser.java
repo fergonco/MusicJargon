@@ -17,7 +17,7 @@ public class ChordParser {
 		basePitches.put("A", 9);
 		basePitches.put("B", 11);
 	}
-	private static final Pattern p = Pattern.compile("([A-G])([♯|♭])?(\\d)?");
+	private static final Pattern p = Pattern.compile("([A-G])([#|b])?(\\d)?");
 
 	private String text;
 	private int octave;
@@ -73,9 +73,9 @@ public class ChordParser {
 			String octaveIndex = matcher.group(3);
 			Integer basePitch = basePitches.get(noteName);
 			if (accidental != null) {
-				if (accidental.equals("♯")) {
+				if (accidental.equals("#")) {
 					basePitch++;
-				} else if (accidental.equals("♭")) {
+				} else if (accidental.equals("b")) {
 					basePitch--;
 				}
 			}

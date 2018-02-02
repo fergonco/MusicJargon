@@ -142,7 +142,7 @@ T5:'t5';
 TOM6:'tom6';
 T6:'t6';
 SILENCE: '-';
-fragment NOTE: 'A'..'G' ('♯' | '♭')? ('0'..'9')?;
+fragment NOTE: 'A'..'G' ('#' | 'b')? ('0'..'9')?;
 EXPLICIT_CHORD: NOTE+;
 CHORD_NAME: NOTE ('maj' | 'min' | 'aug' | 'dim');
 STRING_LITERAL: '"' ~'"'* '"';

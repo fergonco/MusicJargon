@@ -1,7 +1,7 @@
 ts      = 5/8
 r       = [XxxXx] on ts
 whole   = [x] on ts
-chords  = C4EG EGB FAC5 E4G♯B
+chords  = C4EG EGB FAC5 E4G#B
 seq1    = chordNotes(chords{0}, 1, 2, 1, 3, 2, 3)
 seq2    = chordNotes(chords{1}, 1, 2, 1, 3, 2, 3)
 seq3    = chordNotes(chords{2}, 1, 2, 1, 3, 2, 3)

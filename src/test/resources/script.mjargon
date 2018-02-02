@@ -6,7 +6,7 @@ r = [.x..x...x..X..x.] on ts
 whole = [x] on ts
 
 ' Define the "chords" chord progression. In Ubuntu you can use these combinations to get the sharp and flat characters: Ctrl+Shift+u 266f ESPACE (266d for flat)
-chords = C4EG EGB FAC5 E4G♯B
+chords = C4EG EGB FAC5 E4G#B
 
 ' Define sequences of notes based on the chords from the progression
 seq1 = chordNotes(chords{0}, 1, 2, 1, 3, 2)

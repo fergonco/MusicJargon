@@ -10,8 +10,8 @@ whole      = [x...........] on ts
 bassdrumrhythm = bd   bd bd   bd bd    sn
 tutupa         = bd bd sn
 
-chords = E3AC♯4 D3GB FAC4 D3FA EG♯B
-seq1 = A4 B B A C♯5 E
+chords = E3AC#4 D3GB FAC4 D3FA EG#B
+seq1 = A4 B B A C#5 E
 seq2 = D5 C C B4 B _
 seq3 = A4 B B C5 A4 _
 seq4 = A4 B C5 F

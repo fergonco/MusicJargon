@@ -11,7 +11,7 @@ More concretely, MusicJargon has the following data types:
 
 * Aural: something we can hear. Basically it is a combination of a rhythm and a sequence of notes or drum instruments.
 * Rhythms.
-* Pitched sequences: notes like C♯, but also chords.
+* Pitched sequences: notes like C#, but also chords.
 * Drum sequences: drum instrument names like: hihat, bassdrum, snare, etc.
 * Numbers
 * Fractions: For time signatures 12/8 and note durations 1/8.
@@ -61,7 +61,7 @@ Pitched sequences are a sequence of notes, these notes can be single notes or ch
 
     <note-name><accidental>?<octave>?
 
-where *note-name* is one of CDEFGAB uppercase letters, accidental is, optional, either the ♯ or the ♭ character and octave is also optional and defines in which octave to play the note.
+where *note-name* is one of CDEFGAB uppercase letters, accidental is, optional, either the # or the b character and octave is also optional and defines in which octave to play the note.
 
 By default, if there is no accidental, as expected, the pitch of the note is not modified.
 
@@ -326,7 +326,7 @@ And when there is such a chord sequence it is possible to define sequences of si
     ts      = time signature 6/8
     r       = rhythm [XxxXxx] on ts
     whole   = rhythm [x] on ts
-    chords  = sequence C4EG EGB FAC5 E4G♯B
+    chords  = sequence C4EG EGB FAC5 E4G#B
 
     voices    | fingered_bass                 | overdrive_guitar
     dynamics  | f                             | p
