@@ -41,7 +41,9 @@ referenceExpression: id=ID (OPEN_PARENTHESIS parameterValues+=expression (COMA p
 
 rhythmExpression: value=RHYTHMEXPRESSION (ON timeSignature=expression | WITH beatDuration=expression);
 
-pitchSequenceExpression: (notes+=CHORD_LITERAL | notes+=UNDERSCORE)+;
+pitchSequenceExpression: (literals+=chordLiteral)+;
+
+chordLiteral: silence=SILENCE | underscore=UNDERSCORE | (chord=EXPLICIT_CHORD | chord=CHORD_NAME);
 
 drumSequenceExpression: (
     instruments+=HIHAT|
@@ -133,7 +135,10 @@ TOM5:'tom5';
 T5:'t5';
 TOM6:'tom6';
 T6:'t6';
-CHORD_LITERAL: '-' | 'A'..'G' ('A'..'G' | '0'..'9' | '♯' | '♭')*;
+SILENCE: '-';
+fragment NOTE: 'A'..'G' ('♯' | '♭')? ('0'..'9')?;
+EXPLICIT_CHORD: NOTE+;
+CHORD_NAME: NOTE ('maj' | 'min' | 'aug' | 'dim');
 STRING_LITERAL: '"' ~'"'* '"';
 ID: 'a'..'z' ('a'..'z' | 'A'..'Z' | '_' | '0'..'9')*;
 

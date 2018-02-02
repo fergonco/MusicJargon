@@ -1,5 +1,6 @@
 package org.fergonco.music.mjargon.parser;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +8,7 @@ import java.util.Map;
 import org.antlr.v4.runtime.Token;
 import org.fergonco.music.mjargon.antlr.MJargonBaseVisitor;
 import org.fergonco.music.mjargon.antlr.MJargonLexer;
+import org.fergonco.music.mjargon.antlr.MJargonParser.ChordLiteralContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.DrumSequenceExpressionContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.ExpressionContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.NumericExpressionContext;
@@ -22,15 +24,28 @@ import org.fergonco.music.mjargon.model.Model;
 import org.fergonco.music.mjargon.model.NoteSequenceElement;
 import org.fergonco.music.mjargon.model.NoteSubsequence;
 import org.fergonco.music.mjargon.model.NumberValue;
+import org.fergonco.music.mjargon.model.PitchArray;
+import org.fergonco.music.mjargon.model.PitchArrayImpl;
 import org.fergonco.music.mjargon.model.PitchedNoteSequence;
 import org.fergonco.music.mjargon.model.Rhythm;
 import org.fergonco.music.mjargon.model.SequenceAndRhythm;
 import org.fergonco.music.mjargon.model.StringValue;
+import org.fergonco.music.mjargon.model.TiedPitchArray;
 import org.fergonco.music.mjargon.model.Value;
 
 public class ExpressionVisitor extends MJargonBaseVisitor<Value> {
+	private static HashMap<String, Integer> basePitches = new HashMap<>();
 	private static Map<Integer, DrumNote> drumInstrumentCodes = new HashMap<>();
+
 	static {
+		basePitches.put("C", 0);
+		basePitches.put("D", 2);
+		basePitches.put("E", 4);
+		basePitches.put("F", 5);
+		basePitches.put("G", 7);
+		basePitches.put("A", 9);
+		basePitches.put("B", 11);
+
 		drumInstrumentCodes.put(MJargonLexer.HIHAT, DrumNote.HIHAT);
 		drumInstrumentCodes.put(MJargonLexer.HH, DrumNote.HIHAT);
 		drumInstrumentCodes.put(MJargonLexer.HIHATOPEN, DrumNote.HIHATOPEN);
@@ -133,12 +148,28 @@ public class ExpressionVisitor extends MJargonBaseVisitor<Value> {
 
 	@Override
 	public Value visitPitchSequenceExpression(PitchSequenceExpressionContext ctx) {
-		List<Token> chordTokens = ctx.notes;
-		String[] chords = new String[chordTokens.size()];
-		for (int i = 0; i < chords.length; i++) {
-			chords[i] = chordTokens.get(i).getText();
+		List<ChordLiteralContext> noteLiterals = ctx.literals;
+		ArrayList<PitchArray> notes = new ArrayList<>();
+		int octave = 4;
+		for (ChordLiteralContext context : noteLiterals) {
+			PitchArray pitchArray;
+			if (context.underscore != null) {
+				pitchArray = new TiedPitchArray();
+			} else if (context.silence != null) {
+				PitchArrayImpl pitchArrayImpl = new PitchArrayImpl();
+				pitchArrayImpl.setSilence();
+				pitchArray = pitchArrayImpl;
+			} else {
+				Token chord = context.chord;
+				String chordText = chord.getText();
+				ChordParser chordParser = new ChordParser(chordText);
+				chordParser.setDefaultOctave(octave);
+				octave = chordParser.getOctave();
+				pitchArray = chordParser.getPitchArray();
+			}
+			notes.add(pitchArray);
 		}
-		return new PitchedNoteSequence(chords);
+		return new PitchedNoteSequence(notes.toArray(new PitchArray[notes.size()]));
 	}
 
 	@Override
@@ -154,4 +185,5 @@ public class ExpressionVisitor extends MJargonBaseVisitor<Value> {
 	private String trimDelimiters(String text) {
 		return text.substring(1, text.length() - 1);
 	}
+
 }

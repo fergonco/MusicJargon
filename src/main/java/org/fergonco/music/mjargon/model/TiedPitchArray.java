@@ -1,6 +1,6 @@
 package org.fergonco.music.mjargon.model;
 
-public class TiedPichArray implements PitchArray {
+public class TiedPitchArray implements PitchArray {
 
 	@Override
 	public int getPitch(int index) {

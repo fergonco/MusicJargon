@@ -1,0 +1,22 @@
+main       = [x.xx..xx..x.] on 3/4
+poly       = [x..x..x..x..] on 3/4
+whole      = [x...........] on 3/4
+
+
+chords = Amaj Gmaj Fmaj Dmin Emaj
+seq1 = A4 B B A C♯5 E
+seq2 = D5 C C B4 B _
+seq3 = A4 B B C5 A4 _
+seq4 = A4 B C5 F
+seq5 = E5
+             
+voices       | piano "left hand"   | drums "hihat"
+dynamics     | ff                  | ff
+a:           |                     | 
+tempo 70     | chords{0} on whole  | hh on [XxXxXx] on 3/4
+             | chords{1} on whole  | % 
+             | chords{2} on whole  | % 
+             | chords{3} on whole  | % 
+             | chords{4} on whole  | %
+repeat a 10  |                     | 
+                        

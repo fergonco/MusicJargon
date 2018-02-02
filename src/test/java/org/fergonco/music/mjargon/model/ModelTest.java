@@ -29,6 +29,7 @@ public class ModelTest {
 	public void testWriteMidi() throws Exception {
 		File[] testCases = getTestCases();
 		for (File testCase : testCases) {
+			System.out.println(testCase);
 			try {
 				testWrite(testCase);
 			} catch (Exception e) {
