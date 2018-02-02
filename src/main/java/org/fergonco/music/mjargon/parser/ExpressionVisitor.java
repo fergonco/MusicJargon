@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.antlr.v4.runtime.Token;
 import org.fergonco.music.mjargon.antlr.MJargonBaseVisitor;
@@ -164,59 +162,14 @@ public class ExpressionVisitor extends MJargonBaseVisitor<Value> {
 			} else {
 				Token chord = context.chord;
 				String chordText = chord.getText();
-				if (chord.getType() == MJargonLexer.EXPLICIT_CHORD) {
-					ChordAndOctave chordAndOctave = getExplicitChord(octave, chordText);
-					octave = chordAndOctave.octave;
-					pitchArray = chordAndOctave.pitchArray;
-				} else {
-					ChordAndOctave chordAndOctave = getExplicitChord(octave, chordText);
-					octave = chordAndOctave.octave;
-					PitchArrayImpl pitchArrayImpl = chordAndOctave.pitchArray;
-					int basePitch = pitchArrayImpl.getPitch(0);
-					if (chordText.endsWith("maj")) {
-						pitchArrayImpl.add(basePitch + 4);
-						pitchArrayImpl.add(basePitch + 7);
-					} else if (chordText.endsWith("min")) {
-						pitchArrayImpl.add(basePitch + 3);
-						pitchArrayImpl.add(basePitch + 7);
-					} else if (chordText.endsWith("aug")) {
-						pitchArrayImpl.add(basePitch + 4);
-						pitchArrayImpl.add(basePitch + 8);
-					} else if (chordText.endsWith("dim")) {
-						pitchArrayImpl.add(basePitch + 3);
-						pitchArrayImpl.add(basePitch + 6);
-					}
-					pitchArray = pitchArrayImpl;
-				}
+				ChordParser chordParser = new ChordParser(chordText);
+				chordParser.setDefaultOctave(octave);
+				octave = chordParser.getOctave();
+				pitchArray = chordParser.getPitchArray();
 			}
 			notes.add(pitchArray);
 		}
 		return new PitchedNoteSequence(notes.toArray(new PitchArray[notes.size()]));
-	}
-
-	private ChordAndOctave getExplicitChord(int octave, String chordText) {
-		PitchArrayImpl pitchArrayImpl = new PitchArrayImpl();
-		Pattern p = Pattern.compile("([A-G])([♯|♭])?(\\d)?");
-		Matcher matcher = p.matcher(chordText);
-		while (matcher.find()) {
-			String noteName = matcher.group(1);
-			String accidental = matcher.group(2);
-			String octaveIndex = matcher.group(3);
-			Integer basePitch = basePitches.get(noteName);
-			if (accidental != null) {
-				if (accidental.equals("♯")) {
-					basePitch++;
-				} else if (accidental.equals("♭")) {
-					basePitch--;
-				}
-			}
-			if (octaveIndex != null) {
-				octave = Integer.parseInt(octaveIndex);
-			}
-			basePitch += 12 * octave;
-			pitchArrayImpl.add(basePitch);
-		}
-		return new ChordAndOctave(pitchArrayImpl, octave);
 	}
 
 	@Override
@@ -233,15 +186,4 @@ public class ExpressionVisitor extends MJargonBaseVisitor<Value> {
 		return text.substring(1, text.length() - 1);
 	}
 
-	private class ChordAndOctave {
-		private PitchArrayImpl pitchArray;
-		private int octave;
-
-		public ChordAndOctave(PitchArrayImpl pitchArray, int octave) {
-			super();
-			this.pitchArray = pitchArray;
-			this.octave = octave;
-		}
-
-	}
 }
