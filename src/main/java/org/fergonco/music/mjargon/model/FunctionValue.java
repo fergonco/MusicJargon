@@ -6,6 +6,10 @@ import org.fergonco.music.mjargon.model.functions.Arpeggio;
 import org.fergonco.music.mjargon.model.functions.ChordNotes;
 import org.fergonco.music.mjargon.model.functions.Concat;
 import org.fergonco.music.mjargon.model.functions.Function;
+import org.fergonco.music.mjargon.model.functions.RDrumSeq;
+import org.fergonco.music.mjargon.model.functions.RNotes;
+import org.fergonco.music.mjargon.model.functions.RRhythm;
+import org.fergonco.music.mjargon.model.functions.RhythmHits;
 import org.fergonco.music.mjargon.model.functions.Transpose8;
 import org.fergonco.music.mjargon.model.functions.ValueType;
 
@@ -14,6 +18,10 @@ public class FunctionValue extends AbstractValue implements Value {
 	private static HashMap<String, Class<? extends Function>> functions = new HashMap<>();
 	static {
 		try {
+			add(RRhythm.class);
+			add(RhythmHits.class);
+			add(RDrumSeq.class);
+			add(RNotes.class);
 			add(Arpeggio.class);
 			add(Transpose8.class);
 			add(ChordNotes.class);
@@ -33,7 +41,11 @@ public class FunctionValue extends AbstractValue implements Value {
 
 	public FunctionValue(String functionId, Value[] values) {
 		try {
-			function = functions.get(functionId).newInstance();
+			Class<? extends Function> functionClass = functions.get(functionId);
+			if (functionClass == null) {
+				throw new RuntimeException("Function not found: " + functionId);
+			}
+			function = functionClass.newInstance();
 			parameters = values;
 		} catch (InstantiationException | IllegalAccessException e) {
 			/*
@@ -50,6 +62,7 @@ public class FunctionValue extends AbstractValue implements Value {
 			value.validate();
 		}
 		function.setParameters(parameters);
+		function.validate();
 	}
 
 	@Override
