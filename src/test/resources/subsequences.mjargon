@@ -11,10 +11,9 @@ sn2bd      = bd bd sn
              
 voices      | drums "hihat"                | drums "rhythm"
 dynamics    | mf                           | mf
-a:          |                              |
-tempo 70    | concat(crash, hh) on eighths | concat(snare, bassdrumSn{1:}) on mainRhythm
+tempo 70    |                              |
+            | concat(crash, hh) on eighths | concat(snare, bassdrumSn{1:}) on mainRhythm
             | hh                on eighths | bassdrumSn{1:3}               on mainRhythm
             | hh                on eighths | sn2bd                         on filledPolyRhythm
             | hh                on eighths | sn2bd                         on polyRhythm
-repeat a 10 |                              |
                         

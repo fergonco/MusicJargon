@@ -12,8 +12,8 @@ seq5 = E5
              
 voices       | piano "left hand"   | drums "hihat"
 dynamics     | ff                  | ff
-a:           |                     | 
-tempo 70     | chords{0} on whole  | hh on [XxXxXx] on 3/4
+tempo 70     |                     | 
+a:           | chords{0} on whole  | hh on [XxXxXx] on 3/4
              | chords{1} on whole  | % 
              | chords{2} on whole  | % 
              | chords{3} on whole  | % 

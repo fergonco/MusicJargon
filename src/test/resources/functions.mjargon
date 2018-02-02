@@ -4,7 +4,8 @@ subbeat      = [XxXxXxXx] on 4/4
 chords      = D4GB EAC5 E4GB CEG
 
 voices    | piano "right hand"                            | drums "right hand"                      
-tempo 120 | arpeggio(chords{0}, "12323")       on subbeat | concat(crash, hihat) on beat                 
+tempo 120 |
+	      | arpeggio(chords{0}, "12323")       on subbeat | concat(crash, hihat) on beat                 
           | arpeggio(chords{1}, "12323")       on subbeat | hihat on beat                 
           | arpeggio(chords{2}, "12323")       on subbeat | hihat on subbeat                 
           | arpeggio(chords{3}, "12323")       on subbeat | hihat on subbeat                 

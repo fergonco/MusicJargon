@@ -4,7 +4,8 @@ chords = C4EG EGB FAC5 E4G♯B
 
 voices   | piano
          | 
-tempo 160| chords{0} on r1
+tempo 160|
+         | chords{0} on r1
          | chords{1} on r1
          | chords{2} on r1
          | chords{3} on r1

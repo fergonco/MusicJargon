@@ -5,13 +5,12 @@ r2      = [X.x.X.xX......xx] on 4/4
 riff1   = E3 E E E
 riff2   = E3 E G E A A G 
 voices         | acoustic_bass        | electric_guitar            | drums "right hand" | drums "rhythm"
-tempo 110      | - - - - - A3 G on r2 |                            |                    |
-start:         |                      |                            |                    |
-               | riff1 on r1          |                            | hihat on eighth    | bd sn on quarter
+tempo 110      |
+               | - - - - - A3 G on r2 |                            |                    |
+start:         | riff1 on r1          |                            | hihat on eighth    | bd sn on quarter
                | riff2 on r2          |                            | %                  | %
 repeat start 2 |                      |                            |                    |
-may:           |                      |                            |                    |
 dynamics       |                      | ppp                        |                    |
-               | riff1 on r1          | transpose8(riff1, 1) on r1 | %                  | %
+may:           | riff1 on r1          | transpose8(riff1, 1) on r1 | %                  | %
                | E3 E G E A - - on r2 | E4 E G E A - -      on r2  | %                  | %
 repeat may 2   |                      |                            |                    |

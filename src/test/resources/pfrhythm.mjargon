@@ -15,8 +15,8 @@ seq4 = chordNotes(chords{3},1,1,2,1,1,1,1,2,3)
 
 voices  | drums            | drums             | fretless_bass
 dynamics| mp               | p                 | ff
-a:      |                  |                   | 
-tempo 75| hihat on subbeat | theRhythm on main | seq1 on bassmain
+tempo 75|                  |                   | 
+        | hihat on subbeat | theRhythm on main | seq1 on bassmain
         | hihat on subbeat | theRhythm on main | seq2 on bassmain
         | hihat on subbeat | theRhythm on main | seq3 on bassmain
         | hihat on subbeat | theRhythm on main | seq4 on bassmain

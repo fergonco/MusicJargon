@@ -14,8 +14,8 @@ first4  = chordNotes(chords{3}, 1)
 
 voices            | fingered_bass   | overdrive_guitar
 dynamics          | f               | p
-a:                |
-tempo 3/8=60      | first1 on whole | chords{0} on r
+tempo 3/8=60      |
+a:                | first1 on whole | chords{0} on r
                   | first2 on whole | chords{1} on r
                   | first3 on whole | chords{2} on r
                   | first4 on whole | chords{3} on r

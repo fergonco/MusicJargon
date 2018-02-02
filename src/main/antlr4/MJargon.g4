@@ -74,13 +74,13 @@ drumSequenceExpression: (
     instruments+=T6
 )+;
 
-labelDeclaration: COLON VERTICAL_BAR*;
+labelDeclaration: COLON barline;
 
 barline: (VERTICAL_BAR {$expressions.add(null);} expressions+=expressionOrReference?)+ {$expressions.add(null);};
 
 expressionOrReference: same=SAME | expr=expression;
 
-tempo: TEMPO bpmOrNumerator=NUMBER (SLASH denominator=NUMBER EQUALS bpm=NUMBER)? barline;
+tempo: TEMPO bpmOrNumerator=NUMBER (SLASH denominator=NUMBER EQUALS bpm=NUMBER)? VERTICAL_BAR*;
 
 voices: VOICES (VERTICAL_BAR instrumentNames+=ID STRING_LITERAL?)+ VERTICAL_BAR?;
 
