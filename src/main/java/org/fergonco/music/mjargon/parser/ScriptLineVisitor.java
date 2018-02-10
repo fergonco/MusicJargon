@@ -11,6 +11,7 @@ import org.fergonco.music.mjargon.antlr.MJargonBaseVisitor;
 import org.fergonco.music.mjargon.antlr.MJargonLexer;
 import org.fergonco.music.mjargon.antlr.MJargonParser.BarlineContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.DeclarationContext;
+import org.fergonco.music.mjargon.antlr.MJargonParser.DefaultDeclarationContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.DynamicsContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.ExpressionContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.ExpressionOrReferenceContext;
@@ -83,6 +84,13 @@ public class ScriptLineVisitor extends MJargonBaseVisitor<Object> {
 		int times = Integer.parseInt(ctx.times.getText());
 		model.repeat(label, times);
 		return super.visitRepeat(ctx);
+	}
+
+	@Override
+	public Object visitDefaultDeclaration(DefaultDeclarationContext ctx) {
+		Value defaultTimeSignature = new ExpressionVisitor(model).visit(ctx.defaultTimeSignature);
+		model.setDefaultTimeSignature(defaultTimeSignature.toFraction());
+		return super.visitDefaultDeclaration(ctx);
 	}
 
 	@Override

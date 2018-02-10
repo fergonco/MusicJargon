@@ -1,7 +1,6 @@
 package org.fergonco.music.mjargon;
 
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -30,13 +29,17 @@ public class MJargon {
 		System.out.println("Version: " + MJargon.class.getPackage().getImplementationVersion());
 		String inputFile = null;
 		String outputFile = null;
-		boolean getOutput = false;
+		String status = null;
+		String label = null;
 		for (String arg : args) {
-			if (getOutput) {
+			if ("-o".equals(status)) {
 				outputFile = arg;
-				getOutput = false;
-			} else if (arg.equals("-o")) {
-				getOutput = true;
+				status = null;
+			} else if ("-l".equals(status) ) {
+				label  = arg;
+				status = null;
+			} else if (arg.equals("-o") || arg.equals("-l")) {
+				status = arg;
 			} else {
 				inputFile = arg;
 			}
@@ -47,7 +50,7 @@ public class MJargon {
 			System.exit(1);
 		}
 
-		InputStream is = new FileInputStream(new File(args[0]));
+		InputStream is = new FileInputStream(inputFile);
 		String script = IOUtils.toString(is, "utf-8");
 		is.close();
 		MJargonLexer lexer = new MJargonLexer(new ANTLRInputStream(script));
@@ -56,6 +59,9 @@ public class MJargon {
 		ScriptContext root = parser.script();
 		new ScriptLineVisitor(model).visit(root);
 		model.validate();
+		if (label != null) {
+			model.startInLabel(label);
+		}
 		List<MJargonError> errors = model.getErrors();
 		for (MJargonError mJargonError : errors) {
 			System.err.println(mJargonError);

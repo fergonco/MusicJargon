@@ -8,6 +8,7 @@ script: lines+=scriptLine* EOF;
 
 scriptLine:	(
 	comment
+	| defaultDeclaration
 	| declaration
 	| barline
 	| tempo
@@ -17,6 +18,8 @@ scriptLine:	(
 	| ) EOL;
 
 comment: COMMENT;
+
+defaultDeclaration: DEFAULT TIME SIGNATURE defaultTimeSignature=numericExpression;
 
 declaration: id=ID (variableDeclaration | labelDeclaration);
 
@@ -39,7 +42,7 @@ stringLiteral: text=STRING_LITERAL;
 
 referenceExpression: id=ID (OPEN_PARENTHESIS parameterValues+=expression (COMA parameterValues+=expression)* CLOSE_PARENTHESIS)?;
 
-rhythmExpression: value=RHYTHMEXPRESSION (ON timeSignature=expression | WITH beatDuration=expression);
+rhythmExpression: value=RHYTHMEXPRESSION (ON timeSignature=expression | WITH beatDuration=expression)?;
 
 pitchSequenceExpression: (literals+=chordLiteral)+;
 
@@ -142,6 +145,9 @@ T5:'t5';
 TOM6:'tom6';
 T6:'t6';
 SILENCE: '-';
+DEFAULT: 'default';
+TIME: 'time';
+SIGNATURE: 'signature';
 fragment NOTE: 'A'..'G' ('#' | 'b')? ('0'..'9')?;
 EXPLICIT_CHORD: NOTE+;
 CHORD_NAME: NOTE ('maj' | 'min' | 'aug' | 'dim');

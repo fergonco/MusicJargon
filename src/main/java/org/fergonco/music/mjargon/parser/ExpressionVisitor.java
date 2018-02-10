@@ -142,6 +142,8 @@ public class ExpressionVisitor extends MJargonBaseVisitor<Value> {
 		} else if (ctx.beatDuration != null) {
 			int noteDenominator = new ExpressionVisitor(model).visit(ctx.beatDuration).toFraction().getDenominator();
 			timeSignature = new FractionValue(rhythmExpression.length(), noteDenominator);
+		} else {
+			timeSignature = model.getDefaultTimeSignature();
 		}
 		return new Rhythm(rhythmExpression, timeSignature);
 	}

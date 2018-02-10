@@ -24,6 +24,8 @@ public class Model {
 	private String[] instruments;
 	private ArrayList<SongLine> songlines = new ArrayList<>();
 	private HashMap<String, Integer> labels = new HashMap<>();
+	private String startingLabel = null;
+	private FractionValue defaultTimeSignature = new FractionValue(4, 4);
 
 	public void addVariable(String id, Value value) {
 		variables.put(id, value);
@@ -83,12 +85,17 @@ public class Model {
 		for (int songlineIndex = 0; songlineIndex < songlines.size(); songlineIndex++) {
 			SongLine songline = songlines.get(songlineIndex);
 			if (songline.isBarline()) {
-				Bar[] bars = songline.getBars();
-				for (int i = 0; i < bars.length; i++) {
-					Note[] notes = bars[i].getNotes(this, songlineIndex, i, currentDynamics[i],
-							tracks[i].getLastNote());
-					for (Note note : notes) {
-						tracks[i].addNote(note);
+				if (startingLabel != null) {
+					songlineIndex = labels.get(startingLabel) - 1;
+					startingLabel = null;
+				} else {
+					Bar[] bars = songline.getBars();
+					for (int i = 0; i < bars.length; i++) {
+						Note[] notes = bars[i].getNotes(this, songlineIndex, i, currentDynamics[i],
+								tracks[i].getLastNote());
+						for (Note note : notes) {
+							tracks[i].addNote(note);
+						}
 					}
 				}
 			} else if (songline.isTempo()) {
@@ -149,5 +156,20 @@ public class Model {
 
 	public Integer getLabel(String label) {
 		return labels.get(label);
+	}
+
+	public void startInLabel(String label) {
+		if (!labels.containsKey(label)) {
+			throw new IllegalArgumentException("No such label: " + label);
+		}
+		this.startingLabel = label;
+	}
+
+	public void setDefaultTimeSignature(FractionValue fraction) {
+		this.defaultTimeSignature = fraction;
+	}
+
+	public FractionValue getDefaultTimeSignature() {
+		return defaultTimeSignature;
 	}
 }
