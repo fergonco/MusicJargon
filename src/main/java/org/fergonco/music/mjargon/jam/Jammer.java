@@ -127,13 +127,13 @@ public class Jammer {
 				builder.append("| drums \"right\"       | drums \"rhythm\"");
 			}
 			builder.append("\n");
-			builder.append("start:").append("\n");
+			builder.append("tempo ").append(getTempo()).append("\n");
 			String[] chords = getChordProgression();
-			boolean tempo = false;
+			boolean first = true;
 			for (String chord : chords) {
-				if (!tempo) {
-					builder.append("tempo ").append(getTempo());
-					tempo = true;
+				if (first) {
+					builder.append("start:");
+					first = false;
 				}
 				if (isBass()) {
 					builder.append("| rNotes(").append(chord).append(", rhythmHits(r)) on r");
@@ -207,7 +207,7 @@ public class Jammer {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			String[] pieces = new String[]{"x", "x.", "x..", "."};
+			String[] pieces = new String[] { "x", "x.", "x..", "." };
 			StringBuffer txt = new StringBuffer();
 			while (txt.length() < model.getNumNotes()) {
 				int rnd = (int) (4 * Math.random());
@@ -341,7 +341,7 @@ public class Jammer {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				playAction.actionPerformed(null);
-				
+
 			}
 		}, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_DOWN_MASK), JComponent.WHEN_IN_FOCUSED_WINDOW);
 		contentPane.setLayout(new GridBagLayout());
