@@ -46,7 +46,7 @@ public class MJargon {
 		}
 		if (inputFile == null) {
 			System.out.println("Usage:");
-			System.out.println("MJargon [-o <output_midi>] <file>");
+			System.out.println("MJargon [-o <output_midi>] [-l <label>] <file>");
 			System.exit(1);
 		}
 
