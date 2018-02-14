@@ -318,7 +318,7 @@ Note that *repeat* can be followed by as many *|* as we want, to pretty format o
 
 ## Referencing other bars
 
-** Same as previous bar: %**
+**Same as previous bar: %**
 
 Most common for drum voices, you may want a voice to play the same as in the last bar. This is done with the "%" symbol. Thus:
 
