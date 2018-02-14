@@ -5,7 +5,7 @@ title: Music Jargon
 
 # Reference
 
-MusicJargon separates the different aspects of music and allows to transform and combine them to produce something we can hear. In a music staff, each note has a pitch, a strength and a duration which is defined by one or more complex symbols in a pentagram. In MusicJargon these concepts are independent and can be defined in one place and be reused on different places, combined differently, etc. For example it is possible to define a rhythm that will be reused in two parts of a song with a different sequence of notes.
+MusicJargon separates the different aspects of music and allows to transform and combine them to produce something we can hear. In a music staff, each note has a pitch, a strength and a duration which is defined by one or more complex symbols in a staff. In MusicJargon these concepts are independent and can be defined in one place and be reused on different places, combined differently, etc. For example it is possible to define a rhythm that will be played in two parts of a song with a different sequence of notes.
 
 More concretely, MusicJargon has the following data types:
 
@@ -16,6 +16,14 @@ More concretely, MusicJargon has the following data types:
 * Numbers
 * Fractions: For time signatures 12/8 and note durations 1/8.
 * Text
+
+## Variable declarations
+
+The aim is to make music, so all these expressions have to be placed on a type of score, explained further down in this documentation. But there is a construction that is useful whenever we are using some expression in many places: variable declarations. They are defined this way:
+
+    <variableName> = <expression>
+
+Where <variableName> is the name that will be assigned to the expression and *expression* is any of the MusicJargon expressions explained below. Variables start with lowercase and can be followed by any upper or lowercase letter, by a number or by an underscore.
 
 ## Numbers, fractions and text
 
@@ -55,6 +63,20 @@ While in this one each character represents a eighth note:
 
     [XxXxXxXx] on 4/4
 
+**Default time signature**
+
+By default, rhythm expressions assume a 4/4 time signature. So:
+
+    [XxXxXxXx]
+
+is the same as the previous rhythm.
+
+The default time signature can be changed using the following declaration:
+
+    default time signature <fraction>
+
+Where *fraction* is the time signature that will become the default one.
+
 ## Pitched sequences
 
 Pitched sequences are a sequence of notes, these notes can be single notes or chords and the sequence can mix these. Notes are separated by spaces and the syntax for an individual note is:
@@ -80,6 +102,30 @@ Silences are expressed as -. For example, the next expression means A, silence, 
 Underscore repeats the previous note "tying" them. The next sequence means A, still A, C:
 
     A _ C
+
+**Chords**
+
+In order to play several notes at the same time with the same voice (in order to play a chord) it is enough to put the notes together:
+
+    CEG
+
+MusicJargon makes no difference from a single notes and chords, so it is possible to create sequences of chords just the same way:
+
+    CEG GBD ACE
+
+Triads can be specified also with the name of the chord followed by *maj*, *min*, *aug* or *dim*. The previous chord sequence would be:
+
+    Cmaj Gmaj Amin
+
+Note that the qualifier has to be added always in order to differentiate it from the single note.
+
+For more complex chords, they can be defined in a variable at the beginning of the script:
+
+    cMajSixth=CEGA
+
+And then reused, for example in a sequence:
+
+    cMajSixth Gmaj Amin
 
 ## Drum sequences
 
@@ -238,6 +284,88 @@ Just leave the bar empty. Empty bars make the corresponding voice mute during th
            |                   | <bar>
            | <bar>             |       
            | ...               | ...
+ 
+## Repetitions
+
+Labels define anchor points with the following syntax:
+
+    <label_name>: | <bar> | ...
+
+For example:
+
+    voices          | piano "left hand" | piano "right hand"
+    intro:          | <bar>             | <bar>
+                    |                   | <bar>
+                    | <bar>             |       
+                    | ...               | ...
+
+Note that the label declaration is not defined in its own line but is followed by bars which are actually played.
+
+Then the *repeat* keyword can be used to make the playback jump to a label:
+
+    repeat <label_name> <times>
+
+Where *label_name* is the label to jump to and times is the number of times it has to jump. For example:
+
+    voices          | piano "left hand" | piano "right hand"
+    intro:          | <bar>             | <bar>
+                    |                   | <bar>
+                    | <bar>             |       
+                    | <bar>             | <bar>
+    repeat intro 4  |                   |
+
+Note that *repeat* can be followed by as many *|* as we want, to pretty format our score.
+
+## Referencing other bars
+
+** Same as previous bar: % **
+
+Most common for drum voices, you may want a voice to play the same as in the last bar. This is done with the "%" symbol. Thus:
+
+    voices | drums "left hand" | drums "right hand"
+           | bd sn on [xxxx]   | hh on [xxxx] 
+           | %                 | %
+           | %                 | %
+           | %                 | %
+
+**Same as some specific bar: like** 
+
+Sometimes it is more complicated and you want one voice to repeat something it already did some bars before. It is not the whole song which is repeating (we could use *repeat* for that) but only one voice. *like* references can do this:
+
+    like <label_name> (+/- <index>)?
+
+Where *label_name* is the label pointing to the bar whose expression you want to play in this bar. *index* is an optional offset from the specified label.
+
+Note that the playback does not jump to that label, it just "copies" the referenced label contents for the voice. Just in the same way the *%* symbol works. We could say *like* is a more flexible *%*.
+
+The index is specially useful when we want a voice to repeat several bars. For example, in order to play a block of four bars pointed by a "intro" label, one should type:
+
+    voices | piano "left hand" | piano "right hand"
+    intro: | <bar>             | <bar>
+           | <bar>             | <bar>
+           | <bar>             | <bar>
+           | <bar>             | <bar>
+           | like intro        | <bar>
+           | like intro + 1    | <bar>
+           | like intro + 2    | <bar>
+           | like intro + 3    | <bar>
+
+Note that it allows to repeat a sequence of bars on one voice while other voices do not repeat.
+
+**like abreviation: +**
+
+The redundant *like intro + i* can be abreviated with a "+", meaning "same label as before + one more bar":
+
+    voices | piano "left hand" | piano "right hand"
+    intro: | <bar>             | <bar>
+           | <bar>             | <bar>
+           | <bar>             | <bar>
+           | <bar>             | <bar>
+           | like intro        | <bar>
+           | +                 | <bar>
+           | +                 | <bar>
+           | +                 | <bar>
+
 
 ## Comments
 
@@ -297,46 +425,6 @@ For example, in the following section the left hand and right hand of piano are 
              | CEG               | C E G on myRhythm
     dynamics |                   | f
              | CEG               | C E G on myRhythm
- 
-## Repetitions
-
-Labels define anchor points with the following syntax:
-
-    <label_name>: | | ...
-
-The label declaration can have any number of | characters afterwards, with no meaning at all but allowing for nice formatting and alignment.
-
-Then the *repeat* keyword can be used to jump to a label:
-
-    repeat <label_name> <times>
-
-Where *label_name* is the label to jump to and times is the number of times it has to jump.
-
-
-
-
-
-
-
-
-
-
-And when there is such a chord sequence it is possible to define sequences of single notes based on the notes of a chord of the sequence:
-
-    ts      = time signature 6/8
-    r       = rhythm [XxxXxx] on ts
-    whole   = rhythm [x] on ts
-    chords  = sequence C4EG EGB FAC5 E4G#B
-
-    voices    | fingered_bass                 | overdrive_guitar
-    dynamics  | f                             | p
-    tempo 120 |                               |
-              | 1 2 3 2 3 1 of chords(0) on r | chords(0) on r
-              | 1 2 3 2 3 1 of chords(1) on r | chords(1) on r
-              | 1 2 3 2 3 1 of chords(2) on r | chords(2) on r
-              | 1 2 3 2 3 1 of chords(3) on r | chords(3) on r
-
-
 
 ## List of functions
 
