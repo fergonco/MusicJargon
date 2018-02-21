@@ -10,13 +10,16 @@ scriptLine:	(
 	comment
 	| defaultDeclaration
 	| declaration
-	| barline
-	| tempo
 	| voices
-	| dynamics
 	| repeat
+	| labelableLine
 	| ) EOL;
 
+labelableLine: (
+	barline
+	| tempo
+	| dynamics
+);
 comment: COMMENT;
 
 defaultDeclaration: DEFAULT TIME SIGNATURE defaultTimeSignature=numericExpression;
@@ -77,7 +80,7 @@ drumSequenceExpression: (
     instruments+=T6
 )+;
 
-labelDeclaration: COLON barline;
+labelDeclaration: COLON labelableLine;
 
 barline: (VERTICAL_BAR {$expressions.add(null);} expressions+=expressionOrReference?)+ {$expressions.add(null);};
 
