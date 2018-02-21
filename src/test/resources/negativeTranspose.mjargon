@@ -1,0 +1,4 @@
+rif = C E G D
+voices | acoustic_bass
+       | rif on [xxxx] with 1/4
+       | transpose8(rif, - 1) on [xxxx] with 1/4

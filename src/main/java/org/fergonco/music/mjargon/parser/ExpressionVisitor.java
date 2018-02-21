@@ -84,6 +84,9 @@ public class ExpressionVisitor extends MJargonBaseVisitor<Value> {
 	@Override
 	public Value visitNumericExpression(NumericExpressionContext ctx) {
 		int numerator = Integer.parseInt(ctx.numerator.getText());
+		if (ctx.minus != null) {
+			numerator = -numerator;
+		}
 		if (ctx.denominator != null) {
 			int denominator = Integer.parseInt(ctx.denominator.getText());
 			return new FractionValue(numerator, denominator);

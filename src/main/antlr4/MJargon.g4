@@ -38,7 +38,7 @@ leftExpression: (
 	| drumSequenceExpression
 );
 
-numericExpression: numerator=NUMBER (SLASH denominator=NUMBER)?;
+numericExpression: minus=SILENCE? numerator=NUMBER (SLASH denominator=NUMBER)?;
 
 stringLiteral: text=STRING_LITERAL;
 
