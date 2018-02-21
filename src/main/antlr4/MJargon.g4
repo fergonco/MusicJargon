@@ -13,7 +13,7 @@ scriptLine:	(
 	| voices
 	| repeat
 	| labelableLine
-	| ) EOL;
+	| ) (EOL|EOF);
 
 labelableLine: (
 	barline
