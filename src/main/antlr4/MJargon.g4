@@ -36,6 +36,7 @@ leftExpression: (
 	| rhythmExpression
 	| pitchSequenceExpression
 	| drumSequenceExpression
+	| auralExpression
 );
 
 numericExpression: numerator=NUMBER (SLASH denominator=NUMBER)?;
@@ -44,7 +45,12 @@ stringLiteral: text=STRING_LITERAL;
 
 referenceExpression: id=ID (OPEN_PARENTHESIS parameterValues+=expression (COMA parameterValues+=expression)* CLOSE_PARENTHESIS)?;
 
-rhythmExpression: value=RHYTHMEXPRESSION (ON timeSignature=expression | WITH beatDuration=expression)?;
+rhythmExpression: value=RHYTHMEXPRESSION timeSignature=onTimeSignature?;
+
+onTimeSignature: (
+	ON timeSignature=expression
+	| WITH beatDuration=expression
+);
 
 pitchSequenceExpression: (literals+=chordLiteral)+;
 
@@ -79,6 +85,8 @@ drumSequenceExpression: (
     instruments+=T6
 )+;
 
+auralExpression: LESS_THAN sequence=pitchSequenceExpression GREATER_THAN timeSignature=onTimeSignature?;
+
 labelDeclaration: COLON labelableLine;
 
 barline: (VERTICAL_BAR {$expressions.add(null);} expressions+=expressionOrReference?)+ {$expressions.add(null);};
@@ -99,6 +107,8 @@ repeat: REPEAT labelId=ID times=NUMBER VERTICAL_BAR*;
 
 NUMBER: '0'..'9'+;
 RHYTHMEXPRESSION: '[' ('X' | 'x' | '.')+ ']';
+LESS_THAN: '<';
+GREATER_THAN: '>';
 SLASH: '/';
 VERTICAL_BAR: '|';
 COLON: ':';

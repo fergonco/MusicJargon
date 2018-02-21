@@ -8,10 +8,12 @@ import java.util.Map;
 import org.antlr.v4.runtime.Token;
 import org.fergonco.music.mjargon.antlr.MJargonBaseVisitor;
 import org.fergonco.music.mjargon.antlr.MJargonLexer;
+import org.fergonco.music.mjargon.antlr.MJargonParser.AuralExpressionContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.ChordLiteralContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.DrumSequenceExpressionContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.ExpressionContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.NumericExpressionContext;
+import org.fergonco.music.mjargon.antlr.MJargonParser.OnTimeSignatureContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.PitchSequenceExpressionContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.ReferenceExpressionContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.RhythmExpressionContext;
@@ -137,15 +139,37 @@ public class ExpressionVisitor extends MJargonBaseVisitor<Value> {
 	public Value visitRhythmExpression(RhythmExpressionContext ctx) {
 		String rhythmExpression = trimDelimiters(ctx.value.getText());
 		Value timeSignature = null;
-		if (ctx.timeSignature != null) {
-			timeSignature = new ExpressionVisitor(model).visit(ctx.timeSignature);
-		} else if (ctx.beatDuration != null) {
-			int noteDenominator = new ExpressionVisitor(model).visit(ctx.beatDuration).toFraction().getDenominator();
-			timeSignature = new FractionValue(rhythmExpression.length(), noteDenominator);
+		OnTimeSignatureContext onTimeSignatureContext = ctx.timeSignature;
+		if (onTimeSignatureContext != null) {
+			timeSignature = getTimeSignature(onTimeSignatureContext, rhythmExpression.length());
 		} else {
 			timeSignature = model.getDefaultTimeSignature();
 		}
 		return new Rhythm(rhythmExpression, timeSignature);
+	}
+
+	private Value getTimeSignature(OnTimeSignatureContext onTimeSignatureContext, int rhythmLength) {
+		Value timeSignature = null;
+		if (onTimeSignatureContext.timeSignature != null) {
+			timeSignature = new ExpressionVisitor(model).visit(onTimeSignatureContext);
+		} else { // beatDuration != null
+			int noteDenominator = new ExpressionVisitor(model).visit(onTimeSignatureContext.beatDuration).toFraction()
+					.getDenominator();
+			timeSignature = new FractionValue(rhythmLength, noteDenominator);
+		}
+		return timeSignature;
+	}
+
+	@Override
+	public Value visitAuralExpression(AuralExpressionContext ctx) {
+		PitchedNoteSequence sequence = (PitchedNoteSequence) visit(ctx.sequence);
+		PitchArray[] notes = sequence.getAllNotes();
+		StringBuilder expression = new StringBuilder();
+		for (int i = 0; i < notes.length; i++) {
+			expression.append("x");
+		}
+		Value rhythm = new Rhythm(expression.toString(), getTimeSignature(ctx.timeSignature, notes.length));
+		return new SequenceAndRhythm(sequence, rhythm);
 	}
 
 	@Override
