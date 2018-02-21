@@ -14,6 +14,7 @@ import org.fergonco.music.midi.InstrumentNames;
 import org.fergonco.music.midi.Note;
 import org.fergonco.music.midi.Score;
 import org.fergonco.music.midi.Track;
+import org.fergonco.music.mjargon.parser.DuplicatedLabelException;
 import org.fergonco.music.mjargon.parser.InvalidReferenceException;
 import org.fergonco.music.mjargon.parser.MJargonError;
 
@@ -47,7 +48,10 @@ public class Model {
 		songlines.add(new Barline(bars));
 	}
 
-	public void newLabel(String text) {
+	public void newLabel(String text) throws DuplicatedLabelException {
+		if (labels.containsKey(text)) {
+			throw new DuplicatedLabelException(text);
+		}
 		labels.put(text, songlines.size());
 	}
 

@@ -20,10 +20,21 @@ import org.fergonco.music.mjargon.antlr.MJargonLexer;
 import org.fergonco.music.mjargon.antlr.MJargonParser;
 import org.fergonco.music.mjargon.antlr.MJargonParser.ScriptContext;
 import org.fergonco.music.mjargon.parser.MJargonError;
+import org.fergonco.music.mjargon.parser.ModelException;
 import org.fergonco.music.mjargon.parser.ScriptLineVisitor;
 import org.junit.Test;
 
 public class ModelTest {
+
+	@Test
+	public void testDuplicatedLabel() throws Exception {
+		File testCase = new File("src/test/resources/testErrors/duplicatedLabel.mjargon");
+		try {
+			getModel(testCase);
+			fail();
+		} catch (ModelException e) {
+		}
+	}
 
 	@Test
 	public void testWriteMidi() throws Exception {

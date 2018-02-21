@@ -1,7 +1,6 @@
 package org.fergonco.music.mjargon.parser;
 
-public class InvalidReferenceException extends RuntimeException {
-	private static final long serialVersionUID = 1L;
+public class InvalidReferenceException extends ModelException {
 
 	private int position = -1;
 
