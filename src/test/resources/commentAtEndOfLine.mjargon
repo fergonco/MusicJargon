@@ -1,0 +1,5 @@
+middleC = C ' Some justification for such a fool thing
+' And the rest of the song
+voices | piano ' just the piano
+       | middleC on [x]
+'That is it!

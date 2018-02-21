@@ -7,13 +7,12 @@ package org.fergonco.music.mjargon.antlr;
 script: lines+=scriptLine* EOF;
 
 scriptLine:	(
-	comment
-	| defaultDeclaration
+	defaultDeclaration
 	| declaration
 	| voices
 	| repeat
 	| labelableLine
-	| ) (EOL|EOF);
+	| ) comment? (EOL|EOF);
 
 labelableLine: (
 	barline
