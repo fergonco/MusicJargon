@@ -29,8 +29,14 @@ public class InstrumentBar implements Bar {
 	public Note[] getNotes(Model model, int songlineIndex, int voiceIndex, Dynamic baseDynamics, Note lastNote) {
 		RhythmComponent[] components = value.toAural().getRhythm().getComponents();
 
-		PitchArray[] pitches = value.toAural().getSequence().getAllNotes(components.length);
-
+		NoteSequence sequence = value.toAural().getSequence();
+		PitchArray[] pitches = sequence.getAllNotes(components.length);
+		boolean sequenceFineDynamics = false;
+		for (PitchArray pitchArray : pitches) {
+			if (pitchArray.isAccented()) {
+				sequenceFineDynamics = true;
+			}
+		}
 		ArrayList<Note> ret = new ArrayList<>();
 		int pitchesIndex = 0;
 		for (int i = 0; i < components.length; i++) {
@@ -38,7 +44,7 @@ public class InstrumentBar implements Bar {
 			pitchesIndex++;
 
 			Dynamic dynamic = components[i].isSilence() ? Dynamic.MUTE : baseDynamics;
-			if (components[i].isAccent()) {
+			if ((!sequenceFineDynamics && components[i].isAccent()) || (sequenceFineDynamics && pitch.isAccented())) {
 				dynamic = dynamic.louder().louder();
 			}
 			Duration duration = components[i].getDuration();

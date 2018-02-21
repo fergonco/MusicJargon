@@ -54,38 +54,39 @@ onTimeSignature: (
 
 pitchSequenceExpression: (literals+=chordLiteral)+;
 
-chordLiteral: silence=SILENCE | underscore=UNDERSCORE | (chord=EXPLICIT_CHORD | chord=CHORD_NAME);
+chordLiteral: silence=SILENCE | underscore=UNDERSCORE | (chord=EXPLICIT_CHORD | chord=CHORD_NAME) accent=ACCENT?;
 
-drumSequenceExpression: (
-    instruments+=HIHAT|
-    instruments+=HH|
-    instruments+=HIHATOPEN|
-    instruments+=HHO|
-    instruments+=HIHATPEDAL|
-    instruments+=HHP|
-    instruments+=BASSDRUM|
-    instruments+=BD|
-    instruments+=SNARE|
-    instruments+=SN|
-    instruments+=RIDE|
-    instruments+=RD|
-    instruments+=CRASH|
-    instruments+=CR|
-    instruments+=TOM1|
-    instruments+=T1|
-    instruments+=TOM2|
-    instruments+=T2|
-    instruments+=TOM3|
-    instruments+=T3|
-    instruments+=TOM4|
-    instruments+=T4|
-    instruments+=TOM5|
-    instruments+=T5|
-    instruments+=TOM6|
-    instruments+=T6
-)+;
+drumSequenceExpression: instruments+=instrument+;
 
-auralExpression: LESS_THAN sequence=pitchSequenceExpression GREATER_THAN timeSignature=onTimeSignature?;
+instrument: code =(
+	HIHAT|
+    HH|
+    HIHATOPEN|
+    HHO|
+    HIHATPEDAL|
+    HHP|
+    BASSDRUM|
+    BD|
+    SNARE|
+    SN|
+    RIDE|
+    RD|
+    CRASH|
+    CR|
+    TOM1|
+    T1|
+    TOM2|
+    T2|
+    TOM3|
+    T3|
+    TOM4|
+    T4|
+    TOM5|
+    T5|
+    TOM6|
+    T6) accent=ACCENT?;
+
+auralExpression: LESS_THAN (pitchSequence=pitchSequenceExpression | drumSequence=drumSequenceExpression) GREATER_THAN timeSignature=onTimeSignature?;
 
 labelDeclaration: COLON labelableLine;
 
@@ -113,6 +114,7 @@ SLASH: '/';
 VERTICAL_BAR: '|';
 COLON: ':';
 COMA: ',';
+ACCENT: '!';
 EQUALS: '=';
 SAME: '%';
 LIKE: 'like';

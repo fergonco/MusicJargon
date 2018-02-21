@@ -7,6 +7,7 @@ public class PitchArrayImpl implements PitchArray {
 	private ArrayList<Integer> pitch = new ArrayList<>();
 	private boolean drums;
 	private boolean silence;
+	private boolean accented;
 
 	public void setDrums(boolean drums) {
 		this.drums = drums;
@@ -48,5 +49,14 @@ public class PitchArrayImpl implements PitchArray {
 
 	public void setSilence() {
 		this.silence = true;
+	}
+
+	public void setAccented(boolean accented) {
+		this.accented = accented;
+	}
+
+	@Override
+	public boolean isAccented() {
+		return this.accented;
 	}
 }

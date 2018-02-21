@@ -1,17 +1,27 @@
 package org.fergonco.music.mjargon.model;
 
-public class PitchedNoteSequence extends AbstractSingleSequence implements NoteSequence {
+import java.util.ArrayList;
 
-	public PitchedNoteSequence(PitchArray[] singleNotes) {
-		pitches = singleNotes;
+public class PitchedNoteSequence extends AbstractNoteSequence implements NoteSequence {
+
+	private ArrayList<PitchArray> pitches = new ArrayList<>();
+	
+	@Override
+	public void validate() {
 	}
 
-	public PitchArray getChord(int chordProgressionIndex) {
-		return pitches[chordProgressionIndex];
+	public void addNote(PitchArray pitchArray) {
+		pitches.add(pitchArray);
 	}
 
 	@Override
-	public void validate() {
+	public PitchArray[] getAllNotes(int numNotes) {
+		return getAllNotes();
+	}
+
+	@Override
+	public PitchArray[] getAllNotes() {
+		return pitches.toArray(new PitchArray[pitches.size()]);
 	}
 
 }

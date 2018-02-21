@@ -1,7 +1,5 @@
 package org.fergonco.music.mjargon.model.functions;
 
-import java.util.ArrayList;
-
 import org.fergonco.music.mjargon.model.DrumNote;
 import org.fergonco.music.mjargon.model.DrumSequence;
 import org.fergonco.music.mjargon.model.NoteSequence;
@@ -27,7 +25,7 @@ public class RDrumSeq extends AbstractFunction implements Function {
 				throw new SemanticException("rDrumSeq takes a number as parameter");
 			}
 		}
-		ArrayList<DrumNote> drumNotes = new ArrayList<>();
+		DrumSequence drumSequence = new DrumSequence();
 		int sequenceLength = getParameters()[0].toInt();
 		for (int i = 0; i < sequenceLength; i++) {
 			DrumNote note;
@@ -36,9 +34,9 @@ public class RDrumSeq extends AbstractFunction implements Function {
 			} else {
 				note = DrumNote.SNARE;
 			}
-			drumNotes.add(note);
+			drumSequence.addDrumNote(note, false);
 		}
-		sequence = new DrumSequence(drumNotes.toArray(new DrumNote[drumNotes.size()]));
+		sequence = drumSequence;
 		sequence.validate();
 	}
 

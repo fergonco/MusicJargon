@@ -32,4 +32,9 @@ public class TiedPitchArray implements PitchArray {
 		return false;
 	}
 
+	@Override
+	public boolean isAccented() {
+		return false;
+	}
+
 }

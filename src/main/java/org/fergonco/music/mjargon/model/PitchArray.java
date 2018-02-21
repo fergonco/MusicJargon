@@ -13,4 +13,6 @@ public interface PitchArray {
 	boolean isDrums();
 
 	boolean isSilence();
+	
+	boolean isAccented();
 }

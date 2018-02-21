@@ -49,18 +49,22 @@ public class ChordParser {
 
 	private void readModifiers() {
 		int basePitch = pitchArray.getPitch(0);
-		if (text.endsWith("maj")) {
+		if (text.contains("maj")) {
 			pitchArray.add(basePitch + 4);
 			pitchArray.add(basePitch + 7);
-		} else if (text.endsWith("min")) {
+		} else if (text.contains("min")) {
 			pitchArray.add(basePitch + 3);
 			pitchArray.add(basePitch + 7);
-		} else if (text.endsWith("aug")) {
+		} else if (text.contains("aug")) {
 			pitchArray.add(basePitch + 4);
 			pitchArray.add(basePitch + 8);
-		} else if (text.endsWith("dim")) {
+		} else if (text.contains("dim")) {
 			pitchArray.add(basePitch + 3);
 			pitchArray.add(basePitch + 6);
+		}
+
+		if (text.endsWith("!")) {
+			pitchArray.setAccented(true);
 		}
 	}
 

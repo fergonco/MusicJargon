@@ -1,17 +1,17 @@
 package org.fergonco.music.mjargon.parser;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.fergonco.music.mjargon.antlr.MJargonBaseVisitor;
 import org.fergonco.music.mjargon.antlr.MJargonLexer;
 import org.fergonco.music.mjargon.antlr.MJargonParser.AuralExpressionContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.ChordLiteralContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.DrumSequenceExpressionContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.ExpressionContext;
+import org.fergonco.music.mjargon.antlr.MJargonParser.InstrumentContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.NumericExpressionContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.OnTimeSignatureContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.PitchSequenceExpressionContext;
@@ -23,6 +23,7 @@ import org.fergonco.music.mjargon.model.DrumSequence;
 import org.fergonco.music.mjargon.model.FractionValue;
 import org.fergonco.music.mjargon.model.FunctionValue;
 import org.fergonco.music.mjargon.model.Model;
+import org.fergonco.music.mjargon.model.NoteSequence;
 import org.fergonco.music.mjargon.model.NoteSequenceElement;
 import org.fergonco.music.mjargon.model.NoteSubsequence;
 import org.fergonco.music.mjargon.model.NumberValue;
@@ -162,7 +163,8 @@ public class ExpressionVisitor extends MJargonBaseVisitor<Value> {
 
 	@Override
 	public Value visitAuralExpression(AuralExpressionContext ctx) {
-		PitchedNoteSequence sequence = (PitchedNoteSequence) visit(ctx.sequence);
+		ParserRuleContext sequenceContext = (ctx.pitchSequence != null) ? ctx.pitchSequence : ctx.drumSequence;
+		NoteSequence sequence = (NoteSequence) visit(sequenceContext);
 		PitchArray[] notes = sequence.getAllNotes();
 		StringBuilder expression = new StringBuilder();
 		for (int i = 0; i < notes.length; i++) {
@@ -175,7 +177,7 @@ public class ExpressionVisitor extends MJargonBaseVisitor<Value> {
 	@Override
 	public Value visitPitchSequenceExpression(PitchSequenceExpressionContext ctx) {
 		List<ChordLiteralContext> noteLiterals = ctx.literals;
-		ArrayList<PitchArray> notes = new ArrayList<>();
+		PitchedNoteSequence ret = new PitchedNoteSequence();
 		int octave = 4;
 		for (ChordLiteralContext context : noteLiterals) {
 			PitchArray pitchArray;
@@ -186,26 +188,26 @@ public class ExpressionVisitor extends MJargonBaseVisitor<Value> {
 				pitchArrayImpl.setSilence();
 				pitchArray = pitchArrayImpl;
 			} else {
-				Token chord = context.chord;
-				String chordText = chord.getText();
+				String chordText = context.getText();
 				ChordParser chordParser = new ChordParser(chordText);
 				chordParser.setDefaultOctave(octave);
 				octave = chordParser.getOctave();
 				pitchArray = chordParser.getPitchArray();
 			}
-			notes.add(pitchArray);
+			ret.addNote(pitchArray);
 		}
-		return new PitchedNoteSequence(notes.toArray(new PitchArray[notes.size()]));
+		return ret;
 	}
 
 	@Override
 	public Value visitDrumSequenceExpression(DrumSequenceExpressionContext ctx) {
-		List<Token> drumTokens = ctx.instruments;
-		DrumNote[] drumNotes = new DrumNote[drumTokens.size()];
-		for (int i = 0; i < drumNotes.length; i++) {
-			drumNotes[i] = drumInstrumentCodes.get(drumTokens.get(i).getType());
+		List<InstrumentContext> drumInstruments = ctx.instruments;
+		DrumSequence ret = new DrumSequence();
+		for (int i = 0; i < drumInstruments.size(); i++) {
+			InstrumentContext drumInstrument = drumInstruments.get(i);
+			ret.addDrumNote(drumInstrumentCodes.get(drumInstrument.code.getType()), drumInstrument.accent != null);
 		}
-		return new DrumSequence(drumNotes);
+		return ret;
 	}
 
 	private String trimDelimiters(String text) {
