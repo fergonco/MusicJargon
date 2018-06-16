@@ -109,6 +109,7 @@ public class MJargon {
 		} else {
 			System.out.println("Usage:");
 			System.out.println("MJargon [-o <output_midi>] [-l <label>] <file>");
+			System.out.println("MJargon -li");
 			System.exit(1);
 		}
 	}
