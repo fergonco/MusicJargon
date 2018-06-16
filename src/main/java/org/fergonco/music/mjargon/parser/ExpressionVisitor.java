@@ -138,17 +138,28 @@ public class ExpressionVisitor extends MJargonBaseVisitor<Value> {
 
 	@Override
 	public Value visitRhythmExpression(RhythmExpressionContext ctx) {
-		String rhythmExpression = trimDelimiters(ctx.value.getText());
-		Value timeSignature = null;
-		if (ctx.timeSignature != null) {
-			timeSignature = new ExpressionVisitor(model).visit(ctx.timeSignature);
-		} else if (ctx.beatDuration != null) {
-			int noteDenominator = new ExpressionVisitor(model).visit(ctx.beatDuration).toFraction().getDenominator();
-			timeSignature = new FractionValue(rhythmExpression.length(), noteDenominator);
+		if (ctx.value != null) {
+			String rhythmExpression = trimDelimiters(ctx.value.getText());
+			Value timeSignature = null;
+			if (ctx.timeSignature != null) {
+				timeSignature = new ExpressionVisitor(model).visit(ctx.timeSignature);
+			} else if (ctx.beatDuration != null) {
+				int noteDenominator = new ExpressionVisitor(model).visit(ctx.beatDuration).toFraction()
+						.getDenominator();
+				timeSignature = new FractionValue(rhythmExpression.length(), noteDenominator);
+			} else {
+				timeSignature = model.getDefaultTimeSignature();
+			}
+			return new Rhythm(rhythmExpression, timeSignature);
 		} else {
-			timeSignature = model.getDefaultTimeSignature();
+			Value timeSignature = new ExpressionVisitor(model).visit(ctx.timeSignature);
+			int numerator = timeSignature.toFraction().getNumerator();
+			StringBuffer rhythmExpression = new StringBuffer();
+			for (int i = 0; i < numerator; i++) {
+				rhythmExpression.append("x");
+			}
+			return new Rhythm(rhythmExpression.toString(), timeSignature);
 		}
-		return new Rhythm(rhythmExpression, timeSignature);
 	}
 
 	@Override
