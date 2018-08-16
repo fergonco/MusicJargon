@@ -58,6 +58,8 @@ public class ExpressionVisitor extends MJargonBaseVisitor<Value> {
 		drumInstrumentCodes.put(MJargonLexer.SN, DrumNote.SNARE);
 		drumInstrumentCodes.put(MJargonLexer.RIDE, DrumNote.RIDE);
 		drumInstrumentCodes.put(MJargonLexer.RD, DrumNote.RIDE);
+		drumInstrumentCodes.put(MJargonLexer.RIDEBELL, DrumNote.RIDE_BELL);
+		drumInstrumentCodes.put(MJargonLexer.RDB, DrumNote.RIDE_BELL);
 		drumInstrumentCodes.put(MJargonLexer.CRASH, DrumNote.CRASH);
 		drumInstrumentCodes.put(MJargonLexer.CR, DrumNote.CRASH);
 		drumInstrumentCodes.put(MJargonLexer.TOM1, DrumNote.TOM1);

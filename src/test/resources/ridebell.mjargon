@@ -1,0 +1,3 @@
+voices      | drums                | drums
+a:          | rd rdb on [xxxxxxxx] | bd sn on [xxxx]
+repeat a 20 |                      |

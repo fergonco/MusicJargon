@@ -10,6 +10,7 @@ public enum DrumNote {
 	BASSDRUM(Note.DRUMS_Acoustic_Bass_Drum), //
 	SNARE(Note.DRUMS_Acoustic_Snare), //
 	RIDE(Note.DRUMS_Ride_Cymbal_1), //
+	RIDE_BELL(Note.DRUMS_Ride_Bell), //
 	CRASH(Note.DRUMS_Crash_Cymbal_1), //
 	TOM1(Note.DRUMS_High_Tom), //
 	TOM2(Note.DRUMS_Hi_Mid_Tom), //

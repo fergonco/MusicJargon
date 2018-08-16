@@ -63,6 +63,8 @@ drumSequenceExpression: (
     instruments+=SN|
     instruments+=RIDE|
     instruments+=RD|
+    instruments+=RIDEBELL|
+    instruments+=RDB|
     instruments+=CRASH|
     instruments+=CR|
     instruments+=TOM1|
@@ -132,6 +134,8 @@ SNARE:'snare';
 SN:'sn';
 RIDE:'ride';
 RD:'rd';
+RIDEBELL:'ridebell';
+RDB:'rdb';
 CRASH:'crash';
 CR:'cr';
 TOM1:'tom1';
