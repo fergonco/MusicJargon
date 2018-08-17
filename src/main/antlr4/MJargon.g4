@@ -44,7 +44,9 @@ stringLiteral: text=STRING_LITERAL;
 
 referenceExpression: id=ID (OPEN_PARENTHESIS parameterValues+=expression (COMA parameterValues+=expression)* CLOSE_PARENTHESIS)?;
 
-rhythmExpression: value=RHYTHMEXPRESSION (ON timeSignature=expression | WITH beatDuration=expression)?;
+rhythmExpression: 
+	(value=RHYTHMEXPRESSION (ON timeSignature=expression | WITH beatDuration=expression)?)
+	| (full=FULL ON timeSignature=expression);
 
 pitchSequenceExpression: (literals+=chordLiteral)+;
 
@@ -118,6 +120,7 @@ COMMENT: '\'' ~( '\r' | '\n' )*;
 ON: 'on';
 WITH: 'with';
 TEMPO: 'tempo';
+FULL: 'full';
 REPEAT: 'repeat';
 VOICES: 'voices';
 DYNAMICS: 'dynamics';
