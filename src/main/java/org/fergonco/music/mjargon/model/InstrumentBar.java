@@ -35,7 +35,9 @@ public class InstrumentBar implements Bar {
 		int pitchesIndex = 0;
 		for (int i = 0; i < components.length; i++) {
 			PitchArray pitch = pitches[pitchesIndex % pitches.length];
-			pitchesIndex++;
+			if (!components[i].isPlaceholder()) {
+				pitchesIndex++;
+			}
 
 			Dynamic dynamic = components[i].isSilence() ? Dynamic.MUTE : baseDynamics;
 			if (components[i].isAccent()) {

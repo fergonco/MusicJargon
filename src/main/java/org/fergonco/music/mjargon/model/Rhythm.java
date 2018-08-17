@@ -29,7 +29,7 @@ public class Rhythm extends AbstractValue implements Value {
 			for (int i = 0; i < length; i++) {
 				char symbol = expression.charAt(i);
 				if (current == null) {
-					current = new RhythmComponent(subdivisionDuration, symbol);
+					current = new RhythmComponent(subdivisionDuration, symbol, symbol == '.');
 				} else {
 					RhythmComponent next = current.process(symbol, subdivisionDuration);
 					if (next != null) {
