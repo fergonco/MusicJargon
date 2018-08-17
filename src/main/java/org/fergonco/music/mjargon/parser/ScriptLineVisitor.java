@@ -81,7 +81,7 @@ public class ScriptLineVisitor extends MJargonBaseVisitor<Object> {
 	@Override
 	public Object visitRepeat(RepeatContext ctx) {
 		String label = ctx.labelId.getText();
-		int times = Integer.parseInt(ctx.times.getText());
+		Value times = new ExpressionVisitor(model).visit(ctx.times);
 		model.repeat(label, times);
 		return super.visitRepeat(ctx);
 	}

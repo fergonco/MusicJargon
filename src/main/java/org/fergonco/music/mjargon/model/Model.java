@@ -131,7 +131,7 @@ public class Model {
 		score.write();
 	}
 
-	public void repeat(String label, int times) {
+	public void repeat(String label, Value times) {
 		songlines.add(new Repeat(label, times));
 	}
 

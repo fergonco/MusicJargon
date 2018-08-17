@@ -99,7 +99,7 @@ voices: VOICES (VERTICAL_BAR instrumentNames+=ID STRING_LITERAL?)+ VERTICAL_BAR?
 
 dynamics: DYNAMICS (VERTICAL_BAR {$dynamicCodes.add(null);} dynamicCodes+=DYNAMIC?)*;
 
-repeat: REPEAT labelId=ID times=NUMBER VERTICAL_BAR*;
+repeat: REPEAT labelId=ID times=leftExpression VERTICAL_BAR*;
 
 NUMBER: '0'..'9'+;
 RHYTHMEXPRESSION: '[' ('X' | 'x' | '.')+ ']';
