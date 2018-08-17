@@ -1,0 +1,6 @@
+voices     | drums
+a:         | sn on [xxxx]
+           | bd on [xxxx]
+           | bd sn on [xxxx]
+           | like a+1
+           | +

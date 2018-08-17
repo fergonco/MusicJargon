@@ -7,11 +7,11 @@ public class InstrumentRepeatBar implements Bar {
 
 	private String labelName;
 	private int shift;
-	private boolean lastLabelReference;
+	private boolean likePlusOne;
 
 	@Override
 	public Note[] getNotes(Model model, int songlineIndex, int voiceIndex, Dynamic baseDynamics, Note lastNote) {
-		if (lastLabelReference) {
+		if (likePlusOne) {
 			LabelAndShift labelAndShift = getLastLabelReference(model, songlineIndex, voiceIndex);
 			labelName = labelAndShift.label;
 			shift = labelAndShift.shift;
@@ -25,18 +25,17 @@ public class InstrumentRepeatBar implements Bar {
 
 	private LabelAndShift getLastLabelReference(Model model, int songlineIndex, int voiceIndex) {
 		int offset = -1;
-		int shift = 1;
 		while (songlineIndex + offset >= 0) {
 			Bar bar = model.getBar(songlineIndex, offset, voiceIndex);
 			if (bar instanceof InstrumentRepeatBar) {
 				InstrumentRepeatBar repeatBar = (InstrumentRepeatBar) bar;
-				if (!repeatBar.lastLabelReference && repeatBar.labelName != null) {
+				if (!repeatBar.likePlusOne && repeatBar.labelName != null) {
 					LabelAndShift ret = new LabelAndShift();
 					ret.label = repeatBar.labelName;
-					ret.shift = shift;
+					ret.shift = repeatBar.shift + 1;
 					return ret;
 				}
-				if (repeatBar.lastLabelReference) {
+				if (repeatBar.likePlusOne) {
 					shift++;
 				}
 			}
@@ -51,7 +50,7 @@ public class InstrumentRepeatBar implements Bar {
 			if (model.getLabel(labelName) == null) {
 				throw new SemanticException("Label not found: " + labelName);
 			}
-		} else if (lastLabelReference) {
+		} else if (likePlusOne) {
 			if (getLastLabelReference(model, songlineIndex, voiceIndex) == null) {
 				throw new SemanticException("Cannot find a 'like' previous bar");
 			}
@@ -62,7 +61,7 @@ public class InstrumentRepeatBar implements Bar {
 		InstrumentRepeatBar ret = new InstrumentRepeatBar();
 		ret.labelName = null;
 		ret.shift = -1;
-		ret.lastLabelReference = false;
+		ret.likePlusOne = false;
 		return ret;
 	}
 
@@ -70,15 +69,15 @@ public class InstrumentRepeatBar implements Bar {
 		InstrumentRepeatBar ret = new InstrumentRepeatBar();
 		ret.labelName = null;
 		ret.shift = Integer.MAX_VALUE; // It will be calculated later
-		ret.lastLabelReference = true;
+		ret.likePlusOne = true;
 		return ret;
 	}
 
-	public static Bar labelReference(String labelName, int shift) {
+	public static Bar likeLabel(String labelName, int shift) {
 		InstrumentRepeatBar ret = new InstrumentRepeatBar();
 		ret.labelName = labelName;
 		ret.shift = shift;
-		ret.lastLabelReference = false;
+		ret.likePlusOne = false;
 		return ret;
 	}
 

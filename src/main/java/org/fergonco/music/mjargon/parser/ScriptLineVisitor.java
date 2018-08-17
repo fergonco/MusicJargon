@@ -134,7 +134,7 @@ public class ScriptLineVisitor extends MJargonBaseVisitor<Object> {
 			if (expressionContext != null) {
 				if (expressionContext.same != null) {
 					bars.add(InstrumentRepeatBar.lastOne());
-				} else if (expressionContext.label != null) {
+				} else if (expressionContext.label != null) { // like expression
 					int shift = 0;
 					if (expressionContext.shiftAmount != null) {
 						shift = Integer.parseInt(expressionContext.shiftAmount.getText());
@@ -142,7 +142,7 @@ public class ScriptLineVisitor extends MJargonBaseVisitor<Object> {
 							shift = -shift;
 						}
 					}
-					bars.add(InstrumentRepeatBar.labelReference(expressionContext.label.getText(), shift));
+					bars.add(InstrumentRepeatBar.likeLabel(expressionContext.label.getText(), shift));
 				} else if (expressionContext.plus != null) {
 					bars.add(InstrumentRepeatBar.plusOne());
 				} else {
