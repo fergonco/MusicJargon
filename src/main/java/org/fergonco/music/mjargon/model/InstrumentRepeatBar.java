@@ -25,6 +25,7 @@ public class InstrumentRepeatBar implements Bar {
 
 	private LabelAndShift getLastLabelReference(Model model, int songlineIndex, int voiceIndex) {
 		int offset = -1;
+		int shift = 1;
 		while (songlineIndex + offset >= 0) {
 			Bar bar = model.getBar(songlineIndex, offset, voiceIndex);
 			if (bar instanceof InstrumentRepeatBar) {
@@ -32,7 +33,7 @@ public class InstrumentRepeatBar implements Bar {
 				if (!repeatBar.likePlusOne && repeatBar.labelName != null) {
 					LabelAndShift ret = new LabelAndShift();
 					ret.label = repeatBar.labelName;
-					ret.shift = repeatBar.shift + 1;
+					ret.shift = repeatBar.shift + shift;
 					return ret;
 				}
 				if (repeatBar.likePlusOne) {
