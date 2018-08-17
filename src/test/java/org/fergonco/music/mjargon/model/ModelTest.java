@@ -1,6 +1,7 @@
 package org.fergonco.music.mjargon.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
@@ -25,6 +26,14 @@ import org.fergonco.music.mjargon.parser.ScriptLineVisitor;
 import org.junit.Test;
 
 public class ModelTest {
+
+	@Test
+	public void testPlusWithoutPreviousLike() throws Exception {
+		Model model = getValidatedModel(
+				getScriptContent(new File("src/test/resources/testErrors/plusWithoutPreviousLike.mjargon")));
+		assertEquals(1, model.getErrors().size());
+		assertTrue(model.getErrors().get(0).getMessage().contains("like"));
+	}
 
 	@Test
 	public void testDuplicatedLabel() throws Exception {
@@ -100,24 +109,34 @@ public class ModelTest {
 	}
 
 	private static Model getModel(File testCase) throws Exception {
-		InputStream is = new FileInputStream(testCase);
-		String script = IOUtils.toString(is, "utf-8");
-		is.close();
+		String script = getScriptContent(testCase);
 
 		return getModel(script);
 	}
 
+	private static String getScriptContent(File testCase) throws FileNotFoundException, IOException {
+		InputStream is = new FileInputStream(testCase);
+		String script = IOUtils.toString(is, "utf-8");
+		is.close();
+		return script;
+	}
+
 	private static Model getModel(String script) throws Exception {
+		Model model = getValidatedModel(script);
+		List<MJargonError> errors = model.getErrors();
+		if (errors.size() > 0) {
+			throw new RuntimeException(errors.get(0).toString());
+		}
+		return model;
+	}
+
+	private static Model getValidatedModel(String script) {
 		MJargonLexer lexer = new MJargonLexer(new ANTLRInputStream(script));
 		MJargonParser parser = new MJargonParser(new CommonTokenStream(lexer));
 		Model model = new Model();
 		ScriptContext root = parser.script();
 		new ScriptLineVisitor(model).visit(root);
 		model.validate();
-		List<MJargonError> errors = model.getErrors();
-		if (errors.size() > 0) {
-			throw new RuntimeException(errors.get(0).toString());
-		}
 		return model;
 	}
 
