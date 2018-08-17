@@ -27,7 +27,7 @@ declaration: id=ID (variableDeclaration | labelDeclaration);
 
 variableDeclaration: EQUALS value=expression;
 
-expression: left=leftExpression (OPEN_BRACE index=NUMBER (colon=COLON toIndex=NUMBER?)? CLOSE_BRACE)? (ON rhythm=expression)?;
+expression: left=leftExpression (OPEN_BRACE index=NUMBER (colon=COLON toIndex=NUMBER?)? CLOSE_BRACE)? (ON rhythm=leftExpression)?;
 
 leftExpression: (
 	  numericExpression
