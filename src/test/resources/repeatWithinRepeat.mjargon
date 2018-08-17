@@ -1,0 +1,5 @@
+voices     | drums
+a:         | sn bd on [xxxx]
+b:         | bd sn on [xxxx]
+repeat b 2 |
+repeat a 2 | 
