@@ -36,6 +36,7 @@ leftExpression: (
 	| rhythmExpression
 	| pitchSequenceExpression
 	| drumSequenceExpression
+	| auralExpression
 );
 
 numericExpression: minus=SILENCE? numerator=NUMBER (SLASH denominator=NUMBER)?;
@@ -45,43 +46,56 @@ stringLiteral: text=STRING_LITERAL;
 referenceExpression: id=ID (OPEN_PARENTHESIS parameterValues+=expression (COMA parameterValues+=expression)* CLOSE_PARENTHESIS)?;
 
 rhythmExpression: 
-	(value=RHYTHMEXPRESSION (ON timeSignature=expression | WITH beatDuration=expression)?)
+	(value=RHYTHMEXPRESSION timeDefinition=onTimeSignature?)
 	| (full=FULL ON timeSignature=expression);
+
+onTimeSignature: (
+	ON timeSignature=expression
+	| WITH beatDuration=expression
+);
 
 pitchSequenceExpression: (literals+=chordLiteral)+;
 
 chordLiteral: silence=SILENCE | underscore=UNDERSCORE | (chord=EXPLICIT_CHORD | chord=CHORD_NAME);
 
-drumSequenceExpression: (
-    instruments+=HIHAT|
-    instruments+=HH|
-    instruments+=HIHATOPEN|
-    instruments+=HHO|
-    instruments+=HIHATPEDAL|
-    instruments+=HHP|
-    instruments+=BASSDRUM|
-    instruments+=BD|
-    instruments+=SNARE|
-    instruments+=SN|
-    instruments+=RIDE|
-    instruments+=RD|
-    instruments+=RIDEBELL|
-    instruments+=RDB|
-    instruments+=CRASH|
-    instruments+=CR|
-    instruments+=TOM1|
-    instruments+=T1|
-    instruments+=TOM2|
-    instruments+=T2|
-    instruments+=TOM3|
-    instruments+=T3|
-    instruments+=TOM4|
-    instruments+=T4|
-    instruments+=TOM5|
-    instruments+=T5|
-    instruments+=TOM6|
-    instruments+=T6
-)+;
+drumSequenceExpression: instruments+=instrument+;
+
+instrument: code=(
+    HIHAT|
+    HH|
+    HIHATOPEN|
+    HHO|
+    HIHATPEDAL|
+    HHP|
+    BASSDRUM|
+    BD|
+    SNARE|
+    SN|
+    RIDE|
+    RD|
+    RIDEBELL|
+    RDB|
+    CRASH|
+    CR|
+    TOM1|
+    T1|
+    TOM2|
+    T2|
+    TOM3|
+    T3|
+    TOM4|
+    T4|
+    TOM5|
+    T5|
+    TOM6|
+    T6
+);
+
+auralExpression: LESS_THAN (pitches+=auralPitch+ | drumElements+=auralDrumElement+) GREATER_THAN timeSignature=onTimeSignature?;
+
+auralPitch: pitch=chordLiteral accent=ACCENT?;
+
+auralDrumElement: drumElement=instrument accent=ACCENT?;
 
 labelDeclaration: COLON labelableLine;
 
@@ -103,10 +117,13 @@ repeat: REPEAT labelId=ID times=leftExpression VERTICAL_BAR*;
 
 NUMBER: '0'..'9'+;
 RHYTHMEXPRESSION: '[' ('X' | 'x' | '.')+ ']';
+LESS_THAN: '<';
+GREATER_THAN: '>';
 SLASH: '/';
 VERTICAL_BAR: '|';
 COLON: ':';
 COMA: ',';
+ACCENT: '!';
 EQUALS: '=';
 SAME: '%';
 LIKE: 'like';

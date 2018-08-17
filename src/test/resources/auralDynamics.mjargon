@@ -1,0 +1,4 @@
+voices | piano                                 | drums "right hand"
+a:     | <D! _ _ - D A3 C4!> with 1/8          | <hh! hh hh! hh hh! hh hh!> on 7/8
+       | D - D A3 C4 on [X..xxxX] with 1/8     | hh hh on [XxXxXxX] on 7/8
+repeat a 2
