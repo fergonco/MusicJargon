@@ -17,6 +17,7 @@ import org.fergonco.music.midi.Track;
 import org.fergonco.music.mjargon.parser.DuplicatedLabelException;
 import org.fergonco.music.mjargon.parser.InvalidReferenceException;
 import org.fergonco.music.mjargon.parser.MJargonError;
+import org.fergonco.music.mjargon.parser.ModelException;
 
 public class Model {
 
@@ -76,6 +77,9 @@ public class Model {
 	}
 
 	public void writeMidi(OutputStream stream) throws IOException {
+		if (instruments == null || instruments.length == 0) {
+			throw new ModelException("No voices defined");
+		}
 		Score score = new Score(stream);
 		Track[] tracks = new Track[instruments.length];
 		for (int i = 0; i < tracks.length; i++) {
