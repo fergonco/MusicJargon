@@ -7,33 +7,29 @@ import java.util.Map;
 
 import org.fergonco.music.mjargon.antlr.MJargonBaseVisitor;
 import org.fergonco.music.mjargon.antlr.MJargonLexer;
-import org.fergonco.music.mjargon.antlr.MJargonParser.AuralDrumElementContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.AuralExpressionContext;
-import org.fergonco.music.mjargon.antlr.MJargonParser.AuralPitchContext;
-import org.fergonco.music.mjargon.antlr.MJargonParser.ChordLiteralContext;
-import org.fergonco.music.mjargon.antlr.MJargonParser.DrumSequenceExpressionContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.ExpressionContext;
-import org.fergonco.music.mjargon.antlr.MJargonParser.InstrumentContext;
+import org.fergonco.music.mjargon.antlr.MJargonParser.NoteLiteralContext;
+import org.fergonco.music.mjargon.antlr.MJargonParser.NoteSequenceExpressionContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.NumericExpressionContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.OnTimeSignatureContext;
-import org.fergonco.music.mjargon.antlr.MJargonParser.PitchSequenceExpressionContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.ReferenceExpressionContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.RhythmExpressionContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.StringLiteralContext;
 import org.fergonco.music.mjargon.model.DrumNote;
-import org.fergonco.music.mjargon.model.DrumSequence;
 import org.fergonco.music.mjargon.model.FractionValue;
 import org.fergonco.music.mjargon.model.FunctionValue;
 import org.fergonco.music.mjargon.model.Model;
-import org.fergonco.music.mjargon.model.NoteSequence;
 import org.fergonco.music.mjargon.model.NoteSequenceElement;
 import org.fergonco.music.mjargon.model.NoteSubsequence;
 import org.fergonco.music.mjargon.model.NumberValue;
 import org.fergonco.music.mjargon.model.PitchArray;
+import org.fergonco.music.mjargon.model.PitchArrayImpl;
 import org.fergonco.music.mjargon.model.PitchedNoteSequence;
 import org.fergonco.music.mjargon.model.Rhythm;
 import org.fergonco.music.mjargon.model.SequenceAndRhythm;
 import org.fergonco.music.mjargon.model.StringValue;
+import org.fergonco.music.mjargon.model.TiedPitchArray;
 import org.fergonco.music.mjargon.model.Value;
 
 public class ExpressionVisitor extends MJargonBaseVisitor<Value> {
@@ -178,59 +174,125 @@ public class ExpressionVisitor extends MJargonBaseVisitor<Value> {
 
 	@Override
 	public Value visitAuralExpression(AuralExpressionContext ctx) {
-		StringBuilder rhythmExpression = new StringBuilder();
-		NoteSequence sequence;
-		if (!ctx.pitches.isEmpty()) {
-			List<AuralPitchContext> noteLiterals = ctx.pitches;
-			ArrayList<PitchArray> notes = new ArrayList<>();
-			SequenceParser sequenceParser = new SequenceParser();
-			for (AuralPitchContext noteLiteral : noteLiterals) {
-				notes.add(sequenceParser.getPitch(noteLiteral.pitch));
-				if (noteLiteral.accent != null) {
-					rhythmExpression.append("X");
-				} else {
-					rhythmExpression.append("x");
-				}
-			}
-			sequence = new PitchedNoteSequence(notes.toArray(new PitchArray[notes.size()]));
-		} else {
-			List<AuralDrumElementContext> drumLiterals = ctx.drumElements;
-			ArrayList<DrumNote> drumNotes = new ArrayList<>();
-			for (AuralDrumElementContext noteLiteral : drumLiterals) {
-				drumNotes.add(drumInstrumentCodes.get(noteLiteral.drumElement.code.getType()));
-				if (noteLiteral.accent != null) {
-					rhythmExpression.append("X");
-				} else {
-					rhythmExpression.append("x");
-				}
-			}
-			sequence = new DrumSequence(drumNotes.toArray(new DrumNote[drumNotes.size()]));
+		AuralSequenceBuilder auralSequenceBuilder = new AuralSequenceBuilder();
+		Value sequence = processSequence(ctx.noteSequence.literals, auralSequenceBuilder);
+		return new SequenceAndRhythm(sequence, auralSequenceBuilder.buildRhythm(ctx.timeSignature));
+	}
 
+	private interface SequenceBuilder {
+
+		void addTie();
+
+		void addSilence();
+
+		void addPitch(PitchArray pitchArray, boolean accent);
+
+		Value buildSequence();
+
+	}
+
+	public class DefaultSequenceBuilder implements SequenceBuilder {
+		private ArrayList<PitchArray> notes = new ArrayList<>();
+		private Boolean pitched = null;
+
+		@Override
+		public void addTie() {
+			notes.add(new TiedPitchArray());
 		}
-		Value rhythm = new Rhythm(rhythmExpression.toString(),
-				getTimeSignature(ctx.timeSignature, rhythmExpression.length()));
-		return new SequenceAndRhythm(sequence, rhythm);
+
+		@Override
+		public void addSilence() {
+			PitchArrayImpl pitchArrayImpl = new PitchArrayImpl();
+			pitchArrayImpl.setSilence();
+			notes.add(pitchArrayImpl);
+		}
+
+		@Override
+		public void addPitch(PitchArray pitchArray, boolean accent) {
+			if (pitched != null) {
+				if (pitched.booleanValue() == pitchArray.isDrums()) {
+					throw new ModelException("Cannot mix pitched notes and drum notes");
+				}
+			}
+			notes.add(pitchArray);
+			pitched = !pitchArray.isDrums();
+		}
+
+		@Override
+		public Value buildSequence() {
+			return new PitchedNoteSequence(notes.toArray(new PitchArray[notes.size()]));
+		}
+	}
+
+	private class AuralSequenceBuilder extends DefaultSequenceBuilder implements SequenceBuilder {
+
+		private StringBuilder rhythmExpression = new StringBuilder();
+
+		@Override
+		public void addSilence() {
+			addRhythmComponent(false);
+			super.addSilence();
+		}
+
+		@Override
+		public void addTie() {
+			addRhythmComponent(false);
+			super.addTie();
+		}
+
+		@Override
+		public void addPitch(PitchArray pitchArray, boolean accent) {
+			addRhythmComponent(accent);
+			super.addPitch(pitchArray, accent);
+		}
+
+		public Value buildRhythm(OnTimeSignatureContext timeSignature) {
+			return new Rhythm(rhythmExpression.toString(), getTimeSignature(timeSignature, rhythmExpression.length()));
+		}
+
+		private void addRhythmComponent(boolean accent) {
+			if (accent) {
+				rhythmExpression.append("X");
+			} else {
+				rhythmExpression.append("x");
+			}
+		}
+	}
+
+	private Value processSequence(List<NoteLiteralContext> noteLiterals, SequenceBuilder sequenceBuilder) {
+		int octave = 4;
+		for (NoteLiteralContext noteLiteralContext : noteLiterals) {
+			int n = 1;
+			if (noteLiteralContext.times != null) {
+				n = Integer.parseInt(noteLiteralContext.times.getText());
+			}
+			for (int i = 0; i < n; i++) {
+				if (noteLiteralContext.underscore != null) {
+					sequenceBuilder.addTie();
+				} else if (noteLiteralContext.silence != null) {
+					sequenceBuilder.addSilence();
+				} else {
+					boolean accent = noteLiteralContext.accent != null;
+					int type = noteLiteralContext.note.getType();
+					if (type == MJargonLexer.EXPLICIT_CHORD || type == MJargonLexer.CHORD_NAME) {
+						String chordText = noteLiteralContext.getText();
+						ChordParser chordParser = new ChordParser(chordText);
+						chordParser.setDefaultOctave(octave);
+						octave = chordParser.getOctave();
+						sequenceBuilder.addPitch(chordParser.getPitchArray(), accent);
+					} else {
+						sequenceBuilder.addPitch(drumInstrumentCodes.get(type).toPitchArray(), accent);
+					}
+				}
+			}
+		}
+
+		return sequenceBuilder.buildSequence();
 	}
 
 	@Override
-	public Value visitPitchSequenceExpression(PitchSequenceExpressionContext ctx) {
-		List<ChordLiteralContext> noteLiterals = ctx.literals;
-		ArrayList<PitchArray> notes = new ArrayList<>();
-		SequenceParser sequenceParser = new SequenceParser();
-		for (ChordLiteralContext context : noteLiterals) {
-			notes.add(sequenceParser.getPitch(context));
-		}
-		return new PitchedNoteSequence(notes.toArray(new PitchArray[notes.size()]));
-	}
-
-	@Override
-	public Value visitDrumSequenceExpression(DrumSequenceExpressionContext ctx) {
-		List<InstrumentContext> drumInstrumens = ctx.instruments;
-		DrumNote[] drumNotes = new DrumNote[drumInstrumens.size()];
-		for (int i = 0; i < drumNotes.length; i++) {
-			drumNotes[i] = drumInstrumentCodes.get(drumInstrumens.get(i).code.getType());
-		}
-		return new DrumSequence(drumNotes);
+	public Value visitNoteSequenceExpression(NoteSequenceExpressionContext ctx) {
+		return processSequence(ctx.noteLiteral(), new DefaultSequenceBuilder());
 	}
 
 	private String trimDelimiters(String text) {

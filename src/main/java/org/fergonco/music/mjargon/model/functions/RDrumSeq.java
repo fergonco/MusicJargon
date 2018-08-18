@@ -3,14 +3,15 @@ package org.fergonco.music.mjargon.model.functions;
 import java.util.ArrayList;
 
 import org.fergonco.music.mjargon.model.DrumNote;
-import org.fergonco.music.mjargon.model.DrumSequence;
 import org.fergonco.music.mjargon.model.NoteSequence;
+import org.fergonco.music.mjargon.model.PitchArray;
+import org.fergonco.music.mjargon.model.PitchedNoteSequence;
 import org.fergonco.music.mjargon.model.SemanticException;
 import org.fergonco.music.mjargon.model.Value;
 
 public class RDrumSeq extends AbstractFunction implements Function {
 
-	private DrumSequence sequence;
+	private PitchedNoteSequence sequence;
 
 	@Override
 	public String getId() {
@@ -27,7 +28,7 @@ public class RDrumSeq extends AbstractFunction implements Function {
 				throw new SemanticException("rDrumSeq takes a number as parameter");
 			}
 		}
-		ArrayList<DrumNote> drumNotes = new ArrayList<>();
+		ArrayList<PitchArray> drumNotes = new ArrayList<>();
 		int sequenceLength = getParameters()[0].toInt();
 		for (int i = 0; i < sequenceLength; i++) {
 			DrumNote note;
@@ -36,9 +37,9 @@ public class RDrumSeq extends AbstractFunction implements Function {
 			} else {
 				note = DrumNote.SNARE;
 			}
-			drumNotes.add(note);
+			drumNotes.add(note.toPitchArray());
 		}
-		sequence = new DrumSequence(drumNotes.toArray(new DrumNote[drumNotes.size()]));
+		sequence = new PitchedNoteSequence(drumNotes.toArray(new PitchArray[drumNotes.size()]));
 		sequence.validate();
 	}
 
