@@ -185,7 +185,7 @@ public class ExpressionVisitor extends MJargonBaseVisitor<Value> {
 			ArrayList<PitchArray> notes = new ArrayList<>();
 			SequenceParser sequenceParser = new SequenceParser();
 			for (AuralPitchContext noteLiteral : noteLiterals) {
-				notes.add(sequenceParser.getPitch(noteLiteral.pitch));
+				sequenceParser.addPitches(noteLiteral.pitch, notes);
 				if (noteLiteral.accent != null) {
 					rhythmExpression.append("X");
 				} else {
@@ -218,19 +218,25 @@ public class ExpressionVisitor extends MJargonBaseVisitor<Value> {
 		ArrayList<PitchArray> notes = new ArrayList<>();
 		SequenceParser sequenceParser = new SequenceParser();
 		for (ChordLiteralContext context : noteLiterals) {
-			notes.add(sequenceParser.getPitch(context));
+			sequenceParser.addPitches(context, notes);
 		}
 		return new PitchedNoteSequence(notes.toArray(new PitchArray[notes.size()]));
 	}
 
 	@Override
 	public Value visitDrumSequenceExpression(DrumSequenceExpressionContext ctx) {
-		List<InstrumentContext> drumInstrumens = ctx.instruments;
-		DrumNote[] drumNotes = new DrumNote[drumInstrumens.size()];
-		for (int i = 0; i < drumNotes.length; i++) {
-			drumNotes[i] = drumInstrumentCodes.get(drumInstrumens.get(i).code.getType());
+		List<InstrumentContext> drumInstruments = ctx.instruments;
+		ArrayList<DrumNote> drumNotes = new ArrayList<>();
+		for (InstrumentContext instrumentContext : drumInstruments) {
+			int n = 1;
+			if (instrumentContext.times != null) {
+				n = Integer.parseInt(instrumentContext.times.getText());
+			}
+			for (int j = 0; j < n; j++) {
+				drumNotes.add(drumInstrumentCodes.get(instrumentContext.code.getType()));
+			}
 		}
-		return new DrumSequence(drumNotes);
+		return new DrumSequence(drumNotes.toArray(new DrumNote[drumNotes.size()]));
 	}
 
 	private String trimDelimiters(String text) {

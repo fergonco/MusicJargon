@@ -54,42 +54,43 @@ onTimeSignature: (
 	| WITH beatDuration=expression
 );
 
-pitchSequenceExpression: (literals+=chordLiteral)+;
+pitchSequenceExpression: literals+=chordLiteral+;
 
-chordLiteral: silence=SILENCE | underscore=UNDERSCORE | (chord=EXPLICIT_CHORD | chord=CHORD_NAME);
+chordLiteral: times=NUMBER? (silence=SILENCE | underscore=UNDERSCORE | (chord=EXPLICIT_CHORD | chord=CHORD_NAME)) ;
 
 drumSequenceExpression: instruments+=instrument+;
 
-instrument: code=(
-    HIHAT|
-    HH|
-    HIHATOPEN|
-    HHO|
-    HIHATPEDAL|
-    HHP|
-    BASSDRUM|
-    BD|
-    SNARE|
-    SN|
-    RIDE|
-    RD|
-    RIDEBELL|
-    RDB|
-    CRASH|
-    CR|
-    TOM1|
-    T1|
-    TOM2|
-    T2|
-    TOM3|
-    T3|
-    TOM4|
-    T4|
-    TOM5|
-    T5|
-    TOM6|
-    T6
-);
+instrument: 
+	times=NUMBER?
+	code=(
+		HIHAT|
+		HH|
+		HIHATOPEN|
+		HHO|
+		HIHATPEDAL|
+		HHP|
+		BASSDRUM|
+		BD|
+		SNARE|
+		SN|
+		RIDE|
+		RD|
+		RIDEBELL|
+		RDB|
+		CRASH|
+		CR|
+		TOM1|
+		T1|
+		TOM2|
+		T2|
+		TOM3|
+		T3|
+		TOM4|
+		T4|
+		TOM5|
+		T5|
+		TOM6|
+		T6);
 
 auralExpression: LESS_THAN (pitches+=auralPitch+ | drumElements+=auralDrumElement+) GREATER_THAN timeSignature=onTimeSignature?;
 

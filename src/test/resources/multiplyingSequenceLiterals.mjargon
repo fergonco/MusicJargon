@@ -1,0 +1,5 @@
+tempo 60
+voices | acoustic_bass | drums "right hand"        | drums "rhythm"
+       | 3A C on [xxxx]| cr 3hho on [XXXX] | 4bd sn 4bd sn 2bd sn on [x.x.x.x.x.....xxx.x.x...x.x.x...]
+       | <3A C> on 4/4 | <cr 3hho> on 4/4          | 
+       ' <4bd sn - - 3bd sn - 2bd sn - >

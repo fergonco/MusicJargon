@@ -19,7 +19,7 @@ import org.fergonco.music.mjargon.parser.ScriptLineVisitor;
 
 public class ManualTest {
 	public static void main(String[] args) throws Exception {
-		String scriptName = "auralDynamics";
+		String scriptName = "multiplyingSequenceLiterals";
 		InputStream is = new FileInputStream(new File("src/test/resources/" + scriptName + ".mjargon"));
 		String script = IOUtils.toString(is, "utf-8");
 		is.close();
