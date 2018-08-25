@@ -24,9 +24,16 @@ public enum DrumNote {
 	DrumNote(int code) {
 		this.midiCode = code;
 	}
-	
-	public int getMIDICode() {
+
+	private int getMIDICode() {
 		return midiCode;
+	}
+
+	public PitchArray toPitchArray() {
+		PitchArrayImpl pitch = new PitchArrayImpl();
+		pitch.add(this.getMIDICode());
+		pitch.setDrums(true);
+		return pitch;
 	}
 
 }
