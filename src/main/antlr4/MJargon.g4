@@ -34,8 +34,7 @@ leftExpression: (
 	| stringLiteral
 	| referenceExpression
 	| rhythmExpression
-	| pitchSequenceExpression
-	| drumSequenceExpression
+	| noteSequenceExpression
 	| auralExpression
 );
 
@@ -54,48 +53,50 @@ onTimeSignature: (
 	| WITH beatDuration=expression
 );
 
-pitchSequenceExpression: (literals+=chordLiteral)+;
+noteSequenceExpression: literals+=noteLiteral+;
 
-chordLiteral: silence=SILENCE | underscore=UNDERSCORE | (chord=EXPLICIT_CHORD | chord=CHORD_NAME);
+noteLiteral:
+	times=NUMBER? (
+		silence=SILENCE | 
+		underscore=UNDERSCORE | 
+		(
+			note=(
+				EXPLICIT_CHORD |
+				CHORD_NAME |
+				HIHAT|
+				HH|
+				HIHATOPEN|
+				HHO|
+				HIHATPEDAL|
+				HHP|
+				BASSDRUM|
+				BD|
+				SNARE|
+				SN|
+				RIDE|
+				RD|
+				RIDEBELL|
+				RDB|
+				CRASH|
+				CR|
+				TOM1|
+				T1|
+				TOM2|
+				T2|
+				TOM3|
+				T3|
+				TOM4|
+				T4|
+				TOM5|
+				T5|
+				TOM6|
+				T6
+			)
+			accent=ACCENT?
+		)
+	);
 
-drumSequenceExpression: instruments+=instrument+;
-
-instrument: code=(
-    HIHAT|
-    HH|
-    HIHATOPEN|
-    HHO|
-    HIHATPEDAL|
-    HHP|
-    BASSDRUM|
-    BD|
-    SNARE|
-    SN|
-    RIDE|
-    RD|
-    RIDEBELL|
-    RDB|
-    CRASH|
-    CR|
-    TOM1|
-    T1|
-    TOM2|
-    T2|
-    TOM3|
-    T3|
-    TOM4|
-    T4|
-    TOM5|
-    T5|
-    TOM6|
-    T6
-);
-
-auralExpression: LESS_THAN (pitches+=auralPitch+ | drumElements+=auralDrumElement+) GREATER_THAN timeSignature=onTimeSignature?;
-
-auralPitch: pitch=chordLiteral accent=ACCENT?;
-
-auralDrumElement: drumElement=instrument accent=ACCENT?;
+auralExpression: LESS_THAN noteSequence=noteSequenceExpression GREATER_THAN timeSignature=onTimeSignature?;
 
 labelDeclaration: COLON labelableLine;
 
