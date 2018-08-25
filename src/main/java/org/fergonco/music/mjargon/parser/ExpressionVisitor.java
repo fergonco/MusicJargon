@@ -246,8 +246,14 @@ public class ExpressionVisitor extends MJargonBaseVisitor<Value> {
 			super.addPitch(pitchArray, accent);
 		}
 
-		public Value buildRhythm(OnTimeSignatureContext timeSignature) {
-			return new Rhythm(rhythmExpression.toString(), getTimeSignature(timeSignature, rhythmExpression.length()));
+		public Value buildRhythm(OnTimeSignatureContext timeSignatureContext) {
+			Value timeSignature;
+			if (timeSignatureContext == null) {
+				timeSignature = model.getDefaultTimeSignature();
+			} else {
+				timeSignature = getTimeSignature(timeSignatureContext, rhythmExpression.length());
+			}
+			return new Rhythm(rhythmExpression.toString(), timeSignature);
 		}
 
 		private void addRhythmComponent(boolean accent) {
