@@ -22,7 +22,9 @@ import org.fergonco.music.mjargon.antlr.MJargonParser.VariableDeclarationContext
 import org.fergonco.music.mjargon.antlr.MJargonParser.VoicesContext;
 import org.fergonco.music.mjargon.model.Bar;
 import org.fergonco.music.mjargon.model.InstrumentBar;
-import org.fergonco.music.mjargon.model.InstrumentRepeatBar;
+import org.fergonco.music.mjargon.model.LastOneRepeatBar;
+import org.fergonco.music.mjargon.model.LikeLabelPlusOneRepeatBar;
+import org.fergonco.music.mjargon.model.LikeLabelRepeatBar;
 import org.fergonco.music.mjargon.model.Model;
 import org.fergonco.music.mjargon.model.SilenceBar;
 import org.fergonco.music.mjargon.model.Value;
@@ -133,7 +135,7 @@ public class ScriptLineVisitor extends MJargonBaseVisitor<Object> {
 		for (ExpressionOrReferenceContext expressionContext : instrumentExpressions) {
 			if (expressionContext != null) {
 				if (expressionContext.same != null) {
-					bars.add(InstrumentRepeatBar.lastOne());
+					bars.add(new LastOneRepeatBar());
 				} else if (expressionContext.label != null) { // like expression
 					int shift = 0;
 					if (expressionContext.shiftAmount != null) {
@@ -142,9 +144,9 @@ public class ScriptLineVisitor extends MJargonBaseVisitor<Object> {
 							shift = -shift;
 						}
 					}
-					bars.add(InstrumentRepeatBar.likeLabel(expressionContext.label.getText(), shift));
+					bars.add(new LikeLabelRepeatBar(expressionContext.label.getText(), shift));
 				} else if (expressionContext.plus != null) {
-					bars.add(InstrumentRepeatBar.plusOne());
+					bars.add(new LikeLabelPlusOneRepeatBar());
 				} else {
 					Value value = new ExpressionVisitor(model).visit(expressionContext.expr);
 					bars.add(new InstrumentBar(value));
