@@ -2,12 +2,12 @@ package org.fergonco.music.mjargon.parser;
 
 import java.util.HashMap;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.fergonco.music.mjargon.model.PitchArrayImpl;
+import org.fergonco.music.mjargon.model.SemanticException;
 
-public class ChordParser {
-	private static HashMap<String, Integer> basePitches = new HashMap<>();
+public abstract class ChordParser {
+	protected static HashMap<String, Integer> basePitches = new HashMap<>();
 	static {
 		basePitches.put("C", 0);
 		basePitches.put("D", 2);
@@ -17,11 +17,10 @@ public class ChordParser {
 		basePitches.put("A", 9);
 		basePitches.put("B", 11);
 	}
-	private static final Pattern p = Pattern.compile("([A-G])([#|b])?(\\d)?");
 
-	private String text;
-	private int octave;
-	private PitchArrayImpl pitchArray;
+	protected String text;
+	protected int octave;
+	protected PitchArrayImpl pitchArray;
 
 	public ChordParser(String text) {
 		this.text = text;
@@ -31,59 +30,33 @@ public class ChordParser {
 		this.octave = octave;
 	}
 
-	public int getOctave() {
+	public int getOctave() throws SemanticException {
 		if (pitchArray == null) {
 			getPitchArray();
 		}
 		return octave;
 	}
 
-	public PitchArrayImpl getPitchArray() {
-		if (pitchArray == null) {
-			readExplicit();
-			readModifiers();
-		}
+	public abstract PitchArrayImpl getPitchArray() throws SemanticException ;
 
-		return pitchArray;
-	}
-
-	private void readModifiers() {
-		int basePitch = pitchArray.getPitch(0);
-		if (text.endsWith("maj")) {
-			pitchArray.add(basePitch + 4);
-			pitchArray.add(basePitch + 7);
-		} else if (text.endsWith("min")) {
-			pitchArray.add(basePitch + 3);
-			pitchArray.add(basePitch + 7);
-		} else if (text.endsWith("aug")) {
-			pitchArray.add(basePitch + 4);
-			pitchArray.add(basePitch + 8);
-		} else if (text.endsWith("dim")) {
-			pitchArray.add(basePitch + 3);
-			pitchArray.add(basePitch + 6);
-		}
-	}
-
-	private void readExplicit() {
-		pitchArray = new PitchArrayImpl();
-		Matcher matcher = p.matcher(text);
-		while (matcher.find()) {
-			String noteName = matcher.group(1);
-			String accidental = matcher.group(2);
-			String octaveIndex = matcher.group(3);
-			Integer basePitch = basePitches.get(noteName);
-			if (accidental != null) {
-				if (accidental.equals("#")) {
-					basePitch++;
-				} else if (accidental.equals("b")) {
-					basePitch--;
-				}
+	protected Integer getPitchAndUpdateOctave(Matcher matcher, int groupOffset) {
+		String noteName = matcher.group(groupOffset + 1);
+		String accidental = matcher.group(groupOffset + 2);
+		String octaveIndex = matcher.group(groupOffset + 3);
+		Integer basePitch = basePitches.get(noteName);
+		if (accidental != null) {
+			if (accidental.equals("#")) {
+				basePitch++;
+			} else if (accidental.equals("b")) {
+				basePitch--;
 			}
-			if (octaveIndex != null) {
-				octave = Integer.parseInt(octaveIndex);
-			}
-			basePitch += 12 * octave;
-			pitchArray.add(basePitch);
 		}
+		int chordOctave = octave;
+		if (octaveIndex != null) {
+			chordOctave = Integer.parseInt(octaveIndex);
+		}
+		octave = chordOctave;
+		basePitch += 12 * octave;
+		return basePitch;
 	}
 }

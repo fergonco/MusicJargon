@@ -177,7 +177,7 @@ TIME: 'time';
 SIGNATURE: 'signature';
 fragment NOTE: 'A'..'G' ('#' | 'b')? ('0'..'9')?;
 EXPLICIT_CHORD: NOTE+;
-CHORD_NAME: NOTE ('maj' | 'min' | 'aug' | 'dim');
+CHORD_NAME: NOTE ('maj' | 'min' | 'aug' | 'dim') ('/' NOTE)?;
 STRING_LITERAL: '"' ~'"'* '"';
 ID: 'a'..'z' ('a'..'z' | 'A'..'Z' | '_' | '0'..'9')*;
 

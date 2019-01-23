@@ -49,4 +49,8 @@ public class PitchArrayImpl implements PitchArray {
 	public void setSilence() {
 		this.silence = true;
 	}
+
+	public void transposeFirst() {
+		pitch.add(pitch.remove(0) + 12);
+	}
 }

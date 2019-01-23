@@ -27,6 +27,7 @@ import org.fergonco.music.mjargon.model.PitchArray;
 import org.fergonco.music.mjargon.model.PitchArrayImpl;
 import org.fergonco.music.mjargon.model.PitchedNoteSequence;
 import org.fergonco.music.mjargon.model.Rhythm;
+import org.fergonco.music.mjargon.model.SemanticException;
 import org.fergonco.music.mjargon.model.SequenceAndRhythm;
 import org.fergonco.music.mjargon.model.StringValue;
 import org.fergonco.music.mjargon.model.TiedPitchArray;
@@ -280,14 +281,24 @@ public class ExpressionVisitor extends MJargonBaseVisitor<Value> {
 				} else {
 					boolean accent = noteLiteralContext.accent != null;
 					int type = noteLiteralContext.note.getType();
-					if (type == MJargonLexer.EXPLICIT_CHORD || type == MJargonLexer.CHORD_NAME) {
-						String chordText = noteLiteralContext.getText();
-						ChordParser chordParser = new ChordParser(chordText);
-						chordParser.setDefaultOctave(octave);
-						octave = chordParser.getOctave();
-						sequenceBuilder.addPitch(chordParser.getPitchArray(), accent);
-					} else {
-						sequenceBuilder.addPitch(drumInstrumentCodes.get(type).toPitchArray(), accent);
+					try {
+						if (type == MJargonLexer.EXPLICIT_CHORD) {
+							String chordText = noteLiteralContext.getText();
+							ChordParser chordParser = new ExplicitChordParser(chordText);
+							chordParser.setDefaultOctave(octave);
+							octave = chordParser.getOctave();
+							sequenceBuilder.addPitch(chordParser.getPitchArray(), accent);
+						} else if (type == MJargonLexer.CHORD_NAME) {
+							String chordText = noteLiteralContext.getText();
+							ChordParser chordParser = new NamedChordParser(chordText);
+							chordParser.setDefaultOctave(octave);
+							octave = chordParser.getOctave();
+							sequenceBuilder.addPitch(chordParser.getPitchArray(), accent);
+						} else {
+							sequenceBuilder.addPitch(drumInstrumentCodes.get(type).toPitchArray(), accent);
+						}
+					} catch (SemanticException e) {
+						throw new ModelException(e);
 					}
 				}
 			}
