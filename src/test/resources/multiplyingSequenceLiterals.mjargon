@@ -1,4 +1,3 @@
-tempo 60
-voices | acoustic_bass   | drums "right hand" | drums "rhythm"
-       | 2A _ C on [xxxx]  | cr _ 2hho on [XXXX]  | 4bd sn 4bd sn 2bd sn on [x.x.x.x.x.....xxx.x.x...x.x.x...]
-       | <2A _ C> on 4/4 | <cr _ 2hho> on 4/4 | <4bd sn - - 3bd sn - 2bd sn - > on 4/4
+voices   | acoustic_bass     | drums "right hand"   | drums "rhythm"
+tempo 60 | 2A _ C on [xxxx]  | cr _ 2hho on [XXXX]  | 4bd sn 4bd sn 2bd sn on [x.x.x.x.x.....xxx.x.x...x.x.x...]
+         | <2A _ C> on 4/4   | <cr _ 2hho> on 4/4   | <4bd sn - - 3bd sn - 2bd sn - > on 4/4

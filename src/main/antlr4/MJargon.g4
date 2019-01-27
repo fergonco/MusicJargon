@@ -16,7 +16,6 @@ scriptLine:	(
 
 labelableLine: (
 	barline
-	| tempo
 	| dynamics
 );
 comment: COMMENT;
@@ -100,7 +99,7 @@ auralExpression: LESS_THAN noteSequence=noteSequenceExpression GREATER_THAN time
 
 labelDeclaration: COLON labelableLine;
 
-barline: (VERTICAL_BAR {$expressions.add(null);} expressions+=expressionOrReference?)+ {$expressions.add(null);};
+barline: tempoDeclaration=tempo? (VERTICAL_BAR {$expressions.add(null);} expressions+=expressionOrReference?)+ {$expressions.add(null);};
 
 expressionOrReference: 
 	same=SAME 
@@ -108,7 +107,7 @@ expressionOrReference:
 	| plus=PLUS
 	| expr=expression;
 
-tempo: TEMPO bpmOrNumerator=NUMBER (SLASH denominator=NUMBER EQUALS bpm=NUMBER)? VERTICAL_BAR*;
+tempo: TEMPO bpmOrNumerator=NUMBER (SLASH denominator=NUMBER EQUALS bpm=NUMBER)?;
 
 voices: VOICES (VERTICAL_BAR instrumentNames+=ID STRING_LITERAL?)+ VERTICAL_BAR?;
 

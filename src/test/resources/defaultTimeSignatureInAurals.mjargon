@@ -1,7 +1,5 @@
-tempo 60
-voices | acoustic_bass
-       | <2A _ C>
+voices   | acoustic_bass
+tempo 60 | <2A _ C>
 
 default time signature 12/8
-tempo 3/8=60
-       | <A! E C A! E C A! E C A! E C>
+tempo 3/8=60 | <A! E C A! E C A! E C A! E C>

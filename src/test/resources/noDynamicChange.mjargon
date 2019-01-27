@@ -4,8 +4,7 @@ chords = C4EG
 
 voices   | acoustic_bass | piano
 dynamics | ffff          | ffff
-tempo 250|
-         | C on whole    | C on whole
+tempo 250| C on whole    | C on whole
 dynamics |               | pppp
          | C on whole    | C on whole
 dynamics | ffff          | ffff

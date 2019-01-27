@@ -3,8 +3,7 @@ beat         = [xxxx] on ts
 whole        = [x] on ts
 
 voices        | piano "right hand"       | piano "left hand"  
-tempo 100     |
-              |                          | C4       on whole        
+tempo 100     |                          | C4       on whole        
               | D4GB on whole            | B A G A  on beat   
               | D4GB on whole            |    
               |                          |

@@ -128,6 +128,9 @@ public class ScriptLineVisitor extends MJargonBaseVisitor<Object> {
 
 	@Override
 	public Object visitBarline(BarlineContext ctx) {
+		if (ctx.tempoDeclaration != null) {
+			super.visit(ctx.tempoDeclaration);
+		}
 		List<ExpressionOrReferenceContext> barExpressions = ctx.expressions;
 		List<ExpressionOrReferenceContext> instrumentExpressions = getPerInstrument(barExpressions);
 

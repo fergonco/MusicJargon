@@ -6,8 +6,7 @@ chords = CEG EGB FAC4 EG#B
 
 voices      | acoustic_bass
             | 
-a: tempo 60 |
-            | chords on r1
+a: tempo 60 | chords on r1
             | chords on r2
             | chords on r3
 repeat a 2

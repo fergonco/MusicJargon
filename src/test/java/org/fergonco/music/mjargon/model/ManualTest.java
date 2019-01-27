@@ -19,7 +19,7 @@ import org.fergonco.music.mjargon.parser.ScriptLineVisitor;
 
 public class ManualTest {
 	public static void main(String[] args) throws Exception {
-		String scriptName = "invertedChords";
+		String scriptName = "3_4_chordNames";
 		InputStream is = new FileInputStream(new File("src/test/resources/" + scriptName + ".mjargon"));
 		String script = IOUtils.toString(is, "utf-8");
 		is.close();

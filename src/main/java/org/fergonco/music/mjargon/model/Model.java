@@ -62,13 +62,29 @@ public class Model {
 		bos.close();
 	}
 
+	/**
+	 * Get the index of the next Barline in the specified direction
+	 *
+	 * @param index
+	 * @return
+	 */
+	public int getInstrumentalSongLineIndex(int index, int direction) {
+		while (!(songlines.get(index) instanceof Barline)) {
+			index += direction;
+		}
+		return index;
+	}
+
 	public Bar getBar(int songlineIndex, int barOffset, int voiceIndex) {
-		SongLine songLine = songlines.get(songlineIndex);
 		int direction = (int) Math.signum(barOffset);
+		direction = direction == 0 ? 1 : direction;
+		songlineIndex = getInstrumentalSongLineIndex(songlineIndex, direction);
+		SongLine songLine = songlines.get(songlineIndex);
 		int instrumentBarlines = 0;
 		while (instrumentBarlines < Math.abs(barOffset)) {
 			do {
 				songlineIndex += direction;
+				songlineIndex = getInstrumentalSongLineIndex(songlineIndex, direction);
 				songLine = songlines.get(songlineIndex);
 			} while (!songLine.isBarline());
 			instrumentBarlines++;

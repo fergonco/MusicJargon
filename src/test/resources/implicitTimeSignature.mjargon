@@ -6,7 +6,6 @@ chords = C2EG EGB FAC3 E2G#B
 
 voices   | acoustic_bass
          | 
-tempo 60 |
-         | chordNotes(chords{0}, 1, 2, 1, 3, 3, 2) on r1
+tempo 60 | chordNotes(chords{0}, 1, 2, 1, 3, 3, 2) on r1
          | chordNotes(chords{0}, 1, 2, 1, 3, 3, 2) on r2
          | chordNotes(chords{0}, 1, 2, 1, 3, 3, 2) on r3

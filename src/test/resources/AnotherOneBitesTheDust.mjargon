@@ -5,8 +5,7 @@ r2      = [X.x.X.xX......xx] on 4/4
 riff1   = E3 E E E
 riff2   = E3 E G E A A G 
 voices         | acoustic_bass        | electric_guitar            | drums "right hand" | drums "rhythm"
-tempo 110      |
-               | - - - - - A3 G on r2 |                            |                    |
+tempo 110      | - - - - - A3 G on r2 |                            |                    |
 start:         | riff1 on r1          |                            | hihat on eighth    | bd sn on quarter
                | riff2 on r2          |                            | %                  | %
 repeat start 2 |                      |                            |                    |

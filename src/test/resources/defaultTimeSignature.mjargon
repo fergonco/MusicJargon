@@ -1,11 +1,9 @@
 voices        | acoustic_bass 
-tempo 180     |                              
-              | C4 D C F C D C on [xxxx.xxx] 
+tempo 180     | C4 D C F C D C on [xxxx.xxx] 
               | D E D C A G on [xxxxx.x.]    
               | C4 D C F C D C on [xxxx.xxx] 
               | G3 A G D E D on [xxx.xxx.]
-tempo 3/8=180 |  
-              | C4 D C F C D C on [x.xx.xx.x] on 12/8
+tempo 3/8=180 | C4 D C F C D C on [x.xx.xx.x] on 12/8
               | D E D C A G on [x.xx.xx.x] on 12/8
               | C4 D C F C D C on [x.xx.xx.x] on 12/8
               | G3 A G D E D on [x.xx.xx.x] on 12/8  
