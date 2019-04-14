@@ -4,15 +4,20 @@ grammar MJargon;
 package org.fergonco.music.mjargon.antlr;
 }
 
-script: lines+=scriptLine* EOF;
+script: lines+=scriptLine* structure=play? EOF;
+
+play: PLAY (parts+=ID | EOL)+ ;
 
 scriptLine:	(
 	defaultDeclaration
 	| declaration
+	| labelEnd
 	| voices
 	| repeat
 	| labelableLine
 	| ) comment? (EOL|EOF);
+
+labelEnd: END labelId=ID;
 
 labelableLine: (
 	barline
@@ -178,6 +183,8 @@ fragment NOTE: 'A'..'G' ('#' | 'b')? ('0'..'9')?;
 EXPLICIT_CHORD: NOTE+;
 CHORD_NAME: NOTE ('maj' | 'min' | 'aug' | 'dim') ('/' NOTE)?;
 STRING_LITERAL: '"' ~'"'* '"';
+END: 'end';
+PLAY: 'play';
 ID: 'a'..'z' ('a'..'z' | 'A'..'Z' | '_' | '0'..'9')*;
 
 EOL: '\r'?'\n';

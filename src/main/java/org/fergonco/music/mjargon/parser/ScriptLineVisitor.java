@@ -16,6 +16,8 @@ import org.fergonco.music.mjargon.antlr.MJargonParser.DynamicsContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.ExpressionContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.ExpressionOrReferenceContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.LabelDeclarationContext;
+import org.fergonco.music.mjargon.antlr.MJargonParser.LabelEndContext;
+import org.fergonco.music.mjargon.antlr.MJargonParser.PlayContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.RepeatContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.TempoContext;
 import org.fergonco.music.mjargon.antlr.MJargonParser.VariableDeclarationContext;
@@ -51,6 +53,14 @@ public class ScriptLineVisitor extends MJargonBaseVisitor<Object> {
 
 	public ScriptLineVisitor(Model model) {
 		this.model = model;
+	}
+	
+	@Override
+	public Object visitPlay(PlayContext ctx) {
+		ctx.parts.stream().forEach(t -> {
+			model.addPlaySection(t.getText());
+		});
+		return super.visitPlay(ctx);
 	}
 
 	@Override
@@ -113,6 +123,12 @@ public class ScriptLineVisitor extends MJargonBaseVisitor<Object> {
 	public Object visitLabelDeclaration(LabelDeclarationContext ctx) {
 		model.newLabel(declarationId);
 		return super.visitLabelDeclaration(ctx);
+	}
+
+	@Override
+	public Object visitLabelEnd(LabelEndContext ctx) {
+		model.setSectionEnd(ctx.labelId.getText());
+		return super.visitLabelEnd(ctx);
 	}
 
 	@Override

@@ -1,0 +1,16 @@
+voices | piano 
+a:     | C D E C on [xxxx]
+       | %
+       | E F G on [xxx.]
+       | %
+end a
+
+b:     | G A G F E C on [xxxxx.x.]
+       | %
+       | D G3 C4 on [xxx.]
+       | %
+end b
+
+play
+a a
+b
