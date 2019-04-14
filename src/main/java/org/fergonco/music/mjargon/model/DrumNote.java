@@ -7,7 +7,7 @@ public enum DrumNote {
 	HIHAT(Note.DRUMS_Closed_Hi_Hat), //
 	HIHATOPEN(Note.DRUMS_Open_HiHat), //
 	HIHATPEDAL(Note.DRUMS_Pedal_HiHat), //
-	BASSDRUM(Note.DRUMS_Acoustic_Bass_Drum), //
+	BASSDRUM(Note.DRUMS_Bass_Drum_1), //
 	SNARE(Note.DRUMS_Acoustic_Snare), //
 	RIDE(Note.DRUMS_Ride_Cymbal_1), //
 	RIDE_BELL(Note.DRUMS_Ride_Bell), //
